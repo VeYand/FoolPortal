@@ -1,0 +1,6 @@
+catch_all:
+    path: /{any}
+    controller: App\Controller\PageController::mainPage
+    methods: GET
+    requirements:
+        any: .*
