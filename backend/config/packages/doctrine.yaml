@@ -18,12 +18,12 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App\Authorization:
+            App\User:
                 is_bundle: false
                 type: xml
-                dir: '%kernel.project_dir%/config/doctrine/authorization'
-                prefix: 'App\Authorization'
-                alias: Authorization
+                dir: '%kernel.project_dir%/config/doctrine/user'
+                prefix: 'App\User'
+                alias: User
         controller_resolver:
             auto_mapping: false
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\User\Domain\Model\User" table="user">
+        <id name="userId" type="uuid" column="user_id">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="firstName" column="first_name" length="255"/>
+        <field name="lastName" column="last_name" length="255"/>
+        <field name="patronymic" column="patronymic" length="255" nullable="true"/>
+        <field name="role" type="integer" column="role"/>
+        <field name="imagePath" column="image_path" length="255" nullable="true"/>
+        <field name="email" column="email" length="255"/>
+        <field name="password" column="password"/>
+    </entity>
+</doctrine-mapping>
