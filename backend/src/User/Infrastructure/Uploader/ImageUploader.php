@@ -36,7 +36,8 @@ class ImageUploader implements ImageUploaderInterface
 		try
 		{
 			$imageName = bin2hex(random_bytes(16)) . '.' . $imageType;
-		} catch (RandomException $e)
+		}
+		catch (RandomException $e)
 		{
 			throw new DomainException($e->getMessage());
 		}
