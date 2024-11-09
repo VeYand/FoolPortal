@@ -6,7 +6,7 @@ namespace App\Session\Api;
 use App\Common\Exception\AppException;
 use App\Session\App\Provider\Data\SessionUser;
 
-interface AuthorizationApiInterface
+interface SessionApiInterface
 {
 	/**
 	 * @throws AppException

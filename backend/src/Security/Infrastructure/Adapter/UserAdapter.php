@@ -6,14 +6,14 @@ namespace App\Security\Infrastructure\Adapter;
 use App\Common\Exception\AppException;
 use App\Security\App\Adapter\Data\UserData;
 use App\Security\App\Adapter\UserAdapterInterface;
-use App\User\App\Query\UserQueryServiceInterface;
+use App\User\Api\UserApiInterface;
 use App\Security\App\Adapter\Data\UserRole;
 use App\User\Domain\Model\UserRole as AdaptedUserRole;
 
 readonly class UserAdapter implements UserAdapterInterface
 {
 	public function __construct(
-		private UserQueryServiceInterface $userQueryService,
+		private UserApiInterface $userApi,
 	)
 	{
 	}
@@ -23,7 +23,7 @@ readonly class UserAdapter implements UserAdapterInterface
 	 */
 	public function getUserByEmail(string $email): UserData
 	{
-		$user = $this->userQueryService->getUserByEmail($email);
+		$user = $this->userApi->getUserByEmail($email);
 
 		return new UserData(
 			$user->userId,

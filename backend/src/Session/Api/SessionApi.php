@@ -7,7 +7,7 @@ use App\Common\Exception\AppException;
 use App\Session\App\Provider\Data\SessionUser;
 use App\Session\App\Provider\SessionProviderInterface;
 
-readonly class AuthorizationApi implements AuthorizationApiInterface
+readonly class SessionApi implements SessionApiInterface
 {
 	public function __construct(
 		private SessionProviderInterface $sessionProvider,
