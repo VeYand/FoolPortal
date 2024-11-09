@@ -38,7 +38,7 @@ readonly class GroupService
 
 		if (is_null($group))
 		{
-			throw new DomainException('Group not found');
+			throw new DomainException('Group not found', 404);
 		}
 
 		$group->setName($groupName);
