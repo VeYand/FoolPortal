@@ -29,6 +29,7 @@ readonly class UserService
 	 */
 	public function create(CreateUserInput $input): string
 	{
+		$this->assertEmailIsUnique($input->email);
 		$imagePath = $this->imageUploader->uploadImage($input->base64ImageData);
 		$hashedPassword = $this->passwordHasher->hash($input->plainPassword);
 
@@ -80,6 +81,7 @@ readonly class UserService
 
 		if (!is_null($input->email))
 		{
+			$this->assertEmailIsUnique($input->email);
 			$user->setEmail($input->email);
 		}
 
@@ -108,6 +110,20 @@ readonly class UserService
 			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->userRepository->delete($user);
+		}
+	}
+
+
+	/**
+	 * @throws DomainException
+	 */
+	private function assertEmailIsUnique(string $email): void
+	{
+		$user = $this->userRepository->findByEmail($email);
+
+		if (!is_null($user))
+		{
+			throw new DomainException('User with email "' . $email . '" already exists', 409);
 		}
 	}
 }
