@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Subject\Domain\Model\TeacherSubject" table="teacher_subject">
+        <id name="teacherSubjectId" type="uuid" column="teacher_subject_id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="teacherId" type="uuid" column="teacher_id"/>
+        <field name="subjectId" type="uuid" column="subject_id"/>
+    </entity>
+</doctrine-mapping>
