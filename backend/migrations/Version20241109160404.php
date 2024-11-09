@@ -29,6 +29,8 @@ final class Version20241109160404 extends AbstractMigration
 
 	public function down(Schema $schema): void
 	{
+		$this->addSql('ALTER TABLE group_member DROP FOREIGN KEY FK_GROUP_MEMBER_GROUP_ID');
+		$this->addSql('ALTER TABLE group_member DROP FOREIGN KEY FK_GROUP_MEMBER_USER_ID');
 		$this->addSql('DROP TABLE group_member');
 	}
 }
