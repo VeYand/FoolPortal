@@ -6,6 +6,7 @@ namespace App\User\Domain\Service;
 use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Model\User;
+use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\Service\Exception\UserNotFoundException;
 use App\User\Domain\Service\Input\CreateUserInput;
@@ -14,10 +15,11 @@ use App\User\Domain\Service\Input\UpdateUserInput;
 readonly class UserService
 {
 	public function __construct(
-		private UserRepositoryInterface $userRepository,
-		private UuidProviderInterface   $uuidProvider,
-		private ImageUploaderInterface  $imageUploader,
-		private PasswordHasherInterface $passwordHasher,
+		private UserRepositoryInterface        $userRepository,
+		private GroupMemberRepositoryInterface $groupMemberRepository,
+		private UuidProviderInterface          $uuidProvider,
+		private ImageUploaderInterface         $imageUploader,
+		private PasswordHasherInterface        $passwordHasher,
 	)
 	{
 	}
@@ -95,5 +97,17 @@ readonly class UserService
 		}
 
 		$this->userRepository->store($user);
+	}
+
+	public function delete(string $userId): void
+	{
+		$user = $this->userRepository->find($userId);
+
+		if (!is_null($user))
+		{
+			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
+			$this->groupMemberRepository->delete($groupMembers);
+			$this->userRepository->delete($user);
+		}
 	}
 }

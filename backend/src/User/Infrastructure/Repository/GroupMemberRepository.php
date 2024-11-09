@@ -34,9 +34,35 @@ class GroupMemberRepository implements GroupMemberRepositoryInterface
 		return $groupMember->getGroupId();
 	}
 
-	public function delete(GroupMember $groupMember): void
+	/**
+	 * @inheritDoc
+	 */
+	public function delete(array $groupMembers): void
 	{
-		$this->entityManager->remove($groupMember);
+		foreach ($groupMembers as $groupMember)
+		{
+			$this->entityManager->remove($groupMember);
+		}
 		$this->entityManager->flush();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findByGroup(string $groupId): array
+	{
+		return $this->repository->findBy([
+			'groupId' => $groupId,
+		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findByUser(string $userId): array
+	{
+		return $this->repository->findBy([
+			'userId' => $userId,
+		]);
 	}
 }

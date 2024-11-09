@@ -9,5 +9,8 @@ interface GroupMemberRepositoryInterface extends GroupMemberReadRepositoryInterf
 {
 	public function store(GroupMember $groupMember): string;
 
-	public function delete(GroupMember $groupMember): void;
+	/**
+	 * @param GroupMember[] $groupMembers
+	 */
+	public function delete(array $groupMembers): void;
 }

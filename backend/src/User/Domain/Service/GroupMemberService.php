@@ -45,9 +45,9 @@ readonly class GroupMemberService
 	{
 		$groupMember = $this->groupMemberRepository->find($groupId, $userId);
 
-		if (!isset($groupMember))
+		if (!is_null($groupMember))
 		{
-			$this->groupMemberRepository->delete($groupMember);
+			$this->groupMemberRepository->delete([$groupMember]);
 		}
 	}
 
