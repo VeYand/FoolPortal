@@ -9,5 +9,8 @@ interface CourseRepositoryInterface extends CourseReadRepositoryInterface
 {
 	public function store(Course $course): string;
 
-	public function delete(Course $course): void;
+	/**
+	 * @param Course[] $courses
+	 */
+	public function delete(array $courses): void;
 }

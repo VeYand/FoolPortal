@@ -6,6 +6,7 @@ namespace App\Subject\Domain\Service;
 use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\Domain\Model\TeacherSubject;
+use App\Subject\Domain\Repository\CourseRepositoryInterface;
 use App\Subject\Domain\Repository\SubjectReadRepositoryInterface;
 use App\Subject\Domain\Repository\TeacherSubjectRepositoryInterface;
 
@@ -13,6 +14,7 @@ readonly class TeacherSubjectService
 {
 	public function __construct(
 		private TeacherSubjectRepositoryInterface $teacherSubjectRepository,
+		private CourseRepositoryInterface         $courseRepository,
 		private SubjectReadRepositoryInterface    $subjectReadRepository,
 		private UuidProviderInterface             $uuidProvider,
 	)
@@ -41,6 +43,8 @@ readonly class TeacherSubjectService
 		$teacherSubject = $this->teacherSubjectRepository->find($teacherSubjectId);
 		if (!is_null($teacherSubject))
 		{
+			$courses = $this->courseRepository->findByTeacherSubject($teacherSubject->getTeacherSubjectId());
+			$this->courseRepository->delete($courses);
 			$this->teacherSubjectRepository->delete($teacherSubject);
 		}
 	}

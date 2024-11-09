@@ -42,7 +42,7 @@ readonly class CourseService
 
 		if (!is_null($course))
 		{
-			$this->courseRepository->delete($course);
+			$this->courseRepository->delete([$course]);
 		}
 	}
 

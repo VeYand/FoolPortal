@@ -10,4 +10,9 @@ interface CourseReadRepositoryInterface
 	public function find(string $courseId): ?Course;
 
 	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course;
+
+	/**
+	 * @return Course[]
+	 */
+	public function findByTeacherSubject(string $teacherSubjectId): array;
 }
