@@ -32,6 +32,16 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findBySubject(string $subjectId): array
+	{
+		return $this->repository->findBy([
+			'subjectId' => $subjectId,
+		]);
+	}
+
 	public function store(TeacherSubject $teacherSubject): string
 	{
 		$this->entityManager->persist($teacherSubject);
@@ -39,9 +49,12 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		return $teacherSubject->getSubjectId();
 	}
 
-	public function delete(TeacherSubject $teacherSubject): void
+	public function delete(array $teacherSubjects): void
 	{
-		$this->entityManager->remove($teacherSubject);
+		foreach ($teacherSubjects as $teacherSubject)
+		{
+			$this->entityManager->remove($teacherSubject);
+		}
 		$this->entityManager->flush();
 	}
 }

@@ -6,13 +6,18 @@ namespace App\Subject\Domain\Service;
 use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\Domain\Model\Subject;
+use App\Subject\Domain\Model\TeacherSubject;
+use App\Subject\Domain\Repository\CourseRepositoryInterface;
 use App\Subject\Domain\Repository\SubjectRepositoryInterface;
+use App\Subject\Domain\Repository\TeacherSubjectRepositoryInterface;
 
 readonly class SubjectService
 {
 	public function __construct(
-		private SubjectRepositoryInterface $subjectRepository,
-		private UuidProviderInterface      $uuidProvider,
+		private SubjectRepositoryInterface        $subjectRepository,
+		private TeacherSubjectRepositoryInterface $teacherSubjectRepository,
+		private CourseRepositoryInterface         $courseRepository,
+		private UuidProviderInterface             $uuidProvider,
 	)
 	{
 	}
@@ -41,5 +46,28 @@ readonly class SubjectService
 
 		$subject->setName($subjectName);
 		$this->subjectRepository->store($subject);
+	}
+
+	public function delete(string $subjectId): void
+	{
+		$subject = $this->subjectRepository->find($subjectId);
+
+		if (!is_null($subject))
+		{
+			$teacherSubjects = $this->teacherSubjectRepository->findBySubject($subject->getSubjectId());
+
+			if (!empty($teacherSubjects))
+			{
+				$teacherSubjectIds = array_map(
+					static fn(TeacherSubject $teacherSubject) => $teacherSubject->getTeacherSubjectId(),
+					$teacherSubjects,
+				);
+				$courses = $this->courseRepository->findByTeacherSubjects($teacherSubjectIds);
+				$this->courseRepository->delete($courses);
+				$this->teacherSubjectRepository->delete($teacherSubjects);
+			}
+
+			$this->subjectRepository->delete($subject);
+		}
 	}
 }

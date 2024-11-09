@@ -12,7 +12,8 @@ interface CourseReadRepositoryInterface
 	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course;
 
 	/**
+	 * @param string[] $teacherSubjectIds
 	 * @return Course[]
 	 */
-	public function findByTeacherSubject(string $teacherSubjectId): array;
+	public function findByTeacherSubjects(array $teacherSubjectIds): array;
 }

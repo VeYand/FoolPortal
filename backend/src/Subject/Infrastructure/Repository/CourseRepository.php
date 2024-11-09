@@ -35,10 +35,10 @@ class CourseRepository implements CourseRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByTeacherSubject(string $teacherSubjectId): array
+	public function findByTeacherSubjects(array $teacherSubjectIds): array
 	{
 		return $this->repository->findBy([
-			'teacherSubjectId' => $teacherSubjectId,
+			'teacherSubjectId' => $teacherSubjectIds,
 		]);
 	}
 

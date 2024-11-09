@@ -43,9 +43,9 @@ readonly class TeacherSubjectService
 		$teacherSubject = $this->teacherSubjectRepository->find($teacherSubjectId);
 		if (!is_null($teacherSubject))
 		{
-			$courses = $this->courseRepository->findByTeacherSubject($teacherSubject->getTeacherSubjectId());
+			$courses = $this->courseRepository->findByTeacherSubjects([$teacherSubject->getTeacherSubjectId()]);
 			$this->courseRepository->delete($courses);
-			$this->teacherSubjectRepository->delete($teacherSubject);
+			$this->teacherSubjectRepository->delete([$teacherSubject]);
 		}
 	}
 

@@ -9,5 +9,8 @@ interface TeacherSubjectRepositoryInterface extends TeacherSubjectReadRepository
 {
 	public function store(TeacherSubject $teacherSubject): string;
 
-	public function delete(TeacherSubject $teacherSubject): void;
+	/**
+	 * @param TeacherSubject[] $teacherSubjects
+	 */
+	public function delete(array $teacherSubjects): void;
 }
