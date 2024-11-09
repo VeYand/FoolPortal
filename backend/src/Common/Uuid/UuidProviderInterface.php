@@ -5,5 +5,5 @@ namespace App\Common\Uuid;
 
 interface UuidProviderInterface
 {
-    public function generate(): string;
+	public function generate(): string;
 }

@@ -7,8 +7,8 @@ use Symfony\Component\Uid\Uuid;
 
 class UuidProvider implements UuidProviderInterface
 {
-    public function generate(): string
-    {
-        return Uuid::v7()->toBinary();
-    }
+	public function generate(): string
+	{
+		return Uuid::v7()->toBinary();
+	}
 }

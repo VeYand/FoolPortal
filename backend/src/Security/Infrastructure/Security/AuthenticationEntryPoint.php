@@ -12,22 +12,22 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    private const string CONTENT_TYPE_TEXT_HTML = 'text/html';
+	private const string CONTENT_TYPE_TEXT_HTML = 'text/html';
 
-    public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-    )
-    {
-    }
+	public function __construct(
+		private readonly UrlGeneratorInterface $urlGenerator,
+	)
+	{
+	}
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
-    {
-        if ($request->getMethod() === Request::METHOD_GET &&
-            in_array(self::CONTENT_TYPE_TEXT_HTML, $request->getAcceptableContentTypes()))
-        {
-            return new RedirectResponse($this->urlGenerator->generate('login'));
-        }
+	public function start(Request $request, AuthenticationException $authException = null): Response
+	{
+		if ($request->getMethod() === Request::METHOD_GET &&
+			in_array(self::CONTENT_TYPE_TEXT_HTML, $request->getAcceptableContentTypes()))
+		{
+			return new RedirectResponse($this->urlGenerator->generate('login'));
+		}
 
-        return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
-    }
+		return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
+	}
 }
