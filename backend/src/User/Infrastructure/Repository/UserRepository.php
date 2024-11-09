@@ -10,30 +10,30 @@ use Doctrine\ORM\EntityRepository;
 
 class UserRepository implements UserRepositoryInterface
 {
-    private EntityRepository $repository;
+	private EntityRepository $repository;
 
-    public function __construct(
-        private EntityManagerInterface $entityManager,
-    )
-    {
-        $this->repository = $this->entityManager->getRepository(User::class);
-    }
+	public function __construct(
+		private readonly EntityManagerInterface $entityManager,
+	)
+	{
+		$this->repository = $this->entityManager->getRepository(User::class);
+	}
 
-    public function find(string $userId): ?User
-    {
-        return $this->repository->find($userId);
-    }
+	public function find(string $userId): ?User
+	{
+		return $this->repository->find($userId);
+	}
 
-    public function store(User $user): string
-    {
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        return $user->getUserId();
-    }
+	public function store(User $user): string
+	{
+		$this->entityManager->persist($user);
+		$this->entityManager->flush();
+		return $user->getUserId();
+	}
 
-    public function delete(User $user): void
-    {
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
-    }
+	public function delete(User $user): void
+	{
+		$this->entityManager->remove($user);
+		$this->entityManager->flush();
+	}
 }
