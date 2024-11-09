@@ -30,6 +30,12 @@ doctrine:
                 dir: '%kernel.project_dir%/config/doctrine/subject'
                 prefix: 'App\Subject'
                 alias: Subject
+            App\Lesson:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/config/doctrine/lesson'
+                prefix: 'App\Lesson'
+                alias: Lesson
         controller_resolver:
             auto_mapping: false
 
