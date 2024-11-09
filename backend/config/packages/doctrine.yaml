@@ -24,6 +24,12 @@ doctrine:
                 dir: '%kernel.project_dir%/config/doctrine/user'
                 prefix: 'App\User'
                 alias: User
+            App\Subject:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/config/doctrine/subject'
+                prefix: 'App\Subject'
+                alias: Subject
         controller_resolver:
             auto_mapping: false
 
