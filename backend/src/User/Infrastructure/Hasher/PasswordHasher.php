@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Hasher;
 
+use App\Common\Exception\DomainException;
 use App\User\Domain\Service\PasswordHasherInterface as DomainPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\CheckPasswordLengthTrait;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
@@ -13,11 +14,14 @@ class PasswordHasher implements DomainPasswordHasherInterface, PasswordHasherInt
 
 	use CheckPasswordLengthTrait;
 
+	/**
+	 * @throws DomainException
+	 */
 	public function hash(string $plainPassword): string
 	{
 		if ($this->isPasswordTooLong($plainPassword))
 		{
-			throw DomainException();
+			throw new DomainException('Password too long', 400);
 		}
 
 		return $this->encodePassword($plainPassword);

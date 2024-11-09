@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
+use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Domain\Service\Exception\ImageUploadException;
 use App\User\Domain\Service\Exception\UserNotFoundException;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
@@ -21,6 +23,9 @@ readonly class UserService
 	{
 	}
 
+	/**
+	 * @throws DomainException
+	 */
 	public function create(CreateUserInput $input): string
 	{
 		$imagePath = $this->imageUploader->uploadImage($input->base64ImageData);
@@ -41,7 +46,7 @@ readonly class UserService
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws DomainException
 	 */
 	public function update(UpdateUserInput $input): void
 	{

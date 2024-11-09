@@ -17,18 +17,7 @@ class ImageUploader implements ImageUploaderInterface
 	 */
 	public function __construct()
 	{
-		$this->ensureUploadDirectoryExists();
-	}
-
-	/**
-	 * @throws DomainException
-	 */
-	private function ensureUploadDirectoryExists(): void
-	{
-		if (!is_dir(self::UPLOAD_DIRECTORY) && !mkdir(self::UPLOAD_DIRECTORY, 0755, true) && !is_dir(self::UPLOAD_DIRECTORY))
-		{
-			throw new DomainException("Cannot create directory " . self::UPLOAD_DIRECTORY);
-		}
+		self::ensureUploadDirectoryExists();
 	}
 
 	/**
@@ -75,6 +64,17 @@ class ImageUploader implements ImageUploaderInterface
 		if (file_exists($path))
 		{
 			unlink($path);
+		}
+	}
+
+	/**
+	 * @throws DomainException
+	 */
+	private static function ensureUploadDirectoryExists(): void
+	{
+		if (!is_dir(self::UPLOAD_DIRECTORY) && !mkdir(self::UPLOAD_DIRECTORY, 0755, true) && !is_dir(self::UPLOAD_DIRECTORY))
+		{
+			throw new DomainException("Cannot create directory " . self::UPLOAD_DIRECTORY);
 		}
 	}
 
