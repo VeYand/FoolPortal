@@ -24,6 +24,13 @@ class UserRepository implements UserRepositoryInterface
 		return $this->repository->find($userId);
 	}
 
+	public function findByEmail(string $email): ?User
+	{
+		return $this->repository->findOneBy([
+			'email' => $email,
+		]);
+	}
+
 	public function store(User $user): string
 	{
 		$this->entityManager->persist($user);
