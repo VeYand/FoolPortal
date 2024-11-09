@@ -9,7 +9,7 @@ use App\Subject\Domain\Model\TeacherSubject;
 use App\Subject\Domain\Repository\SubjectReadRepositoryInterface;
 use App\Subject\Domain\Repository\TeacherSubjectRepositoryInterface;
 
-readonly class TeacherSubjectRepository
+readonly class TeacherSubjectService
 {
 	public function __construct(
 		private TeacherSubjectRepositoryInterface $teacherSubjectRepository,
