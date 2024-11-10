@@ -24,6 +24,14 @@ class GroupRepository implements GroupRepositoryInterface
 		return $this->repository->find($groupId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function store(Group $group): string
 	{
 		$this->entityManager->persist($group);

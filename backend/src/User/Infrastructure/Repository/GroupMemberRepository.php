@@ -65,4 +65,12 @@ class GroupMemberRepository implements GroupMemberRepositoryInterface
 			'userId' => $userId,
 		]);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
 }

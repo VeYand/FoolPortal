@@ -8,4 +8,9 @@ use App\User\Domain\Model\Group;
 interface GroupReadRepositoryInterface
 {
 	public function find(string $groupId): ?Group;
+
+	/**
+	 * @return Group[]
+	 */
+	public function findAll(): array;
 }
