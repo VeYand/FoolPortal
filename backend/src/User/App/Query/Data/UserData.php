@@ -15,7 +15,6 @@ readonly class UserData
 		public UserRole $role,
 		public ?string  $imageSrc,
 		public string   $email,
-		public string   $password,
 	)
 	{
 	}

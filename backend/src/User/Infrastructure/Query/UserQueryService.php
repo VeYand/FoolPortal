@@ -21,7 +21,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @throws AppException
+	 * @throws UserNotFoundException
 	 */
 	public function getUserByEmail(string $email): UserData
 	{
@@ -35,6 +35,29 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		return $this->convertUserToUserData($user);
 	}
 
+	/**
+	 * @throws UserNotFoundException
+	 */
+	public function getUserHashedPassword(string $userId): string
+	{
+		$user = $this->userReadRepository->find($userId);
+
+		if (is_null($user))
+		{
+			throw new UserNotFoundException();
+		}
+
+		return $user->getPassword();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listAllUsers(): array
+	{
+		return [];
+	}
+
 	private function convertUserToUserData(User $user): UserData
 	{
 		return new UserData(
@@ -45,7 +68,6 @@ readonly class UserQueryService implements UserQueryServiceInterface
 			$user->getRole(),
 			$this->imageQueryService->getImageUrl($user->getImagePath()),
 			$user->getEmail(),
-			$user->getPassword(),
 		);
 	}
 }

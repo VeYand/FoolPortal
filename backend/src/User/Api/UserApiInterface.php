@@ -12,4 +12,9 @@ interface UserApiInterface
 	 * @throws AppException
 	 */
 	public function getUserByEmail(string $email): UserData;
+
+	/**
+	 * @throws AppException
+	 */
+	public function getUserHashedPassword(string $userId): string;
 }

@@ -24,12 +24,13 @@ readonly class UserAdapter implements UserAdapterInterface
 	public function getUserByEmail(string $email): UserData
 	{
 		$user = $this->userApi->getUserByEmail($email);
+		$password = $this->userApi->getUserHashedPassword($user->userId);
 
 		return new UserData(
 			$user->userId,
 			self::remapUserRole($user->role),
 			$user->email,
-			$user->password,
+			$password,
 		);
 	}
 

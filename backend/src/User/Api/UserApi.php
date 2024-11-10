@@ -21,4 +21,12 @@ readonly class UserApi implements UserApiInterface
 	{
 		return $this->userQueryService->getUserByEmail($email);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getUserHashedPassword(string $userId): string
+	{
+		return $this->userQueryService->getUserHashedPassword($userId);
+	}
 }

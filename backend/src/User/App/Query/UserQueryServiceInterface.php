@@ -12,4 +12,11 @@ interface UserQueryServiceInterface
 	 * @throws AppException
 	 */
 	public function getUserByEmail(string $email): UserData;
+
+	public function getUserHashedPassword(string $userId): string;
+
+	/**
+	 * @return UserData[]
+	 */
+	public function listAllUsers(): array;
 }
