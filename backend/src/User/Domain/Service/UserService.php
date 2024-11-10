@@ -101,12 +101,16 @@ readonly class UserService
 		$this->userRepository->store($user);
 	}
 
+	/**
+	 * @throws DomainException
+	 */
 	public function delete(string $userId): void
 	{
 		$user = $this->userRepository->find($userId);
 
 		if (!is_null($user))
 		{
+			$this->imageUploader->removeImage($user->getImagePath());
 			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->userRepository->delete($user);

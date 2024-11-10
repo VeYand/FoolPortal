@@ -12,5 +12,8 @@ interface ImageUploaderInterface
 	 */
 	public function uploadImage(string $base64Data): string;
 
+	/**
+	 * @throws DomainException
+	 */
 	public function removeImage(string $path): void;
 }

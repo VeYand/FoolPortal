@@ -42,7 +42,7 @@ class ImageUploader implements ImageUploaderInterface
 			throw new DomainException($e->getMessage());
 		}
 
-		$imagePath = self::UPLOAD_DIRECTORY . $imageName;
+		$imagePath = self::UPLOAD_DIRECTORY . '/' . $imageName;
 
 		$base64Data = preg_replace('#^data:image/[^;]+;base64,#', '', $base64Data);
 		$decodedData = base64_decode($base64Data, true);
@@ -60,11 +60,14 @@ class ImageUploader implements ImageUploaderInterface
 		return $imagePath;
 	}
 
+	/**
+	 * @throws DomainException
+	 */
 	public function removeImage(string $path): void
 	{
-		if (file_exists($path))
+		if (file_exists($path) && !unlink($path))
 		{
-			unlink($path);
+			throw new DomainException("Failed to delete image at path: $path");
 		}
 	}
 
