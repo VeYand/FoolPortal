@@ -6,12 +6,14 @@ namespace App\Lesson\Domain\Service;
 use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Model\Location;
+use App\Lesson\Domain\Repository\LessonRepositoryInterface;
 use App\Lesson\Domain\Repository\LocationRepositoryInterface;
 
 readonly class LocationService
 {
 	public function __construct(
 		private LocationRepositoryInterface $locationRepository,
+		private LessonRepositoryInterface   $lessonRepository,
 		private UuidProviderInterface       $uuidProvider,
 	)
 	{
@@ -41,5 +43,28 @@ readonly class LocationService
 
 		$location->setName($locationName);
 		$this->locationRepository->store($location);
+	}
+
+	public function delete(string $locationId): void
+	{
+		$location = $this->locationRepository->find($locationId);
+
+		if (!is_null($location))
+		{
+			$this->removeLocationFromLessons($location->getLocationId());
+			$this->locationRepository->delete($location);
+		}
+	}
+
+	private function removeLocationFromLessons(string $locationId): void
+	{
+		$lessons = $this->lessonRepository->findByLocation($locationId);
+
+		foreach ($lessons as $lesson)
+		{
+			$lesson->setLocationId(null);
+		}
+
+		$this->lessonRepository->store($lessons);
 	}
 }

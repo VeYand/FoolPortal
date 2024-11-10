@@ -8,4 +8,9 @@ use App\Lesson\Domain\Model\Lesson;
 interface LessonReadRepositoryInterface
 {
 	public function find(string $lessonId): ?Lesson;
+
+	/**
+	 * @return Lesson[]
+	 */
+	public function findByLocation(string $locationId): array;
 }

@@ -26,7 +26,7 @@ readonly class LessonService
 	/**
 	 * @throws DomainException
 	 */
-	public function create(CreateLessonInput $input): string
+	public function create(CreateLessonInput $input): void
 	{
 		if (!is_null($input->locationId))
 		{
@@ -45,7 +45,7 @@ readonly class LessonService
 			$input->description,
 		);
 
-		return $this->lessonRepository->store($lesson);
+		$this->lessonRepository->store([$lesson]);
 	}
 
 	/**
@@ -92,7 +92,7 @@ readonly class LessonService
 			$lesson->setDescription($input->description);
 		}
 
-		$this->lessonRepository->store($lesson);
+		$this->lessonRepository->store([$lesson]);
 	}
 
 	/*

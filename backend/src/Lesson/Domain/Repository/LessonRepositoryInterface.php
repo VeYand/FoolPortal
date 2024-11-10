@@ -7,7 +7,10 @@ use App\Lesson\Domain\Model\Lesson;
 
 interface LessonRepositoryInterface extends LessonReadRepositoryInterface
 {
-	public function store(Lesson $lesson): string;
+	/**
+	 * @param Lesson[] $lessons
+	 */
+	public function store(array $lessons): void;
 
 	public function delete(Lesson $lesson): void;
 }

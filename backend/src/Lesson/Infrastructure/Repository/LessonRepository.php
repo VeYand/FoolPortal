@@ -24,11 +24,26 @@ class LessonRepository implements LessonRepositoryInterface
 		return $this->repository->find($lessonId);
 	}
 
-	public function store(Lesson $lesson): string
+	/**
+	 * @inheritDoc
+	 */
+	public function findByLocation(string $locationId): array
 	{
-		$this->entityManager->persist($lesson);
+		return $this->repository->findBy([
+			'locationId' => $locationId,
+		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function store(array $lessons): void
+	{
+		foreach ($lessons as $lesson)
+		{
+			$this->entityManager->persist($lesson);
+		}
 		$this->entityManager->flush();
-		return $lesson->getLessonId();
 	}
 
 	public function delete(Lesson $lesson): void
