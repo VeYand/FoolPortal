@@ -31,6 +31,14 @@ class UserRepository implements UserRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function store(User $user): string
 	{
 		$this->entityManager->persist($user);

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
-use App\Common\Exception\AppException;
 use App\User\App\Exception\UserNotFoundException;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\ImageQueryServiceInterface;
@@ -55,7 +54,12 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	 */
 	public function listAllUsers(): array
 	{
-		return [];
+		$users = $this->userReadRepository->findAll();
+
+		return array_map(
+			fn(User $user) => $this->convertUserToUserData($user),
+			$users,
+		);
 	}
 
 	private function convertUserToUserData(User $user): UserData
