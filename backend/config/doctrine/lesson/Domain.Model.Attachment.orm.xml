@@ -9,6 +9,6 @@
         <field name="name" column="name"/>
         <field name="description" column="description" nullable="true"/>
         <field name="path" column="path"/>
-        <field name="type" type="integer" column="type"/>
+        <field name="extension" column="extension"/>
     </entity>
 </doctrine-mapping>

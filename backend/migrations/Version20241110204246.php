@@ -20,7 +20,7 @@ final class Version20241110204246 extends AbstractMigration
         		name VARCHAR(255) NOT NULL,
         		description VARCHAR(255) DEFAULT NULL,
         		path VARCHAR(255) NOT NULL,
-        		type INT NOT NULL,
+        		extension VARCHAR(255) NOT NULL,
         		PRIMARY KEY(attachment_id)
 			) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB',
 		);

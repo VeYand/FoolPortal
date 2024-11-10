@@ -5,17 +5,14 @@ namespace App\Lesson\Domain\Model;
 
 class Attachment
 {
-	private int $type;
-
 	public function __construct(
 		private readonly string $attachmentId,
 		private string          $name,
 		private ?string         $description,
 		private readonly string $path,
-		AttachmentType          $type,
+		private readonly string $extension,
 	)
 	{
-		$this->type = $type->value;
 	}
 
 	public function getAttachmentId(): string
@@ -48,13 +45,8 @@ class Attachment
 		return $this->path;
 	}
 
-	public function getType(): int
+	public function getExtension(): string
 	{
-		return $this->type;
-	}
-
-	public function setType(AttachmentType $type): void
-	{
-		$this->type = $type->value;
+		return $this->extension;
 	}
 }
