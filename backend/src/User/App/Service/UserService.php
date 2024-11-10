@@ -9,7 +9,7 @@ use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 use App\User\Domain\Service\UserService as DomainUserService;
 
-readonly class UserService implements UserServiceInterface
+readonly class UserService
 {
 	public function __construct(
 		private DomainUserService    $domainUserService,
