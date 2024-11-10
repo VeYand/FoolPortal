@@ -26,10 +26,13 @@ final class Version20241110180042 extends AbstractMigration
         		PRIMARY KEY(lesson_id)
 			) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB',
 		);
+
+		$this->addSql('ALTER TABLE lesson ADD CONSTRAINT FK_LESSON_LOCATION_ID FOREIGN KEY (location_id) REFERENCES `location` (location_id)');
 	}
 
 	public function down(Schema $schema): void
 	{
+		$this->addSql('ALTER TABLE lesson DROP FOREIGN KEY FK_LESSON_LOCATION_ID');
 		$this->addSql('DROP TABLE lesson');
 	}
 }
