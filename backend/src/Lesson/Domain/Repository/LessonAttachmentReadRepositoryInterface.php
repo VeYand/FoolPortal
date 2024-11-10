@@ -10,4 +10,9 @@ interface LessonAttachmentReadRepositoryInterface
 	public function find(string $lessonAttachmentId): ?LessonAttachment;
 
 	public function findByLessonAndAttachment(string $lessonId, string $attachmentId): ?LessonAttachment;
+
+	/**
+	 * @return LessonAttachment[]
+	 */
+	public function findByAttachment(string $attachmentId): array;
 }

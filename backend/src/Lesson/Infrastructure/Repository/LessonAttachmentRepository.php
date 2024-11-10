@@ -32,6 +32,16 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByAttachment(string $attachmentId): array
+	{
+		return $this->repository->findBy([
+			'attachmentId' => $attachmentId,
+		]);
+	}
+
 	public function store(LessonAttachment $lessonAttachment): string
 	{
 		$this->entityManager->persist($lessonAttachment);
@@ -39,9 +49,15 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		return $lessonAttachment->getLessonAttachmentId();
 	}
 
-	public function delete(LessonAttachment $lessonAttachment): void
+	/**
+	 * @inheritDoc
+	 */
+	public function delete(array $lessonAttachments): void
 	{
-		$this->entityManager->remove($lessonAttachment);
+		foreach ($lessonAttachments as $lessonAttachment)
+		{
+			$this->entityManager->remove($lessonAttachment);
+		}
 		$this->entityManager->flush();
 	}
 }

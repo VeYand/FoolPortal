@@ -10,5 +10,8 @@ interface LessonAttachmentRepositoryInterface extends LessonAttachmentReadReposi
 {
 	public function store(LessonAttachment $lessonAttachment): string;
 
-	public function delete(LessonAttachment $lessonAttachment): void;
+	/**
+	 * @param LessonAttachment[] $lessonAttachments
+	 */
+	public function delete(array $lessonAttachments): void;
 }

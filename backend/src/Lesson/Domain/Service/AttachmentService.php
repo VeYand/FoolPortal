@@ -7,14 +7,16 @@ use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Model\Attachment;
 use App\Lesson\Domain\Repository\AttachmentRepositoryInterface;
+use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
 
 readonly class AttachmentService
 {
 	public function __construct(
-		private AttachmentRepositoryInterface $attachmentRepository,
-		private AttachmentUploaderInterface   $attachmentUploader,
-		private UuidProviderInterface         $uuidProvider,
+		private AttachmentRepositoryInterface       $attachmentRepository,
+		private LessonAttachmentRepositoryInterface $lessonAttachmentRepository,
+		private AttachmentUploaderInterface         $attachmentUploader,
+		private UuidProviderInterface               $uuidProvider,
 	)
 	{
 	}
@@ -46,6 +48,8 @@ readonly class AttachmentService
 
 		if (!is_null($attachment))
 		{
+			$lessonAttachments = $this->lessonAttachmentRepository->findByAttachment($attachment->getAttachmentId());
+			$this->lessonAttachmentRepository->delete($lessonAttachments);
 			$this->attachmentUploader->removeAttachment($attachment->getPath());
 			$this->attachmentRepository->delete($attachment);
 		}
