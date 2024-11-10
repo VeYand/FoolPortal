@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Lesson\Domain\Model\LessonAttachment" table="lesson_attachment">
+        <id name="lessonAttachmentId" type="uuid" column="lesson_attachment_id">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="lessonId" type="uuid" column="lesson_id"/>
+        <field name="attachmentId" type="uuid" column="attachment_id"/>
+    </entity>
+</doctrine-mapping>
