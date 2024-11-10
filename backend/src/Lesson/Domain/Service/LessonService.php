@@ -31,7 +31,7 @@ readonly class LessonService
 			$this->assertLocationExists($input->locationId);
 		}
 
-		$this->assertDateNotPassed($input->date);
+		self::assertDateNotPassed($input->date);
 
 		$lesson = new Lesson(
 			$this->uuidProvider->generate(),
@@ -60,7 +60,7 @@ readonly class LessonService
 
 		if (!is_null($input->date))
 		{
-			$this->assertDateNotPassed($input->date);
+			self::assertDateNotPassed($input->date);
 			$lesson->setDate($input->date);
 		}
 
@@ -96,19 +96,6 @@ readonly class LessonService
 	/**
 	 * @throws DomainException
 	 */
-	public function assertDateNotPassed(\DateTimeInterface $date): void
-	{
-		$today = new \DateTime('today');
-
-		if ($today > $date)
-		{
-			throw new DomainException('Date is already passed', 404);
-		}
-	}
-
-	/**
-	 * @throws DomainException
-	 */
 	public function assertLocationExists(string $locationId): void
 	{
 		$location = $this->locationReadRepository->find($locationId);
@@ -116,6 +103,19 @@ readonly class LessonService
 		if (is_null($location))
 		{
 			throw new DomainException('Location not found', 404);
+		}
+	}
+
+	/**
+	 * @throws DomainException
+	 */
+	private static function assertDateNotPassed(\DateTimeInterface $date): void
+	{
+		$today = new \DateTime('today');
+
+		if ($today > $date)
+		{
+			throw new DomainException('Date is already passed', 404);
 		}
 	}
 }
