@@ -42,6 +42,16 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByLesson(string $lessonId): array
+	{
+		return $this->repository->findBy([
+			'lessonId' => $lessonId,
+		]);
+	}
+
 	public function store(LessonAttachment $lessonAttachment): string
 	{
 		$this->entityManager->persist($lessonAttachment);

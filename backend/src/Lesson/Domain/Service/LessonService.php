@@ -6,6 +6,7 @@ namespace App\Lesson\Domain\Service;
 use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Model\Lesson;
+use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
 use App\Lesson\Domain\Repository\LocationReadRepositoryInterface;
 use App\Lesson\Domain\Service\Input\CreateLessonInput;
@@ -14,9 +15,10 @@ use App\Lesson\Domain\Service\Input\UpdateLessonInput;
 readonly class LessonService
 {
 	public function __construct(
-		private LessonRepositoryInterface       $lessonRepository,
-		private LocationReadRepositoryInterface $locationReadRepository,
-		private UuidProviderInterface           $uuidProvider,
+		private LessonRepositoryInterface           $lessonRepository,
+		private LessonAttachmentRepositoryInterface $lessonAttachmentRepository,
+		private LocationReadRepositoryInterface     $locationReadRepository,
+		private UuidProviderInterface               $uuidProvider,
 	)
 	{
 	}
@@ -91,6 +93,22 @@ readonly class LessonService
 		}
 
 		$this->lessonRepository->store($lesson);
+	}
+
+	/*
+	 * TODO Уязвимость: не удаляется вложение, если его перестают использовать
+	 * Решение - создать библиотеку вложений, либо реализовать удаление вложения, если его пересают использовать
+	 */
+	public function delete(string $lessonId): void
+	{
+		$lesson = $this->lessonRepository->find($lessonId);
+
+		if (!is_null($lesson))
+		{
+			$lessonAttachments = $this->lessonAttachmentRepository->findByLesson($lesson->getLessonId());
+			$this->lessonAttachmentRepository->delete($lessonAttachments);
+			$this->lessonRepository->delete($lesson);
+		}
 	}
 
 	/**
