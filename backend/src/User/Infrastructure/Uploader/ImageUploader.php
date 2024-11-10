@@ -34,7 +34,7 @@ class ImageUploader implements ImageUploaderInterface
 
 		if (is_null($imageType))
 		{
-			throw new ImageUploadException("Unsupported image format");
+			throw new ImageUploadException("Unsupported image format", 400);
 		}
 
 		try
