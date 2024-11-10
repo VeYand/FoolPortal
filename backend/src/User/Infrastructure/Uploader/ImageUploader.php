@@ -4,20 +4,24 @@ declare(strict_types=1);
 namespace App\User\Infrastructure\Uploader;
 
 use App\Common\Exception\DomainException;
+use App\Common\Provider\EnvironmentProviderInterface;
 use App\User\Domain\Service\Exception\ImageUploadException;
 use App\User\Domain\Service\ImageUploaderInterface;
 use Random\RandomException;
 
 class ImageUploader implements ImageUploaderInterface
 {
-	private const string UPLOAD_DIRECTORY = 'upload/';
+	private string $uploadDirectoryPath;
 
 	/**
 	 * @throws DomainException
 	 */
-	public function __construct()
+	public function __construct(
+		EnvironmentProviderInterface $environmentProvider,
+	)
 	{
-		self::ensureUploadDirectoryExists();
+		$this->uploadDirectoryPath = $environmentProvider->getUserImageUploadDirectory();
+		$this->ensureUploadDirectoryExists();
 	}
 
 	/**
@@ -42,7 +46,7 @@ class ImageUploader implements ImageUploaderInterface
 			throw new DomainException($e->getMessage());
 		}
 
-		$imagePath = self::UPLOAD_DIRECTORY . '/' . $imageName;
+		$imagePath = $this->uploadDirectoryPath . '/' . $imageName;
 
 		$base64Data = preg_replace('#^data:image/[^;]+;base64,#', '', $base64Data);
 		$decodedData = base64_decode($base64Data, true);
@@ -74,11 +78,11 @@ class ImageUploader implements ImageUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	private static function ensureUploadDirectoryExists(): void
+	private function ensureUploadDirectoryExists(): void
 	{
-		if (!is_dir(self::UPLOAD_DIRECTORY) && !mkdir(self::UPLOAD_DIRECTORY, 0755, true) && !is_dir(self::UPLOAD_DIRECTORY))
+		if (!is_dir($this->uploadDirectoryPath) && !mkdir($this->uploadDirectoryPath, 0755, true) && !is_dir($this->uploadDirectoryPath))
 		{
-			throw new DomainException("Cannot create directory " . self::UPLOAD_DIRECTORY);
+			throw new DomainException("Cannot create directory " . $this->uploadDirectoryPath);
 		}
 	}
 

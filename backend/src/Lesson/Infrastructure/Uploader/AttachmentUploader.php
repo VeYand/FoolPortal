@@ -4,20 +4,24 @@ declare(strict_types=1);
 namespace App\Lesson\Infrastructure\Uploader;
 
 use App\Common\Exception\DomainException;
+use App\Common\Provider\EnvironmentProviderInterface;
 use App\Lesson\Domain\Service\AttachmentUploaderInterface;
 use Random\RandomException;
 use RuntimeException;
 
-class AttachmentUploader implements AttachmentUploaderInterface
+readonly class AttachmentUploader implements AttachmentUploaderInterface
 {
-	private const string UPLOAD_DIRECTORY = 'upload/';
+	private string $uploadDirectoryPath;
 
 	/**
 	 * @throws DomainException
 	 */
-	public function __construct()
+	public function __construct(
+		EnvironmentProviderInterface $environmentProvider,
+	)
 	{
-		self::ensureUploadDirectoryExists();
+		$this->uploadDirectoryPath = $environmentProvider->getAttachmentUploadDirectory();
+		$this->ensureUploadDirectoryExists();
 	}
 
 	/**
@@ -39,7 +43,7 @@ class AttachmentUploader implements AttachmentUploaderInterface
 			throw new DomainException($e->getMessage());
 		}
 
-		$attachmentPath = self::UPLOAD_DIRECTORY . '/' . $fileName;
+		$attachmentPath = $this->uploadDirectoryPath . '/' . $fileName;
 
 		if (!rename($tempAttachmentPath, $attachmentPath))
 		{
@@ -64,11 +68,11 @@ class AttachmentUploader implements AttachmentUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	private static function ensureUploadDirectoryExists(): void
+	private function ensureUploadDirectoryExists(): void
 	{
-		if (!is_dir(self::UPLOAD_DIRECTORY) && !mkdir(self::UPLOAD_DIRECTORY, 0755, true) && !is_dir(self::UPLOAD_DIRECTORY))
+		if (!is_dir($this->uploadDirectoryPath) && !mkdir($this->uploadDirectoryPath, 0755, true) && !is_dir($this->uploadDirectoryPath))
 		{
-			throw new DomainException("Cannot create directory " . self::UPLOAD_DIRECTORY);
+			throw new DomainException("Cannot create directory " . $this->uploadDirectoryPath);
 		}
 	}
 }
