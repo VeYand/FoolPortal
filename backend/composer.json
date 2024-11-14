@@ -71,7 +71,7 @@
         }
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "*",
         "symfony/maker-bundle": "^1.61"
     }
 }
