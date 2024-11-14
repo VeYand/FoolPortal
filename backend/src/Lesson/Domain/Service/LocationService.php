@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Location;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
 use App\Lesson\Domain\Repository\LocationRepositoryInterface;
@@ -38,7 +38,7 @@ readonly class LocationService
 
 		if (is_null($location))
 		{
-			throw new DomainException('Location not found', 404);
+			throw new DomainException('Location not found', DomainException::LOCATION_NOT_FOUND);
 		}
 
 		$location->setName($locationName);

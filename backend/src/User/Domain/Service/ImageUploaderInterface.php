@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
-use App\Common\Exception\DomainException;
+use App\User\Domain\Exception\DomainException;
 
 interface ImageUploaderInterface
 {

@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Uploader;
 
-use App\Common\Exception\DomainException;
 use App\Common\Provider\EnvironmentProviderInterface;
+use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Service\AttachmentUploaderInterface;
 use Random\RandomException;
-use RuntimeException;
 
 readonly class AttachmentUploader implements AttachmentUploaderInterface
 {
@@ -47,7 +46,7 @@ readonly class AttachmentUploader implements AttachmentUploaderInterface
 
 		if (!rename($tempAttachmentPath, $attachmentPath))
 		{
-			throw new RuntimeException("Failed to move file to upload directory");
+			throw new DomainException("Failed to move file to upload directory");
 		}
 
 		return $attachmentPath;

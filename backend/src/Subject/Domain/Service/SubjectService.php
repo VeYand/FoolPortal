@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Subject\Domain\Exception\DomainException;
 use App\Subject\Domain\Model\Subject;
 use App\Subject\Domain\Model\TeacherSubject;
 use App\Subject\Domain\Repository\CourseRepositoryInterface;
@@ -41,7 +41,7 @@ readonly class SubjectService
 
 		if (is_null($subject))
 		{
-			throw new DomainException('Subject not found', 404);
+			throw new DomainException('Subject not found', DomainException::SUBJECT_NOT_FOUND);
 		}
 
 		$subject->setName($subjectName);

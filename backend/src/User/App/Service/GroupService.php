@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\User\App\Service;
 
-use App\Common\Exception\AppException;
-use App\Common\Transaction\TransactionInterface;
+use App\User\App\Exception\AppException;
 use App\User\Domain\Service\GroupService as DomainGroupService;
+use App\User\Domain\Service\UserTransactionService;
 
 readonly class GroupService
 {
 	public function __construct(
-		private DomainGroupService   $domainGroupService,
-		private TransactionInterface $transaction,
+		private DomainGroupService     $domainGroupService,
+		private UserTransactionService $transactionService,
 	)
 	{
 	}
@@ -26,7 +26,7 @@ readonly class GroupService
 			$this->domainGroupService->create($groupName);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 
 
@@ -40,7 +40,7 @@ readonly class GroupService
 			$this->domainGroupService->update($groupId, $groupName);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 
 	/**
@@ -53,6 +53,6 @@ readonly class GroupService
 			$this->domainGroupService->delete($groupId);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 }

@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Session\Api;
 
-use App\Common\Exception\AppException;
+use App\Session\Api\Exception\ApiException;
 use App\Session\App\Provider\Data\SessionUser;
 
 interface SessionApiInterface
 {
 	/**
-	 * @throws AppException
+	 * @throws ApiException
 	 */
-	public function getCurrentUser(): SessionUser;
+	public function getCurrentUser(): SessionUser; // TODO // Как обработать
 }

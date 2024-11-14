@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
+use App\Session\Api\Exception\ApiException;
+use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
 use App\User\App\Query\UserQueryServiceInterface;
@@ -29,7 +31,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function getUserByEmail(string $email): UserData
 	{
-		return $this->userQueryService->getUserByEmail($email);
+		return self::tryExecute(function () use ($email)
+		{
+			return $this->userQueryService->getUserByEmail($email);
+		});
 	}
 
 	/**
@@ -37,7 +42,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function getUserHashedPassword(string $userId): string
 	{
-		return $this->userQueryService->getUserHashedPassword($userId);
+		return self::tryExecute(function () use ($userId)
+		{
+			return $this->userQueryService->getUserHashedPassword($userId);
+		});
 	}
 
 	/**
@@ -45,7 +53,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function listAllUsers(): array
 	{
-		return $this->userQueryService->listAllUsers();
+		return self::tryExecute(function ()
+		{
+			return $this->userQueryService->listAllUsers();
+		});
 	}
 
 	/**
@@ -53,7 +64,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function listAllGroups(): array
 	{
-		return $this->groupQueryService->listAllGroups();
+		return self::tryExecute(function ()
+		{
+			return $this->groupQueryService->listAllGroups();
+		});
 	}
 
 	/**
@@ -61,7 +75,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function createUser(CreateUserInput $input): void
 	{
-		$this->userService->create($input);
+		self::tryExecute(function () use ($input)
+		{
+			$this->userService->create($input);
+		});
 	}
 
 	/**
@@ -69,7 +86,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function updateUser(UpdateUserInput $input): void
 	{
-		$this->userService->update($input);
+		self::tryExecute(function () use ($input)
+		{
+			$this->userService->update($input);
+		});
 	}
 
 	/**
@@ -77,7 +97,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function deleteUser(string $userId): void
 	{
-		$this->userService->delete($userId);
+		self::tryExecute(function () use ($userId)
+		{
+			$this->userService->delete($userId);
+		});
 	}
 
 	/**
@@ -85,7 +108,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function createGroup(string $groupName): void
 	{
-		$this->groupService->create($groupName);
+		self::tryExecute(function () use ($groupName)
+		{
+			$this->groupService->create($groupName);
+		});
 	}
 
 	/**
@@ -93,7 +119,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function updateGroup(string $groupId, string $groupName): void
 	{
-		$this->groupService->update($groupId, $groupName);
+		self::tryExecute(function () use ($groupId, $groupName)
+		{
+			$this->groupService->update($groupId, $groupName);
+		});
 	}
 
 	/**
@@ -101,7 +130,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function deleteGroup(string $groupId): void
 	{
-		$this->groupService->delete($groupId);
+		self::tryExecute(function () use ($groupId)
+		{
+			$this->groupService->delete($groupId);
+		});
 	}
 
 	/**
@@ -109,7 +141,10 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function addUserToGroup(string $groupId, string $userId): void
 	{
-		$this->groupMemberService->addUserToGroup($groupId, $userId);
+		self::tryExecute(function () use ($groupId, $userId)
+		{
+			$this->groupMemberService->addUserToGroup($groupId, $userId);
+		});
 	}
 
 	/**
@@ -117,6 +152,24 @@ readonly class UserApi implements UserApiInterface
 	 */
 	public function removeUserFromGroup(string $groupId, string $userId): void
 	{
-		$this->groupMemberService->removeUserFromGroup($groupId, $userId);
+		self::tryExecute(function () use ($groupId, $userId)
+		{
+			$this->groupMemberService->removeUserFromGroup($groupId, $userId);
+		});
+	}
+
+	/**
+	 * @throws ApiException
+	 */
+	public static function tryExecute(callable $callback): mixed
+	{
+		try
+		{
+			return $callback();
+		}
+		catch (AppException $e)
+		{
+			throw new ApiException($e->getMessage(), $e->getCode(), $e);
+		}
 	}
 }

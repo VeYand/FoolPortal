@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Common\Provider;
 
-use App\Common\Exception\DomainException;
+use RuntimeException;
 
 class EnvironmentProvider implements EnvironmentProviderInterface
 {
@@ -14,7 +14,7 @@ class EnvironmentProvider implements EnvironmentProviderInterface
 	{
 		if (empty($_ENV[self::USER_IMAGE_UPLOAD_DIRECTORY_KEY]))
 		{
-			throw new DomainException('Environment variable USER_UPLOAD_IMAGE_PATH is not set');
+			throw new RuntimeException('Environment variable USER_UPLOAD_IMAGE_PATH is not set');
 		}
 		return $_ENV[self::USER_IMAGE_UPLOAD_DIRECTORY_KEY];
 	}
@@ -23,7 +23,7 @@ class EnvironmentProvider implements EnvironmentProviderInterface
 	{
 		if (empty($_ENV[self::ATTACHMENT_UPLOAD_DIRECTORY_KEY]))
 		{
-			throw new DomainException('Environment variable ATTACHMENT_UPLOAD_PATH is not set');
+			throw new RuntimeException('Environment variable ATTACHMENT_UPLOAD_PATH is not set');
 		}
 		return $_ENV[self::ATTACHMENT_UPLOAD_DIRECTORY_KEY];
 	}

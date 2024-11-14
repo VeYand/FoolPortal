@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\Group;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\GroupRepositoryInterface;
@@ -38,7 +38,7 @@ readonly class GroupService
 
 		if (is_null($group))
 		{
-			throw new DomainException('Group not found', 404);
+			throw new DomainException('Group not found', DomainException::GROUP_NOT_FOUND);
 		}
 
 		$group->setName($groupName);

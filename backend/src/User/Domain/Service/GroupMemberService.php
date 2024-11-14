@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\GroupMember;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\GroupReadRepositoryInterface;
 use App\User\Domain\Repository\UserReadRepositoryInterface;
-use App\User\Domain\Service\Exception\GroupNotFoundException;
-use App\User\Domain\Service\Exception\UserNotFoundException;
 
 readonly class GroupMemberService
 {
@@ -52,7 +50,7 @@ readonly class GroupMemberService
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws DomainException
 	 */
 	private function assertUserExists(string $userId): void
 	{
@@ -60,12 +58,12 @@ readonly class GroupMemberService
 
 		if (is_null($user))
 		{
-			throw new UserNotFoundException();
+			throw new DomainException('User not found', DomainException::USER_NOT_FOUND);
 		}
 	}
 
 	/**
-	 * @throws GroupNotFoundException
+	 * @throws DomainException
 	 */
 	private function assertGroupExists(string $groupId): void
 	{
@@ -73,7 +71,7 @@ readonly class GroupMemberService
 
 		if (is_null($group))
 		{
-			throw new GroupNotFoundException();
+			throw new DomainException('Group not found', DomainException::GROUP_NOT_FOUND);
 		}
 	}
 
@@ -86,7 +84,7 @@ readonly class GroupMemberService
 
 		if (!is_null($groupMember))
 		{
-			throw new DomainException('Group member already exists', 409);
+			throw new DomainException('Group member already exists', DomainException::GROUP_MEMBER_ALREADY_EXISTS);
 		}
 	}
 }

@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\User\App\Service;
 
-use App\Common\Exception\AppException;
-use App\Common\Transaction\TransactionInterface;
+use App\User\App\Exception\AppException;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 use App\User\Domain\Service\UserService as DomainUserService;
+use App\User\Domain\Service\UserTransactionService;
 
 readonly class UserService
 {
 	public function __construct(
-		private DomainUserService    $domainUserService,
-		private TransactionInterface $transaction,
+		private DomainUserService      $domainUserService,
+		private UserTransactionService $transactionService,
 	)
 	{
 	}
@@ -28,7 +28,7 @@ readonly class UserService
 			$this->domainUserService->create($input);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 
 
@@ -42,7 +42,7 @@ readonly class UserService
 			$this->domainUserService->update($input);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 
 	/**
@@ -55,6 +55,6 @@ readonly class UserService
 			$this->domainUserService->delete($userId);
 		};
 
-		$this->transaction->execute($callback);
+		$this->transactionService->execute($callback);
 	}
 }

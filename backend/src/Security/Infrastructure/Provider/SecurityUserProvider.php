@@ -3,18 +3,17 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Provider;
 
-use App\Common\Exception\AppException;
 use App\Security\App\Adapter\UserAdapterInterface;
+use App\Security\App\Exception\AppException;
 use App\Security\Infrastructure\Model\SecurityUser;
-use App\User\App\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException as UserNotFoundSecurityException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class SecurityUserProvider implements UserProviderInterface
+readonly class SecurityUserProvider implements UserProviderInterface
 {
 	public function __construct(
-		private readonly UserAdapterInterface $userAdapter,
+		private UserAdapterInterface $userAdapter,
 	)
 	{
 	}
@@ -46,9 +45,13 @@ class SecurityUserProvider implements UserProviderInterface
 		{
 			$user = $this->userAdapter->getUserByEmail($identifier);
 		}
-		catch (UserNotFoundException)
+		catch (AppException $e)
 		{
-			throw new UserNotFoundSecurityException();
+			if ($e->getCode() === AppException::USER_NOT_FOUND)
+			{
+				throw new UserNotFoundSecurityException();
+			}
+			throw $e;
 		}
 
 		return new SecurityUser(

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Model;
 
-use App\Common\Exception\DomainException;
+use App\Lesson\Domain\Exception\DomainException;
 
 class Lesson
 {
@@ -110,7 +110,7 @@ class Lesson
 	{
 		if ($startTime < 0)
 		{
-			throw new DomainException('Start time must be positive integer', 400);
+			throw new DomainException('Start time must be positive integer', DomainException::INVALID_LESSON_START_TIME);
 		}
 	}
 
@@ -121,12 +121,12 @@ class Lesson
 	{
 		if ($duration < 0)
 		{
-			throw new DomainException('Duration must be positive integer', 400);
+			throw new DomainException('Duration must be positive integer', DomainException::INVALID_LESSON_DURATION);
 		}
 
 		if ($startTime + $duration > self::SECONDS_IN_DAY)
 		{
-			throw new DomainException('Start time must be less than or equal to day', 400);
+			throw new DomainException('Start time must be less than or equal to day', DomainException::INVALID_LESSON_DURATION);
 		}
 	}
 }

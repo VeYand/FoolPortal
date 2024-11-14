@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Uploader;
 
-use App\Common\Exception\DomainException;
 use App\Common\Provider\EnvironmentProviderInterface;
-use App\User\Domain\Service\Exception\ImageUploadException;
+use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Service\ImageUploaderInterface;
 use Random\RandomException;
 
@@ -25,7 +24,6 @@ class ImageUploader implements ImageUploaderInterface
 	}
 
 	/**
-	 * @throws ImageUploadException
 	 * @throws DomainException
 	 */
 	public function uploadImage(string $base64Data): string
@@ -34,7 +32,7 @@ class ImageUploader implements ImageUploaderInterface
 
 		if (is_null($imageType))
 		{
-			throw new ImageUploadException("Unsupported image format", 400);
+			throw new DomainException("Unsupported image format", DomainException::UNSUPPORTED_IMAGE_FORMAT);
 		}
 
 		try
@@ -53,7 +51,7 @@ class ImageUploader implements ImageUploaderInterface
 
 		if ($decodedData === false)
 		{
-			throw new ImageUploadException("Failed to decode base64 image data");
+			throw new DomainException("Failed to decode base64 image data", DomainException::INVALID_BASE_64_DATA);
 		}
 
 		if (file_put_contents($imagePath, $decodedData) === false)

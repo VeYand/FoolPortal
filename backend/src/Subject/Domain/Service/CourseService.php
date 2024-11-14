@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Subject\Domain\Exception\DomainException;
 use App\Subject\Domain\Model\Course;
 use App\Subject\Domain\Repository\CourseRepositoryInterface;
 use App\Subject\Domain\Repository\TeacherSubjectReadRepositoryInterface;
@@ -55,7 +55,7 @@ readonly class CourseService
 
 		if (!is_null($course))
 		{
-			throw new DomainException('Course already exists', 409);
+			throw new DomainException('Course already exists', DomainException::COURSE_ALREADY_EXISTS);
 		}
 	}
 
@@ -68,7 +68,7 @@ readonly class CourseService
 
 		if (is_null($teacherSubject))
 		{
-			throw new DomainException('Teacher subject not found', 404);
+			throw new DomainException('Teacher subject not found', DomainException::TEACHER_SUBJECT_NOT_FOUND);
 		}
 	}
 }

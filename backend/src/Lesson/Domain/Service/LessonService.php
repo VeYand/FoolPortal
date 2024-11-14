@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
@@ -57,7 +57,7 @@ readonly class LessonService
 
 		if (is_null($lesson))
 		{
-			throw new DomainException('Lesson not found', 404);
+			throw new DomainException('Lesson not found', DomainException::LESSON_NOT_FOUND);
 		}
 
 		if (!is_null($input->date))
@@ -120,7 +120,7 @@ readonly class LessonService
 
 		if (is_null($location))
 		{
-			throw new DomainException('Location not found', 404);
+			throw new DomainException('Location not found', DomainException::LOCATION_NOT_FOUND);
 		}
 	}
 
@@ -133,7 +133,7 @@ readonly class LessonService
 
 		if ($today > $date)
 		{
-			throw new DomainException('Date is already passed', 404);
+			throw new DomainException('Date is already passed', DomainException::LESSON_DATE_ALREADY_PASSED);
 		}
 	}
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\App\Query;
 
-use App\Common\Exception\AppException;
+use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Attachment;
 use App\Lesson\Domain\Repository\AttachmentRepositoryInterface;
 use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;

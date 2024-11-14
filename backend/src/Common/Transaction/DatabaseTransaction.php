@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Common\Transaction;
 
-use App\Common\Exception\AppException;
-use App\Common\Exception\ThrowableInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DatabaseTransaction implements TransactionInterface
@@ -17,7 +15,7 @@ class DatabaseTransaction implements TransactionInterface
 	}
 
 	/**
-	 * @throws AppException
+	 * @throws \Exception
 	 */
 	public function execute(callable $callback): void
 	{
@@ -29,10 +27,10 @@ class DatabaseTransaction implements TransactionInterface
 			$this->entityManager->flush();
 			$this->entityManager->commit();
 		}
-		catch (ThrowableInterface $exception)
+		catch (\Exception $e)
 		{
 			$this->entityManager->rollback();
-			throw new AppException($exception->getMessage(), $exception->getCode(), [], $exception);
+			throw $e;
 		}
 	}
 }

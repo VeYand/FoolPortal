@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
-use App\Common\Exception\DomainException;
+use App\Lesson\Domain\Exception\DomainException;
 
 interface AttachmentUploaderInterface
 {

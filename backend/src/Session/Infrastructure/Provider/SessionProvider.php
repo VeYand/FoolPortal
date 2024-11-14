@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Session\Infrastructure\Provider;
 
-use App\Common\Exception\AppException;
 use App\Security\App\Adapter\Data\UserRole as SecurityUserRole;
 use App\Security\Infrastructure\Model\SecurityUser;
+use App\Session\App\Exception\AppException;
 use App\Session\App\Provider\Data\SessionUser;
 use App\Session\App\Provider\SessionProviderInterface;
 use App\User\Domain\Model\UserRole;
@@ -28,7 +28,7 @@ readonly class SessionProvider implements SessionProviderInterface
 
 		if (!$token)
 		{
-			throw new AppException('Not authorized', 401);
+			throw new AppException('Not authorized', AppException::NOT_AUTHORIZED);
 		}
 
 		$user = $token->getUser();

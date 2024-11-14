@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
-use App\User\App\Exception\UserNotFoundException;
+use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\ImageQueryServiceInterface;
@@ -23,7 +23,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws AppException
 	 */
 	public function getUserByEmail(string $email): UserData
 	{
@@ -31,14 +31,14 @@ readonly class UserQueryService implements UserQueryServiceInterface
 
 		if (is_null($user))
 		{
-			throw new UserNotFoundException();
+			throw new AppException('User not found', AppException::USER_NOT_FOUND);
 		}
 
 		return $this->convertUserToUserData($user);
 	}
 
 	/**
-	 * @throws UserNotFoundException
+	 * @throws AppException
 	 */
 	public function getUserHashedPassword(string $userId): string
 	{
@@ -46,7 +46,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 
 		if (is_null($user))
 		{
-			throw new UserNotFoundException();
+			throw new AppException('User not found', AppException::USER_NOT_FOUND);
 		}
 
 		return $user->getPassword();

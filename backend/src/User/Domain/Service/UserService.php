@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
-use App\Common\Exception\DomainException;
 use App\Common\Uuid\UuidProviderInterface;
+use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\UserRepositoryInterface;
-use App\User\Domain\Service\Exception\UserNotFoundException;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 
@@ -56,7 +55,7 @@ readonly class UserService
 
 		if (is_null($user))
 		{
-			throw new UserNotFoundException();
+			throw new DomainException('User not found', DomainException::USER_NOT_FOUND);
 		}
 
 		if (!is_null($input->firstName))
@@ -127,7 +126,7 @@ readonly class UserService
 
 		if (!is_null($user))
 		{
-			throw new DomainException('User with email "' . $email . '" already exists', 409);
+			throw new DomainException('User with email "' . $email . '" already exists', DomainException::EMAIL_IS_NOT_UNIQUE);
 		}
 	}
 }
