@@ -12,6 +12,8 @@ use App\User\Domain\Service\Input\UpdateUserInput;
 
 interface UserApiInterface
 {
+	public function isGroupExists(string $groupId): bool;
+
 	/**
 	 * @throws ApiException
 	 */

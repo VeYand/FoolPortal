@@ -26,6 +26,11 @@ readonly class UserApi implements UserApiInterface
 	{
 	}
 
+	public function isGroupExists(string $groupId): bool
+	{
+		return $this->groupQueryService->isGroupExists($groupId);
+	}
+
 	/**
 	 * @inheritDoc
 	 */

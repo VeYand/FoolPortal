@@ -7,6 +7,8 @@ use App\User\App\Query\Data\GroupData;
 
 interface GroupQueryServiceInterface
 {
+	public function isGroupExists(string $groupId): bool;
+
 	/**
 	 * @return GroupData[]
 	 */

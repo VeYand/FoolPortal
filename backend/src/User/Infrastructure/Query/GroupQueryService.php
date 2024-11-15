@@ -16,6 +16,13 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 	{
 	}
 
+	public function isGroupExists(string $groupId): bool
+	{
+		$group = $this->groupReadRepository->find($groupId);
+
+		return !is_null($group);
+	}
+
 	/**
 	 * @inheritDoc
 	 */
