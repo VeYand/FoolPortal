@@ -25,6 +25,21 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	/**
 	 * @throws AppException
 	 */
+	public function getUserById(string $userId): UserData
+	{
+		$user = $this->userReadRepository->find($userId);
+
+		if (is_null($user))
+		{
+			throw new AppException('User not found', AppException::USER_NOT_FOUND);
+		}
+
+		return $this->convertUserToUserData($user);
+	}
+
+	/**
+	 * @throws AppException
+	 */
 	public function getUserByEmail(string $email): UserData
 	{
 		$user = $this->userReadRepository->findByEmail($email);

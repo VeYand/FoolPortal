@@ -12,6 +12,11 @@ interface UserQueryServiceInterface
 	/**
 	 * @throws AppException
 	 */
+	public function getUserById(string $userId): UserData;
+
+	/**
+	 * @throws AppException
+	 */
 	public function getUserByEmail(string $email): UserData;
 
 	/**

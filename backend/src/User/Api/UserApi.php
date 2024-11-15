@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
-use App\Session\Api\Exception\ApiException;
+use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
@@ -30,6 +30,18 @@ readonly class UserApi implements UserApiInterface
 	{
 		return $this->groupQueryService->isGroupExists($groupId);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getUserById(string $userId): UserData
+	{
+		return self::tryExecute(function () use ($userId)
+		{
+			return $this->userQueryService->getUserById($userId);
+		});
+	}
+
 
 	/**
 	 * @inheritDoc

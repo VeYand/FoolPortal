@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
-use App\Session\Api\Exception\ApiException;
+use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\Data\UserData;
@@ -13,6 +13,11 @@ use App\User\Domain\Service\Input\UpdateUserInput;
 interface UserApiInterface
 {
 	public function isGroupExists(string $groupId): bool;
+
+	/**
+	 * @throws ApiException
+	 */
+	public function getUserById(string $userId): UserData;
 
 	/**
 	 * @throws ApiException
