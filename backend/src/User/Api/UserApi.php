@@ -178,7 +178,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public static function tryExecute(callable $callback): mixed
+	private static function tryExecute(callable $callback): mixed
 	{
 		try
 		{
