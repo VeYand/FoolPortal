@@ -5,7 +5,6 @@ namespace App\User\App\Service;
 
 use App\User\App\Exception\AppException;
 use App\User\Domain\Service\GroupService as DomainGroupService;
-use App\User\Domain\Service\UserTransactionService;
 
 readonly class GroupService
 {

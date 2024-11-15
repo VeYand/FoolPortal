@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\User\Domain\Service;
+namespace App\User\App\Service;
 
 use App\Common\Transaction\TransactionInterface;
 use App\User\App\Exception\AppException;

@@ -7,7 +7,6 @@ use App\User\App\Exception\AppException;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 use App\User\Domain\Service\UserService as DomainUserService;
-use App\User\Domain\Service\UserTransactionService;
 
 readonly class UserService
 {
