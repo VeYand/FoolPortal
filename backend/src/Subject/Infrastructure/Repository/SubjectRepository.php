@@ -24,6 +24,14 @@ class SubjectRepository implements SubjectRepositoryInterface
 		return $this->repository->find($subjectId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function store(Subject $subject): string
 	{
 		$this->entityManager->persist($subject);

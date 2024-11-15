@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Subject\Api;
 
 use App\Subject\Api\Exception\ApiException;
+use App\Subject\App\Query\Data\CourseData;
+use App\Subject\App\Query\Data\SubjectData;
+use App\Subject\App\Query\Data\TeacherSubjectData;
 
 interface SubjectApiInterface
 {
@@ -41,4 +44,19 @@ interface SubjectApiInterface
 	 * @throws ApiException
 	 */
 	public function deleteCourse(string $courseId): void;
+
+	/**
+	 * @return SubjectData[]
+	 */
+	public function listAllSubjects(): array;
+
+	/**
+	 * @return TeacherSubjectData[]
+	 */
+	public function listAllTeacherSubjects(): array;
+
+	/**
+	 * @return CourseData[]
+	 */
+	public function listAllCourses(): array;
 }

@@ -9,6 +9,11 @@ interface CourseReadRepositoryInterface
 {
 	public function find(string $courseId): ?Course;
 
+	/**
+	 * @return Course[]
+	 */
+	public function findAll(): array;
+
 	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course;
 
 	/**

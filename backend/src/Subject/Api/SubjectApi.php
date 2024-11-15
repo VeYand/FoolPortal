@@ -8,13 +8,19 @@ use App\Subject\App\Exception\AppException;
 use App\Subject\App\Service\CourseService;
 use App\Subject\App\Service\SubjectService;
 use App\Subject\App\Service\TeacherSubjectService;
+use App\Subject\Infrastructure\Query\CourseQueryService;
+use App\Subject\Infrastructure\Query\SubjectQueryService;
+use App\Subject\Infrastructure\Query\TeacherSubjectQueryService;
 
 readonly class SubjectApi implements SubjectApiInterface
 {
 	public function __construct(
-		private SubjectService        $subjectService,
-		private TeacherSubjectService $teacherSubjectService,
-		private CourseService         $courseService,
+		private SubjectService             $subjectService,
+		private TeacherSubjectService      $teacherSubjectService,
+		private CourseService              $courseService,
+		private SubjectQueryService        $subjectQueryService,
+		private TeacherSubjectQueryService $teacherSubjectQueryService,
+		private CourseQueryService         $courseQueryService,
 	)
 	{
 	}
@@ -94,6 +100,30 @@ readonly class SubjectApi implements SubjectApiInterface
 		{
 			$this->courseService->delete($courseId);
 		});
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listAllSubjects(): array
+	{
+		return $this->subjectQueryService->listAllSubjects();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listAllTeacherSubjects(): array
+	{
+		return $this->teacherSubjectQueryService->listAllTeacherSubjects();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listAllCourses(): array
+	{
+		return $this->courseQueryService->listAllCourses();
 	}
 
 	/**

@@ -24,6 +24,14 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		return $this->repository->find($teacherSubjectId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function findByTeacherAndSubject(string $teacherId, string $subjectId): ?TeacherSubject
 	{
 		return $this->repository->findOneBy([

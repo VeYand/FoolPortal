@@ -8,4 +8,9 @@ use App\Subject\Domain\Model\Subject;
 interface SubjectReadRepositoryInterface
 {
 	public function find(string $subjectId): ?Subject;
+
+	/**
+	 * @return Subject[]
+	 */
+	public function findAll(): array;
 }

@@ -24,6 +24,14 @@ class CourseRepository implements CourseRepositoryInterface
 		return $this->repository->find($courseId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course
 	{
 		return $this->repository->findOneBy([
