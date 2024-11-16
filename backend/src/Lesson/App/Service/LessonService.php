@@ -5,7 +5,6 @@ namespace App\Lesson\App\Service;
 
 use App\Lesson\App\Adapter\SubjectAdapterInterface;
 use App\Lesson\App\Exception\AppException;
-use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Service\LessonService as DomainLessonService;
 use App\Lesson\Domain\Service\LessonAttachmentService as DomainLessonAttachmentService;
 use App\Lesson\Domain\Service\Input\CreateLessonInput;
