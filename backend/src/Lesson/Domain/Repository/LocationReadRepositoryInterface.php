@@ -9,4 +9,10 @@ use App\Lesson\Domain\Model\Location;
 interface LocationReadRepositoryInterface
 {
 	public function find(string $locationId): ?Location;
+
+	/**
+	 * @param string[] $locationIds
+	 * @return Location[]
+	 */
+	public function findByIds(array $locationIds): array;
 }
