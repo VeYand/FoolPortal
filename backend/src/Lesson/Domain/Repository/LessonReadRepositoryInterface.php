@@ -13,4 +13,9 @@ interface LessonReadRepositoryInterface
 	 * @return Lesson[]
 	 */
 	public function findByLocation(string $locationId): array;
+
+	/**
+	 * @return Lesson[]
+	 */
+	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array;
 }

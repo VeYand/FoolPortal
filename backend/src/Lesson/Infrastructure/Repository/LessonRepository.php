@@ -34,6 +34,23 @@ class LessonRepository implements LessonRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
+	{
+		$qb = $this->entityManager->createQueryBuilder('l');
+
+		$qb->where('l.date >= :startDate')
+			->andWhere('l.date <= :endDate')
+			->andWhere('l.startTime + l.duration <= :endTime')
+			->setParameter('startDate', $startTime)
+			->setParameter('endDate', $endTime)
+			->setParameter('endTime', $endTime->getTimestamp());
+
+		return $qb->getQuery()->getResult();
+	}
+
 	public function store(Lesson $lesson): string
 	{
 		$this->entityManager->persist($lesson);
