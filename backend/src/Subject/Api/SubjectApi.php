@@ -126,6 +126,11 @@ readonly class SubjectApi implements SubjectApiInterface
 		return $this->courseQueryService->listAllCourses();
 	}
 
+	public function isCourseExists(string $courseId): bool
+	{
+		return $this->courseQueryService->isCourseExists($courseId);
+	}
+
 	/**
 	 * @throws ApiException
 	 */

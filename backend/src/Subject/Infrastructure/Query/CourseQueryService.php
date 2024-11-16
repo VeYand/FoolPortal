@@ -29,4 +29,11 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 			$course->getGroupId(),
 		), $courses);
 	}
+
+	public function isCourseExists(string $courseId): bool
+	{
+		$course = $this->courseReadRepository->find($courseId);
+
+		return !is_null($course);
+	}
 }

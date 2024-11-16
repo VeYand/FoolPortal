@@ -11,4 +11,6 @@ interface CourseQueryServiceInterface
 	 * @return CourseData[]
 	 */
 	public function listAllCourses(): array;
+
+	public function isCourseExists(string $courseId): bool;
 }
