@@ -24,6 +24,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 		return $this->repository->find($attachmentId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByIds(array $attachmentIds): array
+	{
+		return $this->repository->findBy(['attachmentId' => $attachmentIds]);
+	}
+
 	public function store(Attachment $attachment): string
 	{
 		$this->entityManager->persist($attachment);
