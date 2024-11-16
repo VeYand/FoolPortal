@@ -65,6 +65,6 @@ readonly class LocationService
 			$lesson->setLocationId(null);
 		}
 
-		$this->lessonRepository->store($lessons);
+		$this->lessonRepository->storeList($lessons);
 	}
 }

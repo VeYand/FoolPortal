@@ -34,10 +34,17 @@ class LessonRepository implements LessonRepositoryInterface
 		]);
 	}
 
+	public function store(Lesson $lesson): string
+	{
+		$this->entityManager->persist($lesson);
+		$this->entityManager->flush();
+		return $lesson->getLessonId();
+	}
+
 	/**
 	 * @inheritDoc
 	 */
-	public function store(array $lessons): void
+	public function storeList(array $lessons): void
 	{
 		foreach ($lessons as $lesson)
 		{
