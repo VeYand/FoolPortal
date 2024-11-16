@@ -7,8 +7,6 @@ use App\Lesson\Domain\Model\LessonAttachment;
 
 interface LessonAttachmentReadRepositoryInterface
 {
-	public function find(string $lessonAttachmentId): ?LessonAttachment;
-
 	public function findByLessonAndAttachment(string $lessonId, string $attachmentId): ?LessonAttachment;
 
 	/**

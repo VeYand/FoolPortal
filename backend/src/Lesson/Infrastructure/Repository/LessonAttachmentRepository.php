@@ -19,11 +19,6 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(LessonAttachment::class);
 	}
 
-	public function find(string $lessonAttachmentId): ?LessonAttachment
-	{
-		return $this->repository->find($lessonAttachmentId);
-	}
-
 	public function findByLessonAndAttachment(string $lessonId, string $attachmentId): ?LessonAttachment
 	{
 		return $this->repository->findOneBy([

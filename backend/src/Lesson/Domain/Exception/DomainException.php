@@ -11,7 +11,8 @@ class DomainException extends \Exception
 	public const int LESSON_DATE_ALREADY_PASSED = 3;
 	public const int LOCATION_NOT_FOUND = 4;
 	public const int LESSON_NOT_FOUND = 5;
-	public const int LESSON_DURA1TION_MUST_BE_POSITIVE = 6;
+	public const int ATTACHMENT_NOT_FOUND = 6;
+	public const int LESSON_ATTACHMENT_ALREADY_EXISTS = 7;
 
 
 	public function __construct(string $message, int $code = self::INTERNAL, \Throwable $previous = null)
