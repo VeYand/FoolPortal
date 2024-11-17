@@ -5,5 +5,5 @@ namespace App\User\Domain\Service\Event;
 
 interface EventPublisherInterface
 {
-	public function publish(GroupDeletedEventInterface $event): void;
+	public function publish(object $event): void;
 }

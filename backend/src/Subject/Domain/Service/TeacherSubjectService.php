@@ -38,6 +38,16 @@ readonly class TeacherSubjectService
 		$this->teacherSubjectRepository->store($teacherSubject);
 	}
 
+	public function deleteByTeacher(string $teacherId): void // TODO оптимизировать
+	{
+		$teacherSubjects = $this->teacherSubjectRepository->findByTeacher($teacherId);
+
+		foreach ($teacherSubjects as $teacherSubject)
+		{
+			$this->delete($teacherSubject->getTeacherSubjectId());
+		}
+	}
+
 	public function delete(string $teacherSubjectId): void
 	{
 		$teacherSubject = $this->teacherSubjectRepository->find($teacherSubjectId);

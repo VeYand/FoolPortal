@@ -8,6 +8,8 @@ use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Domain\Service\Event\EventPublisherInterface;
+use App\User\Domain\Service\Event\UserDeletedEvent;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 
@@ -19,6 +21,7 @@ readonly class UserService
 		private UuidProviderInterface          $uuidProvider,
 		private ImageUploaderInterface         $imageUploader,
 		private PasswordHasherInterface        $passwordHasher,
+		private EventPublisherInterface        $eventPublisher,
 	)
 	{
 	}
@@ -113,6 +116,7 @@ readonly class UserService
 			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->userRepository->delete($user);
+			$this->eventPublisher->publish(new UserDeletedEvent($userId));
 		}
 	}
 

@@ -50,6 +50,16 @@ class CourseRepository implements CourseRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByGroup(string $groupId): array
+	{
+		return $this->repository->findBy([
+			'groupId' => $groupId,
+		]);
+	}
+
 	public function store(Course $course): string
 	{
 		$this->entityManager->persist($course);

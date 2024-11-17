@@ -46,13 +46,13 @@ readonly class CourseService
 		}
 	}
 
-	public function deleteByGroup(string $groupId): void
+	public function deleteByGroup(string $groupId): void // TODO оптимизировать
 	{
-		$course = $this->courseRepository->findByGroup($groupId);
+		$courses = $this->courseRepository->findByGroup($groupId);
 
-		if (!is_null($course))
+		foreach ($courses as $course)
 		{
-			$this->courseRepository->delete([$course]);
+			$this->delete($course->getCourseId());
 		}
 	}
 

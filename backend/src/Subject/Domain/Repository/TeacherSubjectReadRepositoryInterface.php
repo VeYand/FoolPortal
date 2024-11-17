@@ -20,4 +20,9 @@ interface TeacherSubjectReadRepositoryInterface
 	 * @return TeacherSubject[]
 	 */
 	public function findBySubject(string $subjectId): array;
+
+	/**
+	 * @return TeacherSubject[]
+	 */
+	public function findByTeacher(string $teacherId): array;
 }

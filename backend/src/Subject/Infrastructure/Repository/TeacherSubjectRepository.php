@@ -50,6 +50,16 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByTeacher(string $teacherId): array
+	{
+		return $this->repository->findBy([
+			'teacherId' => $teacherId,
+		]);
+	}
+
 	public function store(TeacherSubject $teacherSubject): string
 	{
 		$this->entityManager->persist($teacherSubject);
