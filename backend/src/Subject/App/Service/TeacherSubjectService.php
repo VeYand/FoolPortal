@@ -40,7 +40,7 @@ readonly class TeacherSubjectService
 	{
 		$callback = function () use ($teacherSubjectId): void
 		{
-			$this->teacherSubjectService->delete($teacherSubjectId);
+			$this->teacherSubjectService->delete([$teacherSubjectId]);
 		};
 
 		$this->transactionService->execute($callback);
