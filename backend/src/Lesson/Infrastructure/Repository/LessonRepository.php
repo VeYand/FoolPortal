@@ -49,9 +49,11 @@ class LessonRepository implements LessonRepositoryInterface
 	 */
 	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
 	{
-		$qb = $this->entityManager->createQueryBuilder('l');
+		$qb = $this->entityManager->createQueryBuilder();
 
-		$qb->where('l.date >= :startDate')
+		$qb->select('l')
+			->from(Lesson::class, 'l')
+			->where('l.date >= :startDate')
 			->andWhere('l.date <= :endDate')
 			->andWhere('l.startTime + l.duration <= :endTime')
 			->setParameter('startDate', $startTime)
