@@ -18,4 +18,10 @@ interface LessonReadRepositoryInterface
 	 * @return Lesson[]
 	 */
 	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array;
+
+	/**
+	 * @param string[] $courseIds
+	 * @return Lesson[]
+	 */
+	public function findByCourses(array $courseIds): array;
 }

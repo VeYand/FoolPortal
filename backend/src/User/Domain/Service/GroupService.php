@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
+use App\Common\Event\EventPublisherInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\Group;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\GroupRepositoryInterface;
-use App\User\Domain\Service\Event\EventPublisherInterface;
 use App\User\Domain\Service\Event\GroupDeletedEvent;
 
 readonly class GroupService

@@ -97,7 +97,7 @@ readonly class LessonService
 
 	/*
 	 * TODO Уязвимость: не удаляется вложение, если его перестают использовать
-	 * Решение - создать библиотеку вложений, либо реализовать удаление вложения, если его пересают использовать
+	 * Решение - создать библиотеку вложений, либо реализовать удаление вложения, если его перестают использовать
 	 */
 	public function delete(string $lessonId): void
 	{
@@ -108,6 +108,18 @@ readonly class LessonService
 			$lessonAttachments = $this->lessonAttachmentRepository->findByLesson($lesson->getLessonId());
 			$this->lessonAttachmentRepository->delete($lessonAttachments);
 			$this->lessonRepository->delete($lesson);
+		}
+	}
+
+	/**
+	 * @param string[] $courseIds
+	 */
+	public function deleteByCourses(array $courseIds): void // TODO оптимизировать
+	{
+		$lessons = $this->lessonRepository->findByCourses($courseIds);
+		foreach ($lessons as $lesson)
+		{
+			$this->delete($lesson->getLessonId());
 		}
 	}
 

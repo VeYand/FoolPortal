@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\User\Infrastructure\Service;
+namespace App\Common\Event;
 
-use App\User\Domain\Service\Event\EventPublisherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 readonly class EventPublisher implements EventPublisherInterface

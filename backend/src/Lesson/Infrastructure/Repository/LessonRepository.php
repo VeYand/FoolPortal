@@ -51,6 +51,16 @@ class LessonRepository implements LessonRepositoryInterface
 		return $qb->getQuery()->getResult();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findByCourses(array $courseIds): array
+	{
+		return $this->repository->findBy([
+			'courseId' => $courseIds,
+		]);
+	}
+
 	public function store(Lesson $lesson): string
 	{
 		$this->entityManager->persist($lesson);

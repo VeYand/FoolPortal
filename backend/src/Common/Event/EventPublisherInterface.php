@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\User\Domain\Service\Event;
+namespace App\Common\Event;
 
 interface EventPublisherInterface
 {

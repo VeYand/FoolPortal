@@ -20,7 +20,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\User\Infrastructure\Service\EventPublisher:
+    App\Common\Event\EventPublisher:
         arguments:
             $eventDispatcher: '@event_dispatcher'
         public: true
@@ -32,3 +32,7 @@ services:
     App\Subject\App\Service\Listener\UserDeletedEventListener:
         tags:
             - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\UserDeletedEventListenerInterface, method: '__invoke' }
+
+    App\Lesson\App\Service\Listener\CourseDeletedEventListener:
+        tags:
+            - { name: 'kernel.event_listener', event: App\Subject\Domain\Service\Event\CourseDeletedEventInterface, method: '__invoke' }

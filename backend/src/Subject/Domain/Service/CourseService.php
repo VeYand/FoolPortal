@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Service;
 
+use App\Common\Event\EventPublisherInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\Domain\Exception\DomainException;
 use App\Subject\Domain\Model\Course;
 use App\Subject\Domain\Repository\CourseRepositoryInterface;
 use App\Subject\Domain\Repository\TeacherSubjectReadRepositoryInterface;
+use App\Subject\Domain\Service\Event\CourseDeletedEvent;
 
 readonly class CourseService
 {
@@ -15,6 +17,7 @@ readonly class CourseService
 		private CourseRepositoryInterface             $courseRepository,
 		private TeacherSubjectReadRepositoryInterface $teacherSubjectReadRepository,
 		private UuidProviderInterface                 $uuidProvider,
+		private EventPublisherInterface               $eventPublisher,
 	)
 	{
 	}
@@ -43,6 +46,7 @@ readonly class CourseService
 		if (!is_null($course))
 		{
 			$this->courseRepository->delete([$course]);
+			$this->eventPublisher->publish(new CourseDeletedEvent([$courseId]));
 		}
 	}
 
