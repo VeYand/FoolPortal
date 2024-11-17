@@ -27,6 +27,16 @@ class LessonRepository implements LessonRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
+	public function findByIds(array $lessonIds): array
+	{
+		return $this->repository->findBy([
+			'lessonId' => $lessonIds,
+		]);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function findByLocation(string $locationId): array
 	{
 		return $this->repository->findBy([

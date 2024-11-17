@@ -95,31 +95,21 @@ readonly class LessonService
 		$this->lessonRepository->storeList([$lesson]);
 	}
 
-	/*
+	/**
+	 * @param string[] $lessonIds
+	 *
 	 * TODO Уязвимость: не удаляется вложение, если его перестают использовать
 	 * Решение - создать библиотеку вложений, либо реализовать удаление вложения, если его перестают использовать
 	 */
-	public function delete(string $lessonId): void
+	public function delete(array $lessonIds): void
 	{
-		$lesson = $this->lessonRepository->find($lessonId);
+		$lessons = $this->lessonRepository->findByIds($lessonIds);
 
-		if (!is_null($lesson))
+		if (!empty($lessons))
 		{
-			$lessonAttachments = $this->lessonAttachmentRepository->findByLesson($lesson->getLessonId());
+			$lessonAttachments = $this->lessonAttachmentRepository->findByLessons($lessonIds);
 			$this->lessonAttachmentRepository->delete($lessonAttachments);
-			$this->lessonRepository->delete($lesson);
-		}
-	}
-
-	/**
-	 * @param string[] $courseIds
-	 */
-	public function deleteByCourses(array $courseIds): void // TODO оптимизировать
-	{
-		$lessons = $this->lessonRepository->findByCourses($courseIds);
-		foreach ($lessons as $lesson)
-		{
-			$this->delete($lesson->getLessonId());
+			$this->lessonRepository->delete($lessons);
 		}
 	}
 

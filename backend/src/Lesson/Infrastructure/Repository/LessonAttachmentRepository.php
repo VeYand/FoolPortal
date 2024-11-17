@@ -40,16 +40,6 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByLesson(string $lessonId): array
-	{
-		return $this->repository->findBy([
-			'lessonId' => $lessonId,
-		]);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function findByLessons(array $lessonIds): array
 	{
 		return $this->repository->findBy([

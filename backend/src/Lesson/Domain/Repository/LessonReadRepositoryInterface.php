@@ -10,6 +10,12 @@ interface LessonReadRepositoryInterface
 	public function find(string $lessonId): ?Lesson;
 
 	/**
+	 * @param string[] $lessonIds
+	 * @return Lesson[]
+	 */
+	public function findByIds(array $lessonIds): array;
+
+	/**
 	 * @return Lesson[]
 	 */
 	public function findByLocation(string $locationId): array;
