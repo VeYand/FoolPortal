@@ -19,3 +19,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+        App\User\Infrastructure\Service\EventPublisher:
+            arguments:
+                $eventDispatcher: '@event_dispatcher'
+            public: true
+
+        App\Subject\App\Service\Listener\GroupDeletedEventListener:
+            tags:
+                - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\GroupDeletedEventInterface, method: '__invoke' }

@@ -46,6 +46,16 @@ readonly class CourseService
 		}
 	}
 
+	public function deleteByGroup(string $groupId): void
+	{
+		$course = $this->courseRepository->findByGroup($groupId);
+
+		if (!is_null($course))
+		{
+			$this->courseRepository->delete([$course]);
+		}
+	}
+
 	/**
 	 * @throws DomainException
 	 */

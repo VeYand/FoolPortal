@@ -9,6 +9,8 @@ interface CourseReadRepositoryInterface
 {
 	public function find(string $courseId): ?Course;
 
+	public function findByGroup(string $groupId): ?Course;
+
 	/**
 	 * @return Course[]
 	 */

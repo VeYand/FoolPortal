@@ -8,6 +8,8 @@ use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\Group;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 use App\User\Domain\Repository\GroupRepositoryInterface;
+use App\User\Domain\Service\Event\EventPublisherInterface;
+use App\User\Domain\Service\Event\GroupDeletedEvent;
 
 readonly class GroupService
 {
@@ -15,6 +17,7 @@ readonly class GroupService
 		private GroupRepositoryInterface       $groupRepository,
 		private UuidProviderInterface          $uuidProvider,
 		private GroupMemberRepositoryInterface $groupMemberRepository,
+		private EventPublisherInterface        $eventPublisher,
 	)
 	{
 	}
@@ -54,6 +57,7 @@ readonly class GroupService
 			$groupMembers = $this->groupMemberRepository->findByGroup($group->getGroupId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->groupRepository->delete($group);
+			$this->eventPublisher->publish(new GroupDeletedEvent($groupId));
 		}
 	}
 }
