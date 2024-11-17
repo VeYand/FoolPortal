@@ -18,7 +18,7 @@ readonly class LessonProvider implements LessonProviderInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getLessonIdsByCourseIds(array $courseIds): array
+	public function findLessonIdsByCourseIds(array $courseIds): array
 	{
 		$lessons = $this->lessonReadRepository->findByCourses($courseIds);
 

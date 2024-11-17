@@ -25,6 +25,17 @@ class CourseRepository implements CourseRepositoryInterface
 	}
 
 	/**
+	 * @param string[] $courseIds
+	 * @return Course[]
+	 */
+	public function findByIds(array $courseIds): array
+	{
+		return $this->repository->findBy([
+			'courseId' => $courseIds,
+		]);
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function findAll(): array
@@ -53,10 +64,10 @@ class CourseRepository implements CourseRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByGroup(string $groupId): array
+	public function findByGroups(array $groupIds): array
 	{
 		return $this->repository->findBy([
-			'groupId' => $groupId,
+			'groupId' => $groupIds,
 		]);
 	}
 

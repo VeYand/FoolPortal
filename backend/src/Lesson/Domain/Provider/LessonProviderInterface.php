@@ -9,5 +9,5 @@ interface LessonProviderInterface
 	 * @param string[] $courseIds
 	 * @return string[]
 	 */
-	public function getLessonIdsByCourseIds(array $courseIds): array;
+	public function findLessonIdsByCourseIds(array $courseIds): array;
 }

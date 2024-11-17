@@ -26,7 +26,7 @@ readonly class CourseDeletedEventListener
 	{
 		$callback = function () use ($event): void
 		{
-			$lessonIds = $this->lessonProvider->getLessonIdsByCourseIds($event->getCourseIds());
+			$lessonIds = $this->lessonProvider->findLessonIdsByCourseIds($event->getCourseIds());
 			$this->lessonService->delete($lessonIds);
 		};
 

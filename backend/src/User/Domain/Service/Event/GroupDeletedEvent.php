@@ -5,14 +5,20 @@ namespace App\User\Domain\Service\Event;
 
 readonly class GroupDeletedEvent implements GroupDeletedEventInterface
 {
+	/**
+	 * @param string[] $groupIds
+	 */
 	public function __construct(
-		private string $groupId,
+		private array $groupIds,
 	)
 	{
 	}
 
-	public function getGroupId(): string
+	/**
+	 * @inheritDoc
+	 */
+	public function getGroupIds(): array
 	{
-		return $this->groupId;
+		return $this->groupIds;
 	}
 }

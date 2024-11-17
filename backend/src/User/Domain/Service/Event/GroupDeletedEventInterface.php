@@ -5,5 +5,8 @@ namespace App\User\Domain\Service\Event;
 
 interface GroupDeletedEventInterface
 {
-	public function getGroupId(): string;
+	/**
+	 * @return string[]
+	 */
+	public function getGroupIds(): array;
 }

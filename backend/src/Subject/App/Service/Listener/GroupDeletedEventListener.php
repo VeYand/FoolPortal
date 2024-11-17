@@ -5,14 +5,16 @@ namespace App\Subject\App\Service\Listener;
 
 use App\Subject\App\Exception\AppException;
 use App\Subject\App\Service\TransactionService;
+use App\Subject\Domain\Provider\CourseProviderInterface;
 use App\Subject\Domain\Service\CourseService;
 use App\User\Domain\Service\Event\GroupDeletedEventInterface;
 
 readonly class GroupDeletedEventListener
 {
 	public function __construct(
-		private CourseService      $courseService,
-		private TransactionService $transactionService,
+		private CourseService           $courseService,
+		private TransactionService      $transactionService,
+		private CourseProviderInterface $courseProvider,
 	)
 	{
 	}
@@ -24,7 +26,8 @@ readonly class GroupDeletedEventListener
 	{
 		$callback = function () use ($event): void
 		{
-			$this->courseService->deleteByGroup($event->getGroupId());
+			$courseIds = $this->courseProvider->findCourseIdsByGroupIds($event->getGroupIds());
+			$this->courseService->delete($courseIds);
 		};
 
 		$this->transactionService->execute($callback);

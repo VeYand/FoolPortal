@@ -57,7 +57,7 @@ readonly class GroupService
 			$groupMembers = $this->groupMemberRepository->findByGroup($group->getGroupId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->groupRepository->delete($group);
-			$this->eventPublisher->publish(new GroupDeletedEvent($groupId));
+			$this->eventPublisher->publish(new GroupDeletedEvent([$groupId]));
 		}
 	}
 }

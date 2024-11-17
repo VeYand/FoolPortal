@@ -39,24 +39,17 @@ readonly class CourseService
 		return $this->courseRepository->store($course);
 	}
 
-	public function delete(string $courseId): void
+	/**
+	 * @param string[] $courseIds
+	 */
+	public function delete(array $courseIds): void
 	{
-		$course = $this->courseRepository->find($courseId);
+		$courses = $this->courseRepository->findByIds($courseIds);
 
-		if (!is_null($course))
+		if (!empty($courses))
 		{
-			$this->courseRepository->delete([$course]);
-			$this->eventPublisher->publish(new CourseDeletedEvent([$courseId]));
-		}
-	}
-
-	public function deleteByGroup(string $groupId): void // TODO оптимизировать
-	{
-		$courses = $this->courseRepository->findByGroup($groupId);
-
-		foreach ($courses as $course)
-		{
-			$this->delete($course->getCourseId());
+			$this->courseRepository->delete($courses);
+			$this->eventPublisher->publish(new CourseDeletedEvent($courseIds));
 		}
 	}
 

@@ -10,6 +10,12 @@ interface CourseReadRepositoryInterface
 	public function find(string $courseId): ?Course;
 
 	/**
+	 * @param string[] $courseIds
+	 * @return Course[]
+	 */
+	public function findByIds(array $courseIds): array;
+
+	/**
 	 * @return Course[]
 	 */
 	public function findAll(): array;
@@ -23,7 +29,8 @@ interface CourseReadRepositoryInterface
 	public function findByTeacherSubjects(array $teacherSubjectIds): array;
 
 	/**
+	 * @param string[] $groupIds
 	 * @return Course[]
 	 */
-	public function findByGroup(string $groupId): array;
+	public function findByGroups(array $groupIds): array;
 }
