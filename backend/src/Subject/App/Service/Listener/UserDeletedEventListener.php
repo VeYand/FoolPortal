@@ -6,13 +6,15 @@ namespace App\Subject\App\Service\Listener;
 use App\Subject\App\Exception\AppException;
 use App\Subject\Domain\Service\TeacherSubjectService;
 use App\Subject\App\Service\TransactionService;
+use App\Subject\Infrastructure\Provider\TeacherSubjectProvider;
 use App\User\Domain\Service\Event\UserDeletedEventInterface;
 
 readonly class UserDeletedEventListener
 {
 	public function __construct(
-		private TeacherSubjectService $teacherSubjectService,
-		private TransactionService    $transactionService,
+		private TeacherSubjectService  $teacherSubjectService,
+		private TransactionService     $transactionService,
+		private TeacherSubjectProvider $teacherSubjectProvider,
 	)
 	{
 	}
@@ -24,7 +26,8 @@ readonly class UserDeletedEventListener
 	{
 		$callback = function () use ($event): void
 		{
-			$this->teacherSubjectService->deleteByTeacher($event->getUserId());
+			$teacherSubjectIds = $this->teacherSubjectProvider->findTeacherSubjectIdsByTeacherIds($event->getUserIds());
+			$this->teacherSubjectService->delete($teacherSubjectIds);
 		};
 
 		$this->transactionService->execute($callback);

@@ -5,14 +5,20 @@ namespace App\User\Domain\Service\Event;
 
 readonly class UserDeletedEvent implements UserDeletedEventInterface
 {
+	/**
+	 * @param string[] $userIds
+	 */
 	public function __construct(
-		private string $userId,
+		private array $userIds,
 	)
 	{
 	}
 
-	public function getUserId(): string
+	/**
+	 * @inheritDoc
+	 */
+	public function getUserIds(): array
 	{
-		return $this->userId;
+		return $this->userIds;
 	}
 }

@@ -116,7 +116,7 @@ readonly class UserService
 			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->userRepository->delete($user);
-			$this->eventPublisher->publish(new UserDeletedEvent($userId));
+			$this->eventPublisher->publish(new UserDeletedEvent([$userId]));
 		}
 	}
 

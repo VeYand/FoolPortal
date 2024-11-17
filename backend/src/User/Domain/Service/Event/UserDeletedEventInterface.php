@@ -5,5 +5,8 @@ namespace App\User\Domain\Service\Event;
 
 interface UserDeletedEventInterface
 {
-	public function getUserId(): string;
+	/**
+	 * @return string[]
+	 */
+	public function getUserIds(): array;
 }

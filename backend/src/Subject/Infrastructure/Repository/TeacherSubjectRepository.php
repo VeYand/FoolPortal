@@ -27,6 +27,17 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
+	public function findByIds(array $teacherSubjectIds): array
+	{
+		return $this->repository->findBy([
+			'teacherSubjectId' => $teacherSubjectIds,
+		]);
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
 	public function findAll(): array
 	{
 		return $this->repository->findAll();
@@ -53,10 +64,10 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByTeacher(string $teacherId): array
+	public function findByTeachers(array $teacherIds): array
 	{
 		return $this->repository->findBy([
-			'teacherId' => $teacherId,
+			'teacherId' => $teacherIds,
 		]);
 	}
 

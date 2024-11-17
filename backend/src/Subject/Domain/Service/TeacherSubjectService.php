@@ -42,27 +42,20 @@ readonly class TeacherSubjectService
 		$this->teacherSubjectRepository->store($teacherSubject);
 	}
 
-	public function deleteByTeacher(string $teacherId): void // TODO оптимизировать
+	/**
+	 * @param string[] $teacherSubjectIds
+	 */
+	public function delete(array $teacherSubjectIds): void
 	{
-		$teacherSubjects = $this->teacherSubjectRepository->findByTeacher($teacherId);
-
-		foreach ($teacherSubjects as $teacherSubject)
+		$teacherSubjects = $this->teacherSubjectRepository->findByIds($teacherSubjectIds);
+		if (!empty($teacherSubjects))
 		{
-			$this->delete($teacherSubject->getTeacherSubjectId());
-		}
-	}
-
-	public function delete(string $teacherSubjectId): void
-	{
-		$teacherSubject = $this->teacherSubjectRepository->find($teacherSubjectId);
-		if (!is_null($teacherSubject))
-		{
-			$courses = $this->courseRepository->findByTeacherSubjects([$teacherSubject->getTeacherSubjectId()]);
+			$courses = $this->courseRepository->findByTeacherSubjects($teacherSubjectIds);
 			$this->eventPublisher->publish(new CourseDeletedEvent(
 				array_map(static fn(Course $course) => $course->getCourseId(), $courses),
 			));
 			$this->courseRepository->delete($courses);
-			$this->teacherSubjectRepository->delete([$teacherSubject]);
+			$this->teacherSubjectRepository->delete($teacherSubjects);
 		}
 	}
 

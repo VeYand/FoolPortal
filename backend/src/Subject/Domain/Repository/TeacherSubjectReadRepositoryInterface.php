@@ -10,6 +10,12 @@ interface TeacherSubjectReadRepositoryInterface
 	public function find(string $teacherSubjectId): ?TeacherSubject;
 
 	/**
+	 * @param string[] $teacherSubjectIds
+	 * @return TeacherSubject[]
+	 */
+	public function findByIds(array $teacherSubjectIds): array;
+
+	/**
 	 * @return TeacherSubject[]
 	 */
 	public function findAll(): array;
@@ -22,7 +28,8 @@ interface TeacherSubjectReadRepositoryInterface
 	public function findBySubject(string $subjectId): array;
 
 	/**
+	 * @param string[] $teacherIds
 	 * @return TeacherSubject[]
 	 */
-	public function findByTeacher(string $teacherId): array;
+	public function findByTeachers(array $teacherIds): array;
 }
