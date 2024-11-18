@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Unit\User\Domain\Infrastructure;
+namespace App\Tests\Unit\User\Infrastructure;
 
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
