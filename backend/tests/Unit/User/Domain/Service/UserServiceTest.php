@@ -5,6 +5,7 @@ namespace App\Tests\Unit\User\Domain\Service;
 
 use App\Common\Uuid\UuidProvider;
 use App\Common\Uuid\UuidProviderInterface;
+use App\Tests\Unit\Common\MockEventPublisher;
 use App\Tests\Unit\User\Domain\Infrastructure\GroupMemberInMemoryRepository;
 use App\Tests\Unit\User\Domain\Infrastructure\MockImageUploader;
 use App\Tests\Unit\User\Domain\Infrastructure\UserInMemoryRepository;
@@ -39,11 +40,17 @@ class UserServiceTest extends TestCase
 			$this->uuidProvider,
 			$this->imageUploader,
 			$this->passwordHasher,
+			new MockEventPublisher(),
 		);
 	}
 
 	public function testCase(): void
 	{
+		// подготовка данных
+
+		// действие
+
+		// проверка результата
 		$this->assertTrue(true);
 	}
 }

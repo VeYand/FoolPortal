@@ -8,9 +8,19 @@ use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 
 class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 {
+	/** @var array<string, GroupMember> */
+	private array $groupMembers = [];
+
 	public function find(string $groupId, string $userId): ?GroupMember
 	{
-		// TODO: Implement find() method.
+		foreach ($this->groupMembers as $groupMember)
+		{
+			if ($groupMember->getGroupId() === $groupId && $groupMember->getUserId() === $userId)
+			{
+				return $groupMember;
+			}
+		}
+
 		return null;
 	}
 
@@ -19,32 +29,31 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	 */
 	public function findByGroup(string $groupId): array
 	{
-		// TODO: Implement findByGroup() method.
-		return [];
+		return array_filter(
+			$this->groupMembers,
+			static fn(GroupMember $groupMember) => $groupMember->getGroupId() === $groupId,
+		);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+
 	public function findByUser(string $userId): array
 	{
-		// TODO: Implement findByUser() method.
-		return [];
+		return array_filter(
+			$this->groupMembers,
+			static fn(GroupMember $groupMember) => $groupMember->getUserId() === $userId,
+		);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+
 	public function findAll(): array
 	{
-		// TODO: Implement findAll() method.
-		return [];
+		return array_values($this->groupMembers);
 	}
 
 	public function store(GroupMember $groupMember): string
 	{
-		// TODO: Implement store() method.
-		return '';
+		$this->groupMembers[$groupMember->getGroupMemberId()] = $groupMember;
+		return $groupMember->getGroupMemberId();
 	}
 
 	/**
@@ -52,6 +61,9 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	 */
 	public function delete(array $groupMembers): void
 	{
-		// TODO: Implement delete() method.
+		foreach ($groupMembers as $groupMember)
+		{
+			unset($this->groupMembers[$groupMember->getGroupMemberId()]);
+		}
 	}
 }

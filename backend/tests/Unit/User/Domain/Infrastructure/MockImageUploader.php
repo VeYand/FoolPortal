@@ -12,7 +12,6 @@ class MockImageUploader implements ImageUploaderInterface
 	 */
 	public function uploadImage(string $base64Data): string
 	{
-		// TODO: Implement uploadImage() method.
 		return '';
 	}
 
@@ -21,6 +20,5 @@ class MockImageUploader implements ImageUploaderInterface
 	 */
 	public function removeImage(string $path): void
 	{
-		// TODO: Implement removeImage() method.
 	}
 }

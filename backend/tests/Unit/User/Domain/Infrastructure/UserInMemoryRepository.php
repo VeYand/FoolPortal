@@ -8,15 +8,24 @@ use App\User\Domain\Repository\UserRepositoryInterface;
 
 class UserInMemoryRepository implements UserRepositoryInterface
 {
+	/** @var array<string, User> */
+	private array $users = [];
+
 	public function find(string $userId): ?User
 	{
-		// TODO: Implement find() method.
-		return null;
+		return $this->users[$userId] ?? null;
 	}
 
 	public function findByEmail(string $email): ?User
 	{
-		// TODO: Implement findByEmail() method.
+		foreach ($this->users as $userId => $user)
+		{
+			if ($user->getEmail() === $email)
+			{
+				return $user;
+			}
+		}
+
 		return null;
 	}
 
@@ -25,18 +34,17 @@ class UserInMemoryRepository implements UserRepositoryInterface
 	 */
 	public function findAll(): array
 	{
-		// TODO: Implement findAll() method.
-		return [];
+		return array_values($this->users);
 	}
 
 	public function store(User $user): string
 	{
-		// TODO: Implement store() method.
-		return '';
+		$this->users[$user->getUserId()] = $user;
+		return $user->getUserId();
 	}
 
 	public function delete(User $user): void
 	{
-		// TODO: Implement delete() method.
+		unset($this->users[$user->getUserId()]);
 	}
 }
