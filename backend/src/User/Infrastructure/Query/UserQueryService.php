@@ -23,7 +23,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @throws AppException
+	 * @inheritDoc
 	 */
 	public function getUserById(string $userId): UserData
 	{
@@ -38,7 +38,23 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @throws AppException
+	 * @inheritDoc
+	 */
+	public function getDetailedUserById(string $userId): DetailedUserData
+	{
+		$user = $this->userReadRepository->find($userId);
+
+		if (is_null($user))
+		{
+			throw new AppException('User not found', AppException::USER_NOT_FOUND);
+		}
+
+		$userIdToGroupIdsMap = $this->getUserIdToGroupIdsMap([$userId]);
+		return $this->expandUserByGroups($user, $userIdToGroupIdsMap);
+	}
+
+	/**
+	 * @inheritDoc
 	 */
 	public function getUserByEmail(string $email): UserData
 	{
@@ -53,7 +69,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @throws AppException
+	 * @inheritDoc
 	 */
 	public function getUserHashedPassword(string $userId): string
 	{
@@ -73,43 +89,47 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	public function listAllUsers(): array
 	{
 		$users = $this->userReadRepository->findAll();
-		$groupMembers = $this->groupMemberReadRepository->findAll();
+		$userIds = array_map(
+			static fn(User $user) => $user->getUserId(),
+			$users,
+		);
+		$userIdToGroupIdsMap = $this->getUserIdToGroupIdsMap($userIds);
+		return array_map(
+			function ($user) use ($userIdToGroupIdsMap)
+			{
+				return $this->expandUserByGroups($user, $userIdToGroupIdsMap);
+			},
+			$users,
+		);
+	}
 
-		/** @var DetailedUserData[] $detailedUserDataList */
-		$detailedUserDataList = [];
+	/**
+	 * @param string[] $userIds
+	 * @return array<string, string[]>
+	 */
+	private function getUserIdToGroupIdsMap(array $userIds): array
+	{
+		$groupMembers = $this->groupMemberReadRepository->findByUsers($userIds);
 
-		$userGroupIds = [];
+		/** @var array<string, string[]> $userIdToGroupIdsMap */
+		$userIdToGroupIdsMap = [];
 		foreach ($groupMembers as $groupMember)
 		{
 			$userId = $groupMember->getUserId();
 			$groupId = $groupMember->getGroupId();
-
-			if (!isset($userGroupIds[$userId]))
-			{
-				$userGroupIds[$userId] = [];
-			}
-			$userGroupIds[$userId][] = $groupId;
+			$userIdToGroupIdsMap[$userId][] = $groupId;
 		}
 
-		foreach ($users as $user)
-		{
-			$groupIds = $userGroupIds[$user->getUserId()] ?? [];
+		return $userIdToGroupIdsMap;
+	}
 
-			$imageSrc = $this->imageQueryService->getImageUrl($user->getImagePath());
-
-			$detailedUserDataList[] = new DetailedUserData(
-				$user->getUserId(),
-				$user->getFirstName(),
-				$user->getLastName(),
-				$user->getPatronymic(),
-				$user->getRole(),
-				$imageSrc,
-				$user->getEmail(),
-				$groupIds,
-			);
-		}
-
-		return $detailedUserDataList;
+	/**
+	 * @param array<string, string[]> $userIdToGroupIdsMap
+	 */
+	private function expandUserByGroups(User $user, array $userIdToGroupIdsMap): DetailedUserData
+	{
+		$groupIds = $userIdToGroupIdsMap[$user->getUserId()] ?? [];
+		return $this->convertUserToDetailedUserData($user, $groupIds);
 	}
 
 	private function convertUserToUserData(User $user): UserData
@@ -122,6 +142,25 @@ readonly class UserQueryService implements UserQueryServiceInterface
 			$user->getRole(),
 			$this->imageQueryService->getImageUrl($user->getImagePath()),
 			$user->getEmail(),
+		);
+	}
+
+	/**
+	 * @param string[] $groupIds
+	 */
+	private function convertUserToDetailedUserData(User $user, array $groupIds): DetailedUserData
+	{
+		$imageSrc = $this->imageQueryService->getImageUrl($user->getImagePath());
+
+		return new DetailedUserData(
+			$user->getUserId(),
+			$user->getFirstName(),
+			$user->getLastName(),
+			$user->getPatronymic(),
+			$user->getRole(),
+			$imageSrc,
+			$user->getEmail(),
+			$groupIds,
 		);
 	}
 }

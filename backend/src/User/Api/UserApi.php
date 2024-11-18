@@ -5,6 +5,7 @@ namespace App\User\Api;
 
 use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
+use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
 use App\User\App\Query\UserQueryServiceInterface;
@@ -42,6 +43,16 @@ readonly class UserApi implements UserApiInterface
 		});
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function getDetailedUserById(string $userId): DetailedUserData
+	{
+		return self::tryExecute(function () use ($userId)
+		{
+			return $this->userQueryService->getDetailedUserById($userId);
+		});
+	}
 
 	/**
 	 * @inheritDoc

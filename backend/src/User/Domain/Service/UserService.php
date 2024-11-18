@@ -113,7 +113,7 @@ readonly class UserService
 		if (!is_null($user))
 		{
 			$this->imageUploader->removeImage($user->getImagePath());
-			$groupMembers = $this->groupMemberRepository->findByUser($user->getUserId());
+			$groupMembers = $this->groupMemberRepository->findByUsers([$user->getUserId()]);
 			$this->groupMemberRepository->delete($groupMembers);
 			$this->userRepository->delete($user);
 			$this->eventPublisher->publish(new UserDeletedEvent([$userId]));

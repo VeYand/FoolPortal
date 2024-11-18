@@ -22,6 +22,11 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
+	public function getDetailedUserById(string $userId): DetailedUserData;
+
+	/**
+	 * @throws ApiException
+	 */
 	public function getUserByEmail(string $email): UserData;
 
 	/**

@@ -26,7 +26,7 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByUser(string $userId): array
+	public function findByUsers(array $userIds): array
 	{
 		// TODO: Implement findByUser() method.
 		return [];
