@@ -109,7 +109,7 @@ readonly class LessonService
 		{
 			$lessonAttachments = $this->lessonAttachmentRepository->findByLessons($lessonIds);
 			$this->lessonAttachmentRepository->delete($lessonAttachments);
-			$this->lessonRepository->delete($lessons);
+			$this->lessonRepository->delete($lessons); // TODO Исправить ошибку типизации
 		}
 	}
 
