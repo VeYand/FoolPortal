@@ -59,10 +59,10 @@ class GroupMemberRepository implements GroupMemberRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByUser(string $userId): array
+	public function findByUsers(array $userIds): array
 	{
 		return $this->repository->findBy([
-			'userId' => $userId,
+			'userId' => $userIds,
 		]);
 	}
 

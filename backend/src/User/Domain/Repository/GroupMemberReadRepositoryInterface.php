@@ -15,9 +15,10 @@ interface GroupMemberReadRepositoryInterface
 	public function findByGroup(string $groupId): array;
 
 	/**
+	 * @param string[] $userIds
 	 * @return GroupMember[]
 	 */
-	public function findByUser(string $userId): array;
+	public function findByUsers(array $userIds): array;
 
 	/**
 	 * @return GroupMember[]

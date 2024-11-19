@@ -35,15 +35,16 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 		);
 	}
 
-
-	public function findByUser(string $userId): array
+	/**
+	 * @inheritDoc
+	 */
+	public function findByUsers(array $userIds): array
 	{
-		return array_filter(
+		return array_values(array_filter(
 			$this->groupMembers,
-			static fn(GroupMember $groupMember) => $groupMember->getUserId() === $userId,
-		);
+			static fn(GroupMember $groupMember) => in_array($groupMember->getUserId(), $userIds, true),
+		));
 	}
-
 
 	public function findAll(): array
 	{

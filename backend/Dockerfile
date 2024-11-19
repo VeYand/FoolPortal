@@ -9,12 +9,12 @@ RUN curl -sS https://getcomposer.org/installer -o /composer-setup.php && \
     php /composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
     rm /composer-setup.php
 
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
-RUN sudo apt install symfony-cli
-
 COPY [".", "."]
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY wait-for-it.sh /wait-for-it.sh
 
+RUN chmod +x /wait-for-it.sh
 RUN chmod +x /docker-entrypoint.sh
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
