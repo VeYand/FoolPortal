@@ -46,6 +46,9 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 		));
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function findAll(): array
 	{
 		return array_values($this->groupMembers);
