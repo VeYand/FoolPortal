@@ -3,6 +3,12 @@
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./open-api"
+        }
+    ],
     "require": {
         "php": ">=8.3",
         "ext-ctype": "*",
@@ -17,6 +23,7 @@
         "symfony/event-dispatcher": "7.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.1.*",
+        "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "7.1.*",
         "symfony/security-bundle": "7.1.*",
         "symfony/uid": "7.1.*",
@@ -60,6 +67,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "generate-api" : [
+            "docker run --rm -v ${PWD}:/app mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0 generate -i app/api/fool-portal-api.yaml -g php-symfony --additional-properties composerPackageName=openapitools/fool-portal -o app/open-api"
         ]
     },
     "conflict": {

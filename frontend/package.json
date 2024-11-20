@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "node eslint.mjs && tsc && vite build --emptyOutDir",
-    "build-dev": "vite build --emptyOutDir"
+    "build-dev": "vite build --emptyOutDir",
+    "generate-api": "docker run --rm -v ${PWD}/../:/var/www mirror.gcr.io/openapitools/openapi-generator-cli:v7.3.0 generate -i /var/www/backend/api/fool-portal-api.yaml -g typescript-fetch -o /var/www/frontend/src/app/api"
   },
   "dependencies": {
     "react": "^18.3.1",

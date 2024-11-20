@@ -33,3 +33,11 @@ php bin/console make:migration
 ```bash
 php bin/console doctrine:migrations:migrate
 ```
+
+## Работа с api
+
+### Генерация api для бэкенда
+
+```bash
+composer generate-api
+```

@@ -13,6 +13,10 @@
 /public/build/
 ###< pentatrion/vite-bundle ###
 
+###< open-api ###
+/open-api/
+###< open-api ###
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

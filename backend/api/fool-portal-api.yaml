@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Fool Portal API
+  x-api-identifier: FoolPortal
+  description: API for Fool Portal
+
+paths:
+  /api/v1/user:
+    get:
+      tags:
+        - Authorization
+      operationId: GetLoggedUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/user.yaml#/components/schemas/UserData'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/login:
+    post:
+      tags:
+        - Authorization
+      operationId: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/authorization.yaml#/components/schemas/LoginInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/logout:
+    post:
+      tags:
+        - Authorization
+      operationId: Logout
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+components:
+  schemas:
+    BadResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+  responses:
+    SuccessResponse:
+      description: OK
+
+    BadRequestResponse:
+      description: BadRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    UnauthorizedResponse:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    NotFoundResponse:
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    ConflictResponse:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    InternalServerErrorResponse:
+      description: InternalServerError
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'

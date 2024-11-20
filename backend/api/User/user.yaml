@@ -1,0 +1,45 @@
+components:
+  schemas:
+    UserData:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        firstName:
+          type: string
+          nullable: false
+        lastName:
+          type: string
+          nullable: false
+        patronymic:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum:
+            - OWNER
+            - ADMIN
+            - TEACHER
+            - STUDENT
+          nullable: false
+        imageSrc:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: false
+        groupIds:
+          type: array
+          items:
+            type: string
+          nullable: false
+      required:
+        - userId
+        - firstName
+        - lastName
+        - role
+        - email
+        - groupIds
