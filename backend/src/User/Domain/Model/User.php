@@ -14,7 +14,7 @@ class User
 		private ?string         $patronymic,
 		UserRole                $role,
 		private ?string         $imagePath,
-		private string          $email,
+		private ?string         $email,
 		private string          $password,
 	)
 	{
