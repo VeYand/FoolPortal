@@ -1,3 +1,6 @@
+open_api_server:
+    resource: '@OpenAPIServerBundle/Resources/config/routing.yaml'
+
 login:
     path: /login
     controller: App\Controller\PageController::mainPage

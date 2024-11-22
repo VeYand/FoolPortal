@@ -18,6 +18,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
         "pentatrion/vite-bundle": "^7.0",
+        "openapitools/fool-portal": "*@dev",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
         "symfony/event-dispatcher": "7.1.*",
