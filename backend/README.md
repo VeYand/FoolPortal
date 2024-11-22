@@ -41,3 +41,9 @@ php bin/console doctrine:migrations:migrate
 ```bash
 composer generate-api
 ```
+
+## Авторизация
+
+По умолчанию аккаунт овнера создаётся с такими данными:
+Email: `owner@gmail.com`
+Password: `12345Q`

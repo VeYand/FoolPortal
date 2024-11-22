@@ -32,7 +32,9 @@ readonly class UserService
 	public function create(CreateUserInput $input): string
 	{
 		$this->assertEmailIsUnique($input->email);
-		$imagePath = $this->imageUploader->uploadImage($input->base64ImageData);
+		$imagePath = is_null($input->base64ImageData)
+			? null
+			: $this->imageUploader->uploadImage($input->base64ImageData);
 		$hashedPassword = $this->passwordHasher->hash($input->plainPassword);
 
 		$user = new User(

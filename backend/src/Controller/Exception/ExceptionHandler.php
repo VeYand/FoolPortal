@@ -150,24 +150,31 @@ readonly class ExceptionHandler
 	private static function constructBadRequestResponse(?string $message, int &$responseCode, array &$responseHeaders): BadResponse
 	{
 		$responseCode = Response::HTTP_BAD_REQUEST;
-		return new BadResponse($message ?? Response::$statusTexts[$responseCode]);
+		return self::constructBadResponse($message ?? Response::$statusTexts[$responseCode]);
 	}
 
 	private static function constructUnauthorizedResponse(?string $message, int &$responseCode, array &$responseHeaders): BadResponse
 	{
 		$responseCode = Response::HTTP_UNAUTHORIZED;
-		return new BadResponse($message ?? Response::$statusTexts[$responseCode]);
+		return self::constructBadResponse($message ?? Response::$statusTexts[$responseCode]);
 	}
 
 	private static function constructNotFoundRequestResponse(?string $message, int &$responseCode, array &$responseHeaders): BadResponse
 	{
 		$responseCode = Response::HTTP_NOT_FOUND;
-		return new BadResponse($message ?? Response::$statusTexts[$responseCode]);
+		return self::constructBadResponse($message ?? Response::$statusTexts[$responseCode]);
 	}
 
 	private static function constructConflictResponse(?string $message, int &$responseCode, array &$responseHeaders): BadResponse
 	{
 		$responseCode = Response::HTTP_CONFLICT;
-		return new BadResponse($message ?? Response::$statusTexts[$responseCode]);
+		return self::constructBadResponse($message ?? Response::$statusTexts[$responseCode]);
+	}
+
+	private static function constructBadResponse(string $message): BadResponse
+	{
+		return new BadResponse([
+			'message' => $message,
+		]);
 	}
 }
