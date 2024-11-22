@@ -1,6 +1,14 @@
-import {Authorization} from 'features/authorization/authorization'
+import {Route, Routes} from 'react-router-dom'
+import {LoginPage, UserPortalPage, NotFoundPage} from '../pages'
+import {LoginRoute, UserPortalRoute} from '../shared/routes'
 
-const App = () => <Authorization/>
+const App = () => (
+	<Routes>
+		<Route path={LoginRoute.path} element={<LoginPage />} />
+		<Route path={UserPortalRoute.path} element={<UserPortalPage />} />
+		<Route path="*" element={<NotFoundPage />} />
+	</Routes>
+)
 
 export {
 	App,

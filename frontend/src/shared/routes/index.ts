@@ -1,1 +1,1 @@
-export {LoginRoute} from './routes'
+export {LoginRoute, UserPortalRoute} from './routes'

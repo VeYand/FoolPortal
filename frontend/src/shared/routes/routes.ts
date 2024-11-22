@@ -5,9 +5,15 @@ type RouteType = {
 
 const LoginRoute: RouteType = {
 	path: '/login',
-	getUrl: () => '/login',
+	getUrl: () => LoginRoute.path,
+}
+
+const UserPortalRoute: RouteType = {
+	path: '/portal',
+	getUrl: () => UserPortalRoute.path,
 }
 
 export {
 	LoginRoute,
+	UserPortalRoute,
 }

@@ -10,13 +10,15 @@ import {
 import React, {useState} from 'react'
 import {getCsrfToken} from 'shared/libs'
 import {useLazyLogin} from 'shared/libs/query'
+import {useOnLogin} from './libs/useOnLogin'
 
-const Authorization: React.FC = () => {
+const Authorization = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 
-	const [login] = useLazyLogin()
+	const [login, {error, isLoading, isFetching, isUninitialized, isSuccess}] = useLazyLogin()
+	useOnLogin(!!error, isLoading || isFetching, !!isUninitialized, isSuccess)
 
 	const handleClickShowPassword = () => {
 		setShowPassword(prev => !prev)
@@ -28,19 +30,8 @@ const Authorization: React.FC = () => {
 	}
 
 	return (
-		<Box
-			sx={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-				justifyContent: 'center',
-				height: '100vh',
-				backgroundColor: '#f5f5f5',
-			}}
-		>
-			<Typography variant="h4" gutterBottom>
-				Войти
-			</Typography>
+		<>
+			<Typography variant="h4" gutterBottom>{'Войти'}</Typography>
 			<Box
 				component="form"
 				onSubmit={handleSubmit}
@@ -72,11 +63,9 @@ const Authorization: React.FC = () => {
 						),
 					}}
 				/>
-				<Button variant="contained" color="primary" type="submit">
-					Войти
-				</Button>
+				<Button variant="contained" color="primary" type="submit">{'Войти'}</Button>
 			</Box>
-		</Box>
+		</>
 	)
 }
 
