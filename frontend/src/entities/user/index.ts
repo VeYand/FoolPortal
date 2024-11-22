@@ -1,0 +1,1 @@
+export {userEntitySlice} from './model/userEntitySlice'

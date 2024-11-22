@@ -1,10 +1,15 @@
+import {App} from 'app/App'
+import 'app/styles/index.css'
 import {createRoot} from 'react-dom/client'
-import './index.css'
+import {Provider} from 'react-redux'
+import {store} from 'shared/redux'
 
 const root = document.getElementById('root')
 
 if (root) {
 	createRoot(root).render(
-		<div>Hello world!</div>,
+		<Provider store={store}>
+			<App/>
+		</Provider>,
 	)
 }
