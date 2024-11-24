@@ -8,25 +8,33 @@ import {
 	Typography,
 } from '@mui/material'
 import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {getCsrfToken} from 'shared/libs'
 import {useLazyLogin} from 'shared/libs/query'
-import {useOnLogin} from './libs/useOnLogin'
+import {UserPortalRoute} from 'shared/routes'
 
 const Authorization = () => {
+	const navigate = useNavigate()
+
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 
-	const [login, {error, isLoading, isFetching, isUninitialized, isSuccess}] = useLazyLogin()
-	useOnLogin(!!error, isLoading || isFetching, !!isUninitialized, isSuccess)
+	const [login] = useLazyLogin()
 
 	const handleClickShowPassword = () => {
 		setShowPassword(prev => !prev)
 	}
 
-	const handleSubmit = (event: React.FormEvent) => {
+	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
-		login({email, password, _csrf_token: getCsrfToken()})
+		const data = await login({email, password, _csrf_token: getCsrfToken()})
+		if (data.isSuccess) {
+			navigate(UserPortalRoute.path)
+		}
+		else {
+			console.log(data.error)
+		}
 	}
 
 	return (

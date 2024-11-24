@@ -6,6 +6,7 @@ import {USER_ROLE} from '../../../shared/types/types'
 type UserEntitySlice = {
 	user: UserData,
 	initialized: boolean,
+	loading: boolean,
 }
 
 const emptyUser: UserEntitySlice = {
@@ -18,6 +19,7 @@ const emptyUser: UserEntitySlice = {
 		groupIds: [],
 	},
 	initialized: false,
+	loading: true,
 }
 
 const initialState: UserEntitySlice = emptyUser
@@ -29,6 +31,13 @@ const userEntitySlice = createSlice({
 		setUser: (state: UserEntitySlice, action: PayloadAction<UserData>) => {
 			state.user = action.payload
 			state.initialized = true
+			state.loading = false
+		},
+		setLoading: (state, action: PayloadAction<boolean>) => {
+			state.loading = action.payload
+		},
+		setInitialized: (state, action: PayloadAction<boolean>) => {
+			state.initialized = action.payload
 		},
 	},
 })

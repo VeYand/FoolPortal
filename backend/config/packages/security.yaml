@@ -18,12 +18,12 @@ security:
             custom_authenticators:
                 - App\Security\Infrastructure\Security\UserLoginAuthenticator
             logout:
-                path: /logout
-                target: /login
+                path: /api/v1/logout
+                target: /api/v1/login
             json_login:
-                check_path: /login
-                username_path: json_web_token.email
-                password_path: json_web_token.password
+                check_path: /api/v1/login
+                username_path: email
+                password_path: password
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -33,6 +33,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/v1/login, roles: PUBLIC_ACCESS }
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
 
