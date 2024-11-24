@@ -19,6 +19,7 @@ const Authorization = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
+	const [error, setError] = useState<string | undefined>()
 
 	const [login] = useLazyLogin()
 
@@ -28,12 +29,14 @@ const Authorization = () => {
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
+		setError(undefined)
+
 		const data = await login({email, password, _csrf_token: getCsrfToken()})
 		if (data.isSuccess) {
 			navigate(UserPortalRoute.path)
 		}
 		else {
-			console.log(data.error)
+			setError('Ошибка входа. Пожалуйста, проверьте свои данные.')
 		}
 	}
 
@@ -52,6 +55,7 @@ const Authorization = () => {
 					value={email}
 					onChange={e => setEmail(e.target.value)}
 					required
+					error={!!error}
 				/>
 				<TextField
 					label="Пароль"
@@ -65,12 +69,18 @@ const Authorization = () => {
 						endAdornment: (
 							<InputAdornment position="end">
 								<IconButton onClick={handleClickShowPassword} edge="end">
-									{showPassword ? <VisibilityOff/> : <Visibility/>}
+									{showPassword ? <VisibilityOff /> : <Visibility />}
 								</IconButton>
 							</InputAdornment>
 						),
 					}}
+					error={!!error}
 				/>
+				{error && (
+					<Typography color="error" variant="body2" sx={{mb: 2}}>
+						{error}
+					</Typography>
+				)}
 				<Button variant="contained" color="primary" type="submit">{'Войти'}</Button>
 			</Box>
 		</>
