@@ -5,5 +5,5 @@ namespace App\User\App\Query;
 
 interface ImageQueryServiceInterface
 {
-	public function getImageUrl(string $imagePath): string;
+	public function getImageUrl(?string $imagePath): ?string;
 }

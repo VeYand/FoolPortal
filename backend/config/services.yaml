@@ -36,3 +36,7 @@ services:
     App\Lesson\App\Service\Listener\CourseDeletedEventListener:
         tags:
             - { name: 'kernel.event_listener', event: App\Subject\Domain\Service\Event\CourseDeletedEventInterface, method: '__invoke' }
+
+    App\Controller\AuthorizationApiHandler:
+        tags:
+            - { name: "open_api_server.api", api: "authorization"}

@@ -7,7 +7,7 @@ use App\User\App\Query\ImageQueryServiceInterface;
 
 class ImageQueryService implements ImageQueryServiceInterface
 {
-	public function getImageUrl(string $imagePath): string
+	public function getImageUrl(?string $imagePath): ?string
 	{
 		return $imagePath;
 	}

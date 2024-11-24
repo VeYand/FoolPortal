@@ -55,7 +55,7 @@ readonly class TeacherSubjectService
 
 		if (is_null($user))
 		{
-			throw new AppException('User does not exist', AppException::GROUP_NOT_EXISTS);
+			throw new AppException('User does not exist', AppException::USER_NOT_EXISTS);
 		}
 
 		if ($user->role !== UserRole::TEACHER)

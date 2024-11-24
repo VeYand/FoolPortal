@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Fool Portal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     {{ vite_entry_link_tags('app') }}
     {{ vite_entry_script_tags('app') }}
 </head>
 <body>
-<input type="hidden" id="_csrf_token" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 <div id="root"></div>
+<input type="hidden" id="_csrf_token" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 </body>
 </html>

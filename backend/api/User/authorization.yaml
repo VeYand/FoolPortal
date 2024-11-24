@@ -1,0 +1,19 @@
+components:
+  schemas:
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          nullable: false
+        password:
+          type: string
+          nullable: false
+        _csrf_token:
+          type: string
+          nullable: false
+      required:
+        - email
+        - password
+        - _csrf_token

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Session\Api;
 
 use App\Session\Api\Exception\ApiException;
-use App\Security\App\Exception\AppException;
+use App\Session\App\Exception\AppException;
 use App\Session\App\Provider\Data\SessionUser;
 use App\Session\App\Provider\SessionProviderInterface;
 

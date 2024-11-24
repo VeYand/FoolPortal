@@ -1,7 +1,7 @@
 services:
   db:
     container_name: fool-portal-db
-    image: mysql:8.0.24
+    image: mirror.gcr.io/mysql:8.0.24
     ports:
       - "4306:3306"
     environment:
