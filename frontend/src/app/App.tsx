@@ -4,6 +4,7 @@ import {Route, Routes} from 'react-router-dom'
 import {useInitializeUser} from 'shared/libs/hooks'
 import {LoginRoute, UserPortalRoute} from 'shared/routes'
 import {LoginPage, UserPortalPage, NotFoundPage} from '../pages'
+import {theme} from './theme'
 
 const App = () => {
 	const {isLoading} = useInitializeUser()
@@ -13,7 +14,7 @@ const App = () => {
 	}
 
 	return (
-		<ConfigProvider>
+		<ConfigProvider theme={theme}>
 			<Routes>
 				<Route path={LoginRoute.path} element={<LoginPage/>}/>
 				<Route path={UserPortalRoute.path} element={<UserPortalPage/>}/>
