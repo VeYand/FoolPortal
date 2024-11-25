@@ -10,6 +10,7 @@
     "generate-api": "docker run --rm -v ${PWD}/../:/var/www mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0 generate -i /var/www/backend/api/fool-portal-api.yaml -g typescript-axios -o /var/www/frontend/src/shared/api"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.1",
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.22.2",
     "axios": "^1.6.7",
