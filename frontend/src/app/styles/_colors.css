@@ -1,3 +1,6 @@
 :root {
-
+    --color-text: rgba(0, 0, 0, 0.85);
+    --color-primary: #4CAF50;
+    --color-fill-fecondary: #A5D6A7;
+    --color-shape-fill: #DAE9B3;
 }

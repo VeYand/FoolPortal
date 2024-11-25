@@ -1,9 +1,12 @@
+import {Header} from 'widgets/header/Header'
+import {Tabs} from 'widgets/tabs/Tabs'
+import {getTabs} from './model/getTabs'
+
 const UserPortalPage = () => (
-	<div>
-		{'Добро пожаловать в пользовательский портал!'}
-	</div>
+	<>
+		<Header/>
+		<Tabs tabs={getTabs()}/>
+	</>
 )
 
-export {
-	UserPortalPage,
-}
+export {UserPortalPage}

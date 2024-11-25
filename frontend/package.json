@@ -7,14 +7,12 @@
     "dev": "vite",
     "build": "node eslint.mjs && tsc && vite build --emptyOutDir",
     "build-dev": "vite build --emptyOutDir",
-    "generate-api": "docker run --rm -v ${PWD}/../:/var/www mirror.gcr.io/openapitools/openapi-generator-cli:v7.3.0 generate -i /var/www/backend/api/fool-portal-api.yaml -g typescript-axios -o /var/www/frontend/src/shared/api"
+    "generate-api": "docker run --rm -v ${PWD}/../:/var/www mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0 generate -i /var/www/backend/api/fool-portal-api.yaml -g typescript-axios -o /var/www/frontend/src/shared/api"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
-    "@mui/icons-material": "^6.1.8",
-    "@mui/material": "^6.1.8",
+    "@ant-design/icons": "^5.5.1",
     "@reduxjs/toolkit": "^1.9.5",
+    "antd": "^5.22.2",
     "axios": "^1.6.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
+import {Spin} from 'antd'
+import styles from './Preloader.module.css'
 
 const Preloader = () => (
-	<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-		<CircularProgress/>
-	</Box>
+	<div className={styles.preloaderContainer}>
+		<Spin size="large" />
+	</div>
 )
 
 export {
