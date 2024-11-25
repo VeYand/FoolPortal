@@ -1,3 +1,4 @@
+import {ConfigProvider} from 'antd'
 import {Preloader} from 'features/preloader/Preloader'
 import {Route, Routes} from 'react-router-dom'
 import {useInitializeUser} from 'shared/libs/hooks'
@@ -12,11 +13,13 @@ const App = () => {
 	}
 
 	return (
-		<Routes>
-			<Route path={LoginRoute.path} element={<LoginPage/>}/>
-			<Route path={UserPortalRoute.path} element={<UserPortalPage/>}/>
-			<Route path="*" element={<NotFoundPage/>}/>
-		</Routes>
+		<ConfigProvider>
+			<Routes>
+				<Route path={LoginRoute.path} element={<LoginPage/>}/>
+				<Route path={UserPortalRoute.path} element={<UserPortalPage/>}/>
+				<Route path="*" element={<NotFoundPage/>}/>
+			</Routes>
+		</ConfigProvider>
 	)
 }
 

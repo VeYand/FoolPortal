@@ -1,4 +1,4 @@
-import {Box} from '@mui/material'
+import {Layout, Row, Col} from 'antd'
 import {Authorization} from 'features/authorization/authorization'
 import {Preloader} from 'features/preloader/Preloader'
 import {useEffect} from 'react'
@@ -21,17 +21,13 @@ const LoginPage = () => {
 	}
 
 	return (
-		<Box
-			sx={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-				justifyContent: 'center',
-				height: '100vh',
-				backgroundColor: '#f5f5f5',
-			}}>
-			<Authorization/>
-		</Box>
+		<Layout>
+			<Row justify="center">
+				<Col>
+					<Authorization />
+				</Col>
+			</Row>
+		</Layout>
 	)
 }
 
