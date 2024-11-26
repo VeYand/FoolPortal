@@ -1,35 +1,58 @@
 import {UserOutlined} from '@ant-design/icons'
 import {Layout, Avatar, Typography} from 'antd'
 import {userEntitySlice} from 'entities/user'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import {useLazyLogout} from 'shared/libs/query'
 import {useAppDispatch, useAppSelector} from 'shared/redux'
 import {LoginRoute, ProfileRoute, UserPortalRoute} from 'shared/routes'
-import {Popover} from 'shared/ui/Popover/Popover'
+import {Popover, PopoverItem} from 'shared/ui/Popover/Popover'
 import styles from './Header.module.css'
 
-const Header = () => {
-	const navigate = useNavigate()
+const usePopoverItems = (): PopoverItem[] => {
 	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
+	const location = useLocation()
 	const [logout] = useLazyLogout()
-	const {user} = useAppSelector(state => state.userEntity)
 
-	const onClickToLogo = () => {
-		navigate(UserPortalRoute.path)
-	}
-
-	const navigateToPortal = () => {
-		navigate(UserPortalRoute.path)
-	}
-
-	const navigateToProfile = () => {
-		navigate(ProfileRoute.path)
-	}
+	const handleNavigation = (path: string) => () => navigate(path)
 
 	const handleLogout = async () => {
 		dispatch(userEntitySlice.actions.setInitialized(false))
 		await logout({})
 		navigate(LoginRoute.path)
+	}
+
+	const popoverItems: PopoverItem[] = []
+
+	if (location.pathname !== UserPortalRoute.path) {
+		popoverItems.push({
+			label: 'Перейти в портал пользователя',
+			onClick: handleNavigation(UserPortalRoute.path),
+		})
+	}
+
+	if (location.pathname !== ProfileRoute.path) {
+		popoverItems.push({
+			label: 'Перейти в мой профиль',
+			onClick: handleNavigation(ProfileRoute.path),
+		})
+	}
+
+	popoverItems.push({
+		label: 'Выйти',
+		onClick: handleLogout,
+	})
+
+	return popoverItems
+}
+
+const Header = () => {
+	const navigate = useNavigate()
+	const {user} = useAppSelector(state => state.userEntity)
+	const popoverItems = usePopoverItems()
+
+	const onClickToLogo = () => {
+		navigate(UserPortalRoute.path)
 	}
 
 	return (
@@ -38,11 +61,7 @@ const Header = () => {
 				{'Fool Portal'}
 			</Typography.Title>
 			<Popover
-				items={[
-					{label: 'Перейти в портал пользователя', onClick: navigateToPortal},
-					{label: 'Перейти в мой профиль', onClick: navigateToProfile},
-					{label: 'Выйти', onClick: handleLogout},
-				]}
+				items={popoverItems}
 			>
 				<Avatar
 					src={user.imageSrc}

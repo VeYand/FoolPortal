@@ -36,4 +36,5 @@ const Popover = ({items, children}: PopoverProps) => (
 
 export {
 	Popover,
+	type PopoverItem,
 }
