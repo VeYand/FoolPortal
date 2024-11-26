@@ -40,3 +40,7 @@ services:
     App\Controller\AuthorizationApiHandler:
         tags:
             - { name: "open_api_server.api", api: "authorization"}
+
+    App\Controller\SubjectApiHandler:
+        tags:
+            - { name: "open_api_server.api", api: "subject" }

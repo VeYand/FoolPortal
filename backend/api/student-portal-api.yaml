@@ -21,7 +21,6 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
-
           $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v1/login:
@@ -51,6 +50,59 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
+
+  /api/v1/subject/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListSubjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/subject.yaml#/components/schemas/SubjectsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/CreateSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/update:
+    post:
+      tags:
+        - Subject
+      operationId: UpdateSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/UpdateSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
 components:
   schemas:

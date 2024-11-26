@@ -1,8 +1,9 @@
-import {AuthorizationApi, Configuration} from 'shared/api'
+import {AuthorizationApi, Configuration, SubjectApi} from 'shared/api'
 import {ApiWrapper} from './apiWrapper'
 
 type StudentPortalApiType = {
 	authorizationApi: AuthorizationApi,
+	subjectApi: SubjectApi,
 }
 
 // @ts-expect-error
@@ -15,8 +16,10 @@ let resultApi: StudentPortalApiType | null = null
 
 const studentPortalApi: ApiWrapper<StudentPortalApiType> = {
 	init: () => {
+		const configuration = new Configuration({basePath: baseUrl})
 		resultApi = {
-			authorizationApi: new AuthorizationApi(new Configuration({basePath: baseUrl})),
+			authorizationApi: new AuthorizationApi(configuration),
+			subjectApi: new SubjectApi(configuration),
 		}
 	},
 	get: () => {
