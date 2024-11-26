@@ -2,6 +2,7 @@ import {Input, Button, Typography, Form, Alert} from 'antd'
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {getCsrfToken} from 'shared/libs'
+import {useInitializeUser} from 'shared/libs/hooks'
 import {useLazyLogin} from 'shared/libs/query'
 import {UserPortalRoute} from 'shared/routes'
 import styles from './Authorization.module.css'
@@ -13,12 +14,13 @@ const Authorization = () => {
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState<string | undefined>()
 	const [login] = useLazyLogin()
-
+	const {initialize} = useInitializeUser()
 
 	const handleSubmit = async () => {
 		setError(undefined)
 		const data = await login({email, password, _csrf_token: getCsrfToken()})
 		if (data.isSuccess) {
+			initialize()
 			navigate(UserPortalRoute.path)
 		}
 		else {
