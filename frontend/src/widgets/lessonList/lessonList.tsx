@@ -23,9 +23,13 @@ const LessonList = () => {
 		}
 	}
 
+	const handleDelete = (id: string) => {
+		setItems(prevItems => prevItems.filter(item => item.id !== id))
+	}
+
 	return (
 		<div>
-			<EditableListWidget title="Предметы" data={items} onSave={handleSave} />
+			<EditableListWidget title="Предметы" data={items} onSave={handleSave} onDelete={handleDelete} />
 		</div>
 	)
 }

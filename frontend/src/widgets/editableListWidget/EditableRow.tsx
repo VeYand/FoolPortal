@@ -10,9 +10,10 @@ type EditableItem = {
 type EditableRowProps = {
 	item: EditableItem,
 	onSave: (name: string, id: string | undefined) => void,
+	onDelete: (id: string) => void,
 }
 
-const EditableRow = ({item, onSave}: EditableRowProps) => {
+const EditableRow = ({item, onSave, onDelete}: EditableRowProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [value, setValue] = useState(item.name)
 
@@ -20,6 +21,9 @@ const EditableRow = ({item, onSave}: EditableRowProps) => {
 	const handleSave = () => {
 		onSave(value, item.id)
 		setIsEditing(false)
+	}
+	const handleDelete = () => {
+		onDelete(item.id)
 	}
 
 	return (
@@ -38,10 +42,13 @@ const EditableRow = ({item, onSave}: EditableRowProps) => {
 			<td className={styles.actionCell}>
 				{isEditing ? (
 					<Button onClick={handleSave} type="primary">
-						Save
+						{'Сохранить'}
 					</Button>
 				) : (
-					<Button onClick={handleEdit}>Edit</Button>
+					<div className={styles.buttons}>
+						<Button onClick={handleEdit}>{'Редактировать'}</Button>
+						<Button onClick={handleDelete} danger>{'Удалить'}</Button>
+					</div>
 				)}
 			</td>
 		</tr>

@@ -7,9 +7,10 @@ type EditableListWidgetProps = {
 	title: string,
 	data: EditableItem[],
 	onSave: (name: string, id?: string) => void,
+	onDelete: (id: string) => void,
 }
 
-const EditableListWidget = ({title, data, onSave}: EditableListWidgetProps) => {
+const EditableListWidget = ({title, data, onSave, onDelete}: EditableListWidgetProps) => {
 	const [newItemName, setNewItemName] = useState('')
 
 	const handleAddItem = () => {
@@ -24,7 +25,7 @@ const EditableListWidget = ({title, data, onSave}: EditableListWidgetProps) => {
 			title: 'Name',
 			dataIndex: 'name',
 			key: 'name',
-			render: (_: any, item: EditableItem) => <EditableRow item={item} onSave={onSave} />,
+			render: (_: any, item: EditableItem) => <EditableRow item={item} onSave={onSave} onDelete={onDelete} />,
 		},
 		{
 			title: 'Action',
@@ -54,6 +55,7 @@ const EditableListWidget = ({title, data, onSave}: EditableListWidgetProps) => {
 				pagination={false}
 				showHeader={false}
 				className={styles.table}
+				locale={{emptyText: 'Нет данных'}}
 			/>
 		</div>
 	)

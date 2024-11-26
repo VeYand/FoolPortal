@@ -14,3 +14,8 @@
 .input {
     max-width: 240px;
 }
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
