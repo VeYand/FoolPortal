@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Fool Portal API
-  x-api-identifier: FoolPortal
-  description: API for Fool Portal
+  title: Student Portal API
+  x-api-identifier: StudentPortal
+  description: API for Student Portal
 
 paths:
   /api/v1/user:

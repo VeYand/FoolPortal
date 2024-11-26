@@ -18,7 +18,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
         "pentatrion/vite-bundle": "^7.0",
-        "openapitools/fool-portal": "*@dev",
+        "openapitools/student-portal": "*@dev",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
         "symfony/event-dispatcher": "7.1.*",
@@ -70,7 +70,7 @@
             "@auto-scripts"
         ],
         "generate-api" : [
-            "docker run --rm -v ${PWD}:/app mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0 generate -i app/api/fool-portal-api.yaml -g php-symfony --additional-properties composerPackageName=openapitools/fool-portal -o app/open-api"
+            "docker run --rm -v ${PWD}:/app mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0 generate -i app/api/student-portal-api.yaml -g php-symfony --additional-properties composerPackageName=openapitools/student-portal -o app/open-api"
         ]
     },
     "conflict": {

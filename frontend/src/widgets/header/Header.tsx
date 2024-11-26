@@ -58,7 +58,7 @@ const Header = () => {
 	return (
 		<Layout.Header className={styles.header}>
 			<Typography.Title level={1} className={styles.title} onClick={onClickToLogo}>
-				{'Fool Portal'}
+				{'Student Portal'}
 			</Typography.Title>
 			<Popover
 				items={popoverItems}

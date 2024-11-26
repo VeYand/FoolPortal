@@ -1,9 +1,9 @@
-import {apiSlice, foolPortalApi} from 'shared/redux/api'
+import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
 		getLoggedUser: builder.query({
-			queryFn: async () => await foolPortalApi.get().authorizationApi.getLoggedUser(),
+			queryFn: async () => await studentPortalApi.get().authorizationApi.getLoggedUser(),
 		}),
 	}),
 })

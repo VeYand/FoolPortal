@@ -1,7 +1,7 @@
 import {AuthorizationApi, Configuration} from 'shared/api'
 import {ApiWrapper} from './apiWrapper'
 
-type FoolPortalApiType = {
+type StudentPortalApiType = {
 	authorizationApi: AuthorizationApi,
 }
 
@@ -11,9 +11,9 @@ if (!baseUrl) {
 	throw new Error('Base url is not configured')
 }
 
-let resultApi: FoolPortalApiType | null = null
+let resultApi: StudentPortalApiType | null = null
 
-const foolPortalApi: ApiWrapper<FoolPortalApiType> = {
+const studentPortalApi: ApiWrapper<StudentPortalApiType> = {
 	init: () => {
 		resultApi = {
 			authorizationApi: new AuthorizationApi(new Configuration({basePath: baseUrl})),
@@ -21,12 +21,12 @@ const foolPortalApi: ApiWrapper<FoolPortalApiType> = {
 	},
 	get: () => {
 		if (!resultApi) {
-			throw new Error('FoolPortalApi is not initialized')
+			throw new Error('StudentPortalApi is not initialized')
 		}
 		return resultApi
 	},
 }
 
 export {
-	foolPortalApi,
+	studentPortalApi,
 }

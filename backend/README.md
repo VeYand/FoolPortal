@@ -3,7 +3,7 @@
 ### Зайти в контейнер бэкенда
 
 ```bash
-docker exec -it fool-portal-backend bash
+docker exec -it student-portal-backend bash
 ```
 
 ## Работа с миграциями
