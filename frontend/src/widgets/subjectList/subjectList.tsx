@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {EditableListWidget} from 'widgets/editableListWidget/EditableListWidget'
 import {EditableItem} from 'widgets/editableListWidget/EditableRow'
 
-const LessonList = () => {
+const SubjectList = () => {
 	const [items, setItems] = useState<EditableItem[]>([
 		{id: '1', name: 'Предмет 1'},
 		{id: '2', name: 'Предмет 2'},
@@ -35,5 +35,5 @@ const LessonList = () => {
 }
 
 export {
-	LessonList,
+	SubjectList,
 }
