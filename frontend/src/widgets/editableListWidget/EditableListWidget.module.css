@@ -1,0 +1,22 @@
+.widget {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.newItemContainer {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.newItemInput {
+    flex: 1;
+}
+
+.addButton {
+    flex-shrink: 0;
+}
+
+.table {
+    width: 100%;
+}
