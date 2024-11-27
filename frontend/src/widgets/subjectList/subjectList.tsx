@@ -1,30 +1,48 @@
-import {useState} from 'react'
+import {useEffect, useMemo} from 'react'
+import {useLazyCreateSubject} from 'shared/libs/query/useLazyCreateSubject'
+import {useLazyUpdateSubject} from 'shared/libs/query/useLazyUpdateSubject'
+import {useAppSelector} from 'shared/redux'
 import {EditableListWidget} from 'widgets/editableListWidget/EditableListWidget'
 import {EditableItem} from 'widgets/editableListWidget/EditableRow'
+import {useInitializeSubjects} from './libs/useInitializeSubjects'
 
 const SubjectList = () => {
-	const [items, setItems] = useState<EditableItem[]>([
-		{id: '1', name: 'Предмет 1'},
-		{id: '2', name: 'Предмет 2'},
-	])
+	const [createSubject] = useLazyCreateSubject()
+	const [updateSubject] = useLazyUpdateSubject()
+	const {initialize} = useInitializeSubjects()
+	const {subjects} = useAppSelector(state => state.subjectEntity)
+	const items = useMemo((): EditableItem[] => subjects.map(
+		subject => ({id: subject.subjectId, name: subject.name}),
+	), [subjects])
 
-	const handleSave = (newName: string, id?: string) => {
+	useEffect(initialize, [initialize])
+
+	const handleSave = async (newName: string, id?: string) => {
 		if (id) {
-			setItems(prevItems =>
-				prevItems.map(item => (item.id === id ? {...item, name: newName} : item)),
-			)
+			const data = await updateSubject({subjectId: id, name: newName})
+
+			if (data.isSuccess) {
+				initialize()
+			}
+			else {
+				console.log('Не удалось обновить')// TODO добавить тостики
+			}
 		}
 		else {
-			const newItem: EditableItem = {
-				id: Math.random().toString(),
-				name: newName,
+			const data = await createSubject({name: newName})
+
+			if (data.isSuccess) {
+				initialize()
 			}
-			setItems(prevItems => [...prevItems, newItem])
+			else {
+				console.log('Не удалось сохранить')
+			}
 		}
 	}
 
 	const handleDelete = (id: string) => {
-		setItems(prevItems => prevItems.filter(item => item.id !== id))
+		// setItems(prevItems => prevItems.filter(item => item.id !== id)) TODO проверить ролевую модель
+		console.log('Удаляем: ', id)
 	}
 
 	return (

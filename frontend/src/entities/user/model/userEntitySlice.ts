@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {UserData} from 'shared/types'
-import {USER_ROLE} from '../../../shared/types/types'
+import {UserData, USER_ROLE} from 'shared/types'
 
 
 type UserEntitySlice = {

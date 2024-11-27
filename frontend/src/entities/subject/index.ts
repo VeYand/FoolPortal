@@ -1,0 +1,1 @@
+export {subjectEntitySlice} from './model/subjectEntitySlice'

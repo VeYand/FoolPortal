@@ -16,7 +16,13 @@ type UserData = {
 	groupIds: string[],
 }
 
+type SubjectData = {
+	subjectId: string,
+	name: string,
+}
+
 export {
 	type UserData,
 	USER_ROLE,
+	type SubjectData,
 }
