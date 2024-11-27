@@ -6,7 +6,7 @@ import {EditableListWidget} from 'widgets/editableListWidget/EditableListWidget'
 import {EditableItem} from 'widgets/editableListWidget/EditableRow'
 import {useInitializeSubjects} from './libs/useInitializeSubjects'
 
-const SubjectList = () => {
+const SubjectsList = () => {
 	const [createSubject] = useLazyCreateSubject()
 	const [updateSubject] = useLazyUpdateSubject()
 	const [deleteSubject] = useLazyDeleteSubject()
@@ -72,5 +72,5 @@ const SubjectList = () => {
 }
 
 export {
-	SubjectList,
+	SubjectsList,
 }

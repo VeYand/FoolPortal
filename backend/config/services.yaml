@@ -44,3 +44,7 @@ services:
     App\Controller\SubjectApiHandler:
         tags:
             - { name: "open_api_server.api", api: "subject" }
+
+    App\Controller\LessonApiHandler:
+        tags:
+            - { name: "open_api_server.api", api: "lesson" }

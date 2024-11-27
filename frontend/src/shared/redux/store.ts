@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit'
+import {locationEntitySlice} from 'entities/location'
 import {subjectEntitySlice} from 'entities/subject'
 import {userEntitySlice} from 'entities/user'
 import {apiSlice} from './api'
@@ -8,6 +9,7 @@ const store = configureStore({
 	reducer: {
 		userEntity: userEntitySlice.reducer,
 		subjectEntity: subjectEntitySlice.reducer,
+		locationEntity: locationEntitySlice.reducer,
 		[apiSlice.reducerPath]: apiSlice.reducer,
 	},
 	middleware: getDefaultMiddleware =>

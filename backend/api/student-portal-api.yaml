@@ -186,7 +186,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './Subject/subject.yaml#/components/schemas/DeleteSubjectRequest'
+              $ref: './Lesson/location.yaml#/components/schemas/DeleteLocationRequest'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'

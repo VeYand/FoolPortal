@@ -7,8 +7,9 @@ use App\Controller\Exception\ExceptionHandler;
 use App\Lesson\Api\LessonApiInterface;
 use OpenAPI\Server\Api\LessonApiInterface as LessonApiHandlerInterface;
 use OpenAPI\Server\Model\CreateLocationRequest;
-use OpenAPI\Server\Model\DeleteSubjectRequest;
+use OpenAPI\Server\Model\DeleteLocationRequest;
 use OpenAPI\Server\Model\UpdateLocationRequest;
+use OpenAPI\Server\Model\LocationsList as ApiLocationsList;
 
 readonly class LessonApiHandler implements LessonApiHandlerInterface
 {
@@ -33,11 +34,11 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteLocation(DeleteSubjectRequest $deleteSubjectRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteLocation(DeleteLocationRequest $deleteLocationRequest, int &$responseCode, array &$responseHeaders): void
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($deleteSubjectRequest)
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteLocationRequest)
 		{
-			$this->subjectApi->deleteLocation($deleteSubjectRequest->getSubjectId());
+			$this->subjectApi->deleteLocation($deleteLocationRequest->getLocationId());
 		}, $responseCode, $responseHeaders);
 	}
 
@@ -48,7 +49,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function ()
 		{
-			return $this->subjectApi->listAllLocations();
+			return new ApiLocationsList([
+				'locations' => $this->subjectApi->listAllLocations(),
+			]);
 		}, $responseCode, $responseHeaders);
 	}
 
