@@ -70,6 +70,11 @@ interface LessonApiInterface
 	public function findLocationsByIds(array $locationIds): array;
 
 	/**
+	 * @return LocationData[]
+	 */
+	public function listAllLocations(): array;
+
+	/**
 	 * @param string[] $attachmentIds
 	 * @return AttachmentData[]
 	 */

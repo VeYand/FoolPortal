@@ -123,6 +123,78 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/location/list:
+    get:
+      tags:
+        - Lesson
+      operationId: ListLocations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Lesson/location.yaml#/components/schemas/LocationsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/create:
+    post:
+      tags:
+        - Lesson
+      operationId: CreateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/location.yaml#/components/schemas/CreateLocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/update:
+    post:
+      tags:
+        - Lesson
+      operationId: UpdateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/location.yaml#/components/schemas/UpdateLocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/delete:
+    post:
+      tags:
+        - Lesson
+      operationId: DeleteLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/DeleteSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
 components:
   schemas:
     BadResponse:
