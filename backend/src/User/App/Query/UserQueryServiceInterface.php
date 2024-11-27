@@ -6,6 +6,7 @@ namespace App\User\App\Query;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
+use App\User\App\Query\Spec\ListUsersSpec;
 
 interface UserQueryServiceInterface
 {
@@ -32,5 +33,5 @@ interface UserQueryServiceInterface
 	/**
 	 * @return DetailedUserData[]
 	 */
-	public function listAllUsers(): array;
+	public function listUsers(ListUsersSpec $spec): array;
 }

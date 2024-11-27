@@ -51,6 +51,29 @@ paths:
         '200':
           $ref: '#/components/responses/SuccessResponse'
 
+  /api/v1/user/list:
+    get:
+      tags:
+        - User
+      operationId: ListUsers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/user.yaml#/components/schemas/ListUsersSpec'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/user.yaml#/components/schemas/UsersList'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/subject/list:
     get:
       tags:

@@ -43,3 +43,23 @@ components:
         - role
         - email
         - groupIds
+
+    UsersList:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserData'
+      required:
+        - users
+
+    ListUsersSpec:
+      type: object
+      properties:
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false

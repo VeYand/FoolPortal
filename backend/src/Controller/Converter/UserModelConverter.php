@@ -21,4 +21,16 @@ readonly class UserModelConverter
 			'groupIds' => $user->groupIds,
 		]);
 	}
+
+	/**
+	 * @param DetailedUserData[] $users
+	 * @return ApiUserData[]
+	 */
+	public static function convertUsersToApiUsers(array $users): array
+	{
+		return array_map(
+			static fn(DetailedUserData $user) => self::convertUserDataToApiUserData($user),
+			$users,
+		);
+	}
 }

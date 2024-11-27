@@ -7,6 +7,7 @@ use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\Data\UserData;
+use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 
@@ -38,7 +39,7 @@ interface UserApiInterface
 	 * @return DetailedUserData[]
 	 * @throws ApiException
 	 */
-	public function listAllUsers(): array;
+	public function listUsers(ListUsersSpec $spec): array;
 
 	/**
 	 * @return GroupData[]
