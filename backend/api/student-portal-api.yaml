@@ -123,6 +123,84 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/teacher-subject/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/ListTeacherSubjectRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/teacherSubject.yaml#/components/schemas/TeacherSubjectList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/CreateTeacherSubjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/update:
+    post:
+      tags:
+        - Subject
+      operationId: UpdateTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/UpdateTeacherSubjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/DeleteTeacherSubjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/location/list:
     get:
       tags:
