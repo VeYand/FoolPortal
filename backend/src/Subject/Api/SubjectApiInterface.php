@@ -7,6 +7,7 @@ use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Data\SubjectData;
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 
 interface SubjectApiInterface
 {
@@ -26,14 +27,16 @@ interface SubjectApiInterface
 	public function deleteSubject(string $subjectId): void;
 
 	/**
+	 * @param CreateTeacherSubjectInput[] $inputs
 	 * @throws ApiException
 	 */
-	public function createTeacherSubject(string $teacherId, string $subjectId): void;
+	public function createTeacherSubjects(array $inputs): void;
 
 	/**
+	 * @param string[] $teacherSubjectIds
 	 * @throws ApiException
 	 */
-	public function deleteTeacherSubject(string $teacherSubjectId): void;
+	public function deleteTeacherSubjects(array $teacherSubjectIds): void;
 
 	/**
 	 * @throws ApiException
@@ -54,6 +57,11 @@ interface SubjectApiInterface
 	 * @return TeacherSubjectData[]
 	 */
 	public function listAllTeacherSubjects(): array;
+
+	/**
+	 * @return TeacherSubjectData[]
+	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array;
 
 	/**
 	 * @return CourseData[]

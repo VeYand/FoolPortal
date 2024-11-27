@@ -61,22 +61,22 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createTeacherSubject(string $teacherId, string $subjectId): void
+	public function createTeacherSubjects(array $inputs): void
 	{
-		self::tryExecute(function () use ($teacherId, $subjectId)
+		self::tryExecute(function () use ($inputs)
 		{
-			$this->teacherSubjectService->create($teacherId, $subjectId);
+			$this->teacherSubjectService->create($inputs);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteTeacherSubject(string $teacherSubjectId): void
+	public function deleteTeacherSubjects(array $teacherSubjectIds): void
 	{
-		self::tryExecute(function () use ($teacherSubjectId)
+		self::tryExecute(function () use ($teacherSubjectIds)
 		{
-			$this->teacherSubjectService->delete($teacherSubjectId);
+			$this->teacherSubjectService->delete($teacherSubjectIds);
 		});
 	}
 
@@ -116,6 +116,14 @@ readonly class SubjectApi implements SubjectApiInterface
 	public function listAllTeacherSubjects(): array
 	{
 		return $this->teacherSubjectQueryService->listAllTeacherSubjects();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array
+	{
+		return $this->teacherSubjectQueryService->listTeacherSubjectsByGroup($groupId);
 	}
 
 	/**

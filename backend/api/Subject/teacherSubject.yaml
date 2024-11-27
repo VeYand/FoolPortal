@@ -65,39 +65,10 @@ components:
       required:
         - teacherSubjects
 
-    UpdateTeacherSubjectInput:
-      type: object
-      properties:
-        teacherSubjectId:
-          type: string
-          format: uuid
-          nullable: false
-        teacherId:
-          type: string
-          format: uuid
-          nullable: false
-        subjectId:
-          type: string
-          format: uuid
-          nullable: false
-      required:
-        - teacherId
-        - subjectId
-
-    UpdateTeacherSubjectsRequest:
-      type: object
-      properties:
-        teacherSubjects:
-          type: array
-          items:
-            $ref: '#/components/schemas/UpdateTeacherSubjectInput'
-      required:
-        - teacherSubjects
-
     DeleteTeacherSubjectsRequest:
       type: object
       properties:
-        teacherSubjectId:
+        teacherSubjectIds:
           type: array
           items:
             type: string

@@ -163,25 +163,6 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/teacher-subject/update:
-    post:
-      tags:
-        - Subject
-      operationId: UpdateTeacherSubjects
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: './Subject/teacherSubject.yaml#/components/schemas/UpdateTeacherSubjectsRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
   /api/v1/teacher-subject/delete:
     post:
       tags:

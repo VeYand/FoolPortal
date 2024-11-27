@@ -6,6 +6,7 @@ namespace App\Subject\App\Service;
 use App\Subject\App\Adapter\Data\UserRole;
 use App\Subject\App\Adapter\UserAdapterInterface;
 use App\Subject\App\Exception\AppException;
+use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 use App\Subject\Domain\Service\TeacherSubjectService as DomainTeacherSubjectService;
 
 readonly class TeacherSubjectService
@@ -19,28 +20,36 @@ readonly class TeacherSubjectService
 	}
 
 	/**
+	 * @param CreateTeacherSubjectInput[] $inputs
 	 * @throws AppException
 	 */
-	public function create(string $teacherId, string $subjectId): void
+	public function create(array $inputs): void // TODO Убрать вызов методов в цикле
 	{
-		$this->assertIsTeacher($teacherId);
-
-		$callback = function () use ($teacherId, $subjectId): void
+		foreach ($inputs as $input)
 		{
-			$this->teacherSubjectService->create($teacherId, $subjectId);
+			$this->assertIsTeacher($input->teacherId);
+		}
+
+		$callback = function () use ($inputs): void
+		{
+			foreach ($inputs as $input)
+			{
+				$this->teacherSubjectService->create($input->teacherId, $input->subjectId);
+			}
 		};
 
 		$this->transactionService->execute($callback);
 	}
 
 	/**
+	 * @param string[] $teacherSubjectIds
 	 * @throws AppException
 	 */
-	public function delete(string $teacherSubjectId): void
+	public function delete(array $teacherSubjectIds): void
 	{
-		$callback = function () use ($teacherSubjectId): void
+		$callback = function () use ($teacherSubjectIds): void
 		{
-			$this->teacherSubjectService->delete([$teacherSubjectId]);
+			$this->teacherSubjectService->delete($teacherSubjectIds);
 		};
 
 		$this->transactionService->execute($callback);

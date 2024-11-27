@@ -28,6 +28,11 @@ interface TeacherSubjectReadRepositoryInterface
 	public function findBySubject(string $subjectId): array;
 
 	/**
+	 * @return TeacherSubject[]
+	 */
+	public function findByGroup(string $groupId): array;
+
+	/**
 	 * @param string[] $teacherIds
 	 * @return TeacherSubject[]
 	 */
