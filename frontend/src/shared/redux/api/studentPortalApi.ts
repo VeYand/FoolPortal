@@ -1,8 +1,9 @@
-import {AuthorizationApi, Configuration, LessonApi, SubjectApi} from 'shared/api'
+import {AuthorizationApi, Configuration, LessonApi, SubjectApi, UserApi} from 'shared/api'
 import {ApiWrapper} from './apiWrapper'
 
 type StudentPortalApiType = {
 	authorizationApi: AuthorizationApi,
+	userApi: UserApi,
 	subjectApi: SubjectApi,
 	lessonApi: LessonApi,
 }
@@ -20,6 +21,7 @@ const studentPortalApi: ApiWrapper<StudentPortalApiType> = {
 		const configuration = new Configuration({basePath: baseUrl})
 		resultApi = {
 			authorizationApi: new AuthorizationApi(configuration),
+			userApi: new UserApi(configuration),
 			subjectApi: new SubjectApi(configuration),
 			lessonApi: new LessonApi(configuration),
 		}
