@@ -1,4 +1,4 @@
-import {Table, Button, Modal, Select} from 'antd'
+import {Table, Button, Modal, Select, Tag} from 'antd'
 import {useState} from 'react'
 
 type Subject = {
@@ -11,51 +11,57 @@ type Teacher = {
 	name: string,
 }
 
-const availableSubjects: Subject[] = [
-	{id: '3', name: 'History'},
-	{id: '4', name: 'Chemistry'},
-]
+type TeacherSubject = {
+	teacherSubjectId: string,
+	teacherId: string,
+	subjectId: string,
+}
 
-const teachers: Teacher[] = [
-	{id: '1', name: 'Teacher A'},
-	{id: '2', name: 'Teacher B'},
-]
+type SubjectListForGroupProps = {
+	availableSubjects: Subject[],
+	availableTeachers: Teacher[],
+	availableTeacherSubjects: TeacherSubject[],
+	selectedTeacherSubjectIds: string[],
+	addTeacherSubject: (teacherSubjectId: string) => void,
+	removeTeacherSubject: (teacherSubjectId: string) => void,
+}
 
-export const SubjectListForGroup = () => {
-	const [subjects, setSubjects] = useState<Subject[]>([])
+const SubjectListForGroup = ({
+	availableSubjects,
+	availableTeachers,
+	availableTeacherSubjects,
+	selectedTeacherSubjectIds,
+	addTeacherSubject,
+	removeTeacherSubject,
+}: SubjectListForGroupProps) => {
 	const [isAddSubjectModalOpen, setIsAddSubjectModalOpen] = useState(false)
-	const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null)
+	const [selectedSubjectId, setSelectedSubjectId] = useState<string | undefined>()
 
-	const handleAddSubject = () => {
-		if (selectedSubjectId) {
-			const subject = availableSubjects.find(s => s.id === selectedSubjectId)
-			if (subject) {
-				setSubjects([...subjects, subject])
-			}
-			setSelectedSubjectId(null)
-			setIsAddSubjectModalOpen(false)
+	const handleAddTeacher = (subjectId: string, teacherId: string) => {
+		const teacherSubject = findTeacherSubject(availableTeacherSubjects, teacherId, subjectId)
+		if (teacherSubject && !selectedTeacherSubjectIds.includes(teacherSubject.teacherSubjectId)) {
+			addTeacherSubject(teacherSubject.teacherSubjectId)
 		}
 	}
 
-	const handleRemoveSubject = (id: string) => {
-		setSubjects(subjects.filter(subject => subject.id !== id))
+	const handleRemoveTeacher = (teacherSubjectId: string) => {
+		removeTeacherSubject(teacherSubjectId)
 	}
 
-	const handleSetTeacher = (subjectId: string, teacherId: string) => {
-		setSubjects(
-			subjects.map(subject =>
-				(subject.id === subjectId ? {...subject, teacherId} : subject),
-			),
-		)
+	const handleAddSubject = () => {
+		if (selectedSubjectId) {
+			setIsAddSubjectModalOpen(false)
+			setSelectedSubjectId(undefined)
+		}
 	}
 
 	return (
 		<div>
 			<Button type="primary" onClick={() => setIsAddSubjectModalOpen(true)}>
-				Добавить предмет
+				{'Добавить предмет'}
 			</Button>
 			<Table
-				dataSource={subjects}
+				dataSource={findSubjectsByTeacherSubjectIds(availableSubjects, availableTeacherSubjects, selectedTeacherSubjectIds)}
 				rowKey="id"
 				columns={[
 					{
@@ -64,29 +70,55 @@ export const SubjectListForGroup = () => {
 						key: 'name',
 					},
 					{
-						title: 'Преподаватель',
-						key: 'teacher',
-						render: (_: any, subject: Subject) => (
-							<Select
-								style={{width: 200}}
-								placeholder="Выберите преподавателя"
-								onChange={value => handleSetTeacher(subject.id, value)}
-								allowClear
-							>
-								{teachers.map(teacher => (
-									<Select.Option key={teacher.id} value={teacher.id}>
-										{teacher.name}
-									</Select.Option>
-								))}
-							</Select>
-						),
+						title: 'Преподаватели',
+						key: 'teachers',
+						render: (_: any, subject: Subject) => {
+							const subjectTeacherSubjects = availableTeacherSubjects.filter(
+								ts => ts.subjectId === subject.id && selectedTeacherSubjectIds.includes(ts.teacherSubjectId),
+							)
+
+							const subjectTeachers = subjectTeacherSubjects.map(ts =>
+								availableTeachers.find(t => t.id === ts.teacherId),
+							)
+
+							return (
+								<div>
+									{subjectTeachers.map(teacher => (
+										<Tag
+											closable
+											key={teacher?.id}
+											onClose={() => handleRemoveTeacher(subjectTeacherSubjects.find(ts => ts.teacherId === teacher?.id)?.teacherSubjectId || '')}
+										>
+											{teacher?.name}
+										</Tag>
+									))}
+									<Select
+										style={{width: 200}}
+										placeholder="Добавить преподавателя"
+										onChange={value => handleAddTeacher(subject.id, value)}
+										allowClear
+									>
+										{findTeachersBySubject(availableTeachers, availableTeacherSubjects, subject.id).map(teacher => (
+											<Select.Option key={teacher.id} value={teacher.id}>
+												{teacher.name}
+											</Select.Option>
+										))}
+									</Select>
+								</div>
+							)
+						},
 					},
 					{
 						title: 'Действия',
 						key: 'actions',
 						render: (_: any, subject: Subject) => (
-							<Button danger onClick={() => handleRemoveSubject(subject.id)}>
-								Удалить
+							<Button danger onClick={() => removeTeacherSubjectsBySubject(
+								subject.id,
+								selectedTeacherSubjectIds,
+								availableTeacherSubjects,
+								handleRemoveTeacher,
+							)}>
+								{'Удалить'}
 							</Button>
 						),
 					},
@@ -114,4 +146,54 @@ export const SubjectListForGroup = () => {
 			</Modal>
 		</div>
 	)
+}
+
+const findSubjectsByTeacherSubjectIds = (
+	subjects: Subject[],
+	teacherSubjects: TeacherSubject[],
+	teacherSubjectIds: string[],
+): Subject[] => {
+	const idSet = new Set(teacherSubjectIds)
+	const selectedTeacherSubjects = teacherSubjects.filter(teacherSubject => idSet.has(teacherSubject.teacherSubjectId))
+	const selectedSubjectIds = new Set(selectedTeacherSubjects.map(teacherSubject => teacherSubject.subjectId))
+	return subjects.filter(subject => selectedSubjectIds.has(subject.id))
+}
+
+const findTeachersBySubject = (
+	teachers: Teacher[],
+	teacherSubjects: TeacherSubject[],
+	subjectId: string,
+): Teacher[] => {
+	const teacherSubjectsBySubject = teacherSubjects.filter(teacherSubject => teacherSubject.subjectId === subjectId)
+	const teacherIds = new Set(teacherSubjectsBySubject.map(teacherSubject => teacherSubject.teacherId))
+	return teachers.filter(teacher => teacherIds.has(teacher.id))
+}
+
+const findTeacherSubject = (
+	teacherSubjects: TeacherSubject[],
+	teacherId: string,
+	subjectId: string,
+): TeacherSubject | undefined => teacherSubjects.find(
+	teacherSubject => teacherSubject.subjectId === subjectId && teacherSubject.teacherId === teacherId,
+)
+
+const removeTeacherSubjectsBySubject = (
+	subjectId: string,
+	selectedTeacherSubjectIds: string[],
+	teacherSubjects: TeacherSubject[],
+	removeTeacherSubject: (teacherSubjectId: string) => void,
+): void => {
+	const subjectTeacherSubjects = teacherSubjects.filter(ts => ts.subjectId === subjectId)
+	subjectTeacherSubjects.forEach(ts => {
+		if (selectedTeacherSubjectIds.includes(ts.teacherSubjectId)) {
+			removeTeacherSubject(ts.teacherSubjectId)
+		}
+	})
+}
+
+export {
+	SubjectListForGroup,
+	type TeacherSubject,
+	type Teacher,
+	type Subject,
 }

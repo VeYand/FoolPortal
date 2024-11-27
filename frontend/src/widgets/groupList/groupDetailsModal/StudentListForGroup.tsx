@@ -1,43 +1,37 @@
 import {Table, Button, Modal, Select} from 'antd'
 import {useState} from 'react'
 
-type User = {
+type Student = {
 	id: string,
 	name: string,
 }
 
-const availableUsers: User[] = [
-	{id: '3', name: 'User C'},
-	{id: '4', name: 'User D'},
-]
+type StudentListForGroupProps = {
+	availableStudents: Student[],
+	selectedStudentIds: string[],
+	addStudent: (studentId: string) => void,
+	removeStudent: (studentId: string) => void,
+}
 
-export const UserListForGroup = () => {
-	const [users, setUsers] = useState<User[]>([])
+const StudentListForGroup = ({availableStudents, selectedStudentIds, addStudent, removeStudent}: StudentListForGroupProps) => {
 	const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false)
-	const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
+	const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined)
 
 	const handleAddUser = () => {
 		if (selectedUserId) {
-			const user = availableUsers.find(u => u.id === selectedUserId)
-			if (user) {
-				setUsers([...users, user])
-			}
-			setSelectedUserId(null)
+			addStudent(selectedUserId)
+			setSelectedUserId(undefined)
 			setIsAddUserModalOpen(false)
 		}
-	}
-
-	const handleRemoveUser = (id: string) => {
-		setUsers(users.filter(user => user.id !== id))
 	}
 
 	return (
 		<div>
 			<Button type="primary" onClick={() => setIsAddUserModalOpen(true)}>
-				Добавить пользователя
+				{'Добавить студента'}
 			</Button>
 			<Table
-				dataSource={users}
+				dataSource={findStudentsByIds(availableStudents, selectedStudentIds)}
 				rowKey="id"
 				columns={[
 					{
@@ -48,9 +42,9 @@ export const UserListForGroup = () => {
 					{
 						title: 'Действия',
 						key: 'actions',
-						render: (_: any, user: User) => (
-							<Button danger onClick={() => handleRemoveUser(user.id)}>
-								Удалить
+						render: (_: any, user: Student) => (
+							<Button danger onClick={() => removeStudent(user.id)}>
+								{'Удалить'}
 							</Button>
 						),
 					},
@@ -69,7 +63,7 @@ export const UserListForGroup = () => {
 					value={selectedUserId}
 					onChange={value => setSelectedUserId(value)}
 				>
-					{availableUsers.map(user => (
+					{availableStudents.map(user => (
 						<Select.Option key={user.id} value={user.id}>
 							{user.name}
 						</Select.Option>
@@ -78,4 +72,14 @@ export const UserListForGroup = () => {
 			</Modal>
 		</div>
 	)
+}
+
+const findStudentsByIds = (students: Student[], ids: string[]): Student[] => {
+	const idSet = new Set(ids)
+	return students.filter(student => idSet.has(student.id))
+}
+
+export {
+	type Student,
+	StudentListForGroup,
 }

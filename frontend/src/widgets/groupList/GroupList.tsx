@@ -1,21 +1,41 @@
 import {Table, Button, Typography} from 'antd'
 import {useState} from 'react'
-import {GroupDetailsModal} from './groupDetailsModal/GroupDetailsModal'
+import {Group, GroupDetailsModal} from './groupDetailsModal/GroupDetailsModal'
 import styles from './GroupList.module.css'
 
-type Group = {
-	id: string,
-	name: string,
-}
+const availableStudents = [
+	{id: '1', name: 'Nikita Test'},
+	{id: '2', name: 'Vasiliy Chehov'},
+	{id: '3', name: 'Gosha Dudar Ivanovich'},
+	{id: '4', name: 'Qwerty Mili'},
+]
+const availableTeachers = [
+	{id: '5', name: 'Преподаватель Умный'},
+	{id: '6', name: 'Преподаватель Красивый'},
+]
+const availableSubjects = [
+	{id: '1', name: 'OOD'},
+	{id: '2', name: 'MLITA'},
+	{id: '3', name: 'Physics'},
+	{id: '4', name: 'Math'},
+]
+const availableTeacherSubjects = [
+	{teacherSubjectId: '1', subjectId: '1', teacherId: '5'},
+	{teacherSubjectId: '2', subjectId: '2', teacherId: '5'},
+	{teacherSubjectId: '3', subjectId: '3', teacherId: '5'},
+	{teacherSubjectId: '4', subjectId: '1', teacherId: '6'},
+]
+
 
 const initialGroups: Group[] = [
-	{id: '1', name: 'Group A'},
-	{id: '2', name: 'Group B'},
+	{id: '1', name: 'Group A', studentIds: [], teacherSubjectIds: []},
+	{id: '2', name: 'Group B', studentIds: [], teacherSubjectIds: []},
 ]
+
 
 export const GroupList = () => {
 	const [groups, setGroups] = useState<Group[]>(initialGroups)
-	const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
+	const [selectedGroup, setSelectedGroup] = useState<Group | undefined>()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const handleEditGroup = (group: Group) => {
@@ -24,7 +44,7 @@ export const GroupList = () => {
 	}
 
 	const handleAddGroup = () => {
-		setSelectedGroup(null)
+		setSelectedGroup(undefined)
 		setIsModalOpen(true)
 	}
 
@@ -45,7 +65,7 @@ export const GroupList = () => {
 		<div className={styles.container}>
 			<Typography.Title level={3}>Группы</Typography.Title>
 			<Button type="primary" onClick={handleAddGroup} className={styles.addButton}>
-				Добавить группу
+				{'Добавить группу'}
 			</Button>
 			<Table
 				dataSource={groups}
@@ -62,10 +82,10 @@ export const GroupList = () => {
 						render: (_: any, group: Group) => (
 							<>
 								<Button onClick={() => handleEditGroup(group)} type="link">
-									Редактировать
+									{'Редактировать'}
 								</Button>
 								<Button onClick={() => handleDeleteGroup(group.id)} danger type="link">
-									Удалить
+									{'Удалить'}
 								</Button>
 							</>
 						),
@@ -74,6 +94,10 @@ export const GroupList = () => {
 			/>
 			<GroupDetailsModal
 				group={selectedGroup}
+				availableStudents={availableStudents}
+				availableTeachers={availableTeachers}
+				availableSubjects={availableSubjects}
+				availableTeacherSubjects={availableTeacherSubjects}
 				visible={isModalOpen}
 				onSave={handleSaveGroup}
 				onClose={() => setIsModalOpen(false)}
