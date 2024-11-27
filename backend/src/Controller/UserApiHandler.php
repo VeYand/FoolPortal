@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\Converter\GroupModelConverter;
 use App\Controller\Converter\UserModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\User\Api\UserApiInterface;
@@ -31,6 +32,21 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 
 			return new ApiUsersList([
 				'users' => UserModelConverter::convertUsersToApiUsers($users),
+			]);
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listGroups(int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function ()
+		{
+			$groups = $this->userApi->listAllGroups();
+
+			return new ApiUsersList([
+				'users' => GroupModelConverter::convertGroupsToApiGroups($groups),
 			]);
 		}, $responseCode, $responseHeaders);
 	}

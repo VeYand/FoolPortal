@@ -1,0 +1,25 @@
+components:
+  schemas:
+    GroupData:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - groupId
+        - name
+
+    GroupsList:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupData'
+      required:
+        - groups

@@ -74,6 +74,23 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/group/list:
+    get:
+      tags:
+        - User
+      operationId: ListGroups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/group.yaml#/components/schemas/GroupsList'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/subject/list:
     get:
       tags:
