@@ -3,19 +3,26 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\Converter\CourseModelConverter;
 use App\Controller\Converter\SubjectModelConverter;
 use App\Controller\Converter\TeacherSubjectModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\Subject\Api\SubjectApiInterface;
 use OpenAPI\Server\Api\SubjectApiInterface as SubjectApiHandlerInterface;
+use OpenAPI\Server\Model\CreateCourseInput as ApiCreateCourseInput;
+use App\Subject\App\Service\Input\CreateCourseInput;
+use OpenAPI\Server\Model\CreateCoursesRequest as ApiCreateCoursesRequest;
 use OpenAPI\Server\Model\CreateSubjectRequest;
 use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 use OpenAPI\Server\Model\CreateTeacherSubjectInput as ApiCreateTeacherSubjectInput;
 use OpenAPI\Server\Model\CreateTeacherSubjectsRequest;
+use OpenAPI\Server\Model\DeleteCoursesRequest;
 use OpenAPI\Server\Model\DeleteSubjectRequest;
 use OpenAPI\Server\Model\DeleteTeacherSubjectsRequest;
+use OpenAPI\Server\Model\ListCoursesRequest;
 use OpenAPI\Server\Model\ListTeacherSubjectRequest;
 use OpenAPI\Server\Model\SubjectsList as ApiSubjectsList;
+use OpenAPI\Server\Model\CoursesList as ApiCoursesList;
 use OpenAPI\Server\Model\TeacherSubjectList as ApiTeacherSubjectList;
 use OpenAPI\Server\Model\UpdateSubjectRequest;
 
@@ -117,6 +124,51 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		$this->exceptionHandler->executeWithHandle(function () use ($deleteTeacherSubjectsRequest)
 		{
 			$this->subjectApi->deleteTeacherSubjects($deleteTeacherSubjectsRequest->getTeacherSubjectIds());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function createCourses(ApiCreateCoursesRequest $createCoursesRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($createCoursesRequest)
+		{
+			$this->subjectApi->createCourses(
+				array_map(
+					static fn(ApiCreateCourseInput $input) => new CreateCourseInput(
+						$input->getGroupId(),
+						$input->getTeacherSubjectId(),
+					),
+					$createCoursesRequest->getCourses(),
+				),
+			);
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function deleteCourses(DeleteCoursesRequest $deleteCoursesRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteCoursesRequest)
+		{
+			$this->subjectApi->deleteCourses($deleteCoursesRequest->getCourseIds());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listCourses(ListCoursesRequest $listCoursesRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function () use ($listCoursesRequest)
+		{
+			$courses = $this->subjectApi->listCoursesByGroup($listCoursesRequest->getGroupId());
+
+			return new ApiCoursesList([
+				'courses' => CourseModelConverter::convertCoursesToApiCourses($courses),
+			]);
 		}, $responseCode, $responseHeaders);
 	}
 }

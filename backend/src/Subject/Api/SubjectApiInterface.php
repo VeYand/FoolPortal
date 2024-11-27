@@ -7,6 +7,7 @@ use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Data\SubjectData;
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Service\Input\CreateCourseInput;
 use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 
 interface SubjectApiInterface
@@ -39,14 +40,16 @@ interface SubjectApiInterface
 	public function deleteTeacherSubjects(array $teacherSubjectIds): void;
 
 	/**
+	 * @param CreateCourseInput[] $inputs
 	 * @throws ApiException
 	 */
-	public function createCourse(string $teacherSubjectId, string $groupId): void;
+	public function createCourses(array $inputs): void;
 
 	/**
+	 * @param string[] $courseIds
 	 * @throws ApiException
 	 */
-	public function deleteCourse(string $courseId): void;
+	public function deleteCourses(array $courseIds): void;
 
 	/**
 	 * @return SubjectData[]
@@ -67,6 +70,11 @@ interface SubjectApiInterface
 	 * @return CourseData[]
 	 */
 	public function listAllCourses(): array;
+
+	/**
+	 * @return CourseData[]
+	 */
+	public function listCoursesByGroup(string $groupId): array;
 
 	public function isCourseExists(string $courseId): bool;
 }

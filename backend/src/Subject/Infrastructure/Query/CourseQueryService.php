@@ -22,12 +22,16 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 	public function listAllCourses(): array
 	{
 		$courses = $this->courseReadRepository->findAll();
+		return self::convertCoursesToCoursesList($courses);
+	}
 
-		return array_map(static fn(Course $course) => new CourseData(
-			$course->getCourseId(),
-			$course->getTeacherSubjectId(),
-			$course->getGroupId(),
-		), $courses);
+	/**
+	 * @inheritDoc
+	 */
+	public function listCoursesByGroup(string $groupId): array
+	{
+		$courses = $this->courseReadRepository->findByGroups([$groupId]);
+		return self::convertCoursesToCoursesList($courses);
 	}
 
 	public function isCourseExists(string $courseId): bool
@@ -35,5 +39,21 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		$course = $this->courseReadRepository->find($courseId);
 
 		return !is_null($course);
+	}
+
+	/**
+	 * @param Course[] $courses
+	 * @return CourseData[]
+	 */
+	private static function convertCoursesToCoursesList(array $courses): array
+	{
+		return array_map(
+			static fn(Course $course) => new CourseData(
+				$course->getCourseId(),
+				$course->getTeacherSubjectId(),
+				$course->getGroupId(),
+			),
+			$courses,
+		);
 	}
 }

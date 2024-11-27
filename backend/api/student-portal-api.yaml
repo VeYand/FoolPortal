@@ -222,6 +222,65 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/course/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/ListCoursesRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/course.yaml#/components/schemas/CoursesList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/course/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/CreateCoursesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/course/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/DeleteCoursesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/location/list:
     get:
       tags:

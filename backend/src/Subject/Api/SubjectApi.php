@@ -83,22 +83,22 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createCourse(string $teacherSubjectId, string $groupId): void
+	public function createCourses(array $inputs): void
 	{
-		self::tryExecute(function () use ($teacherSubjectId, $groupId)
+		self::tryExecute(function () use ($inputs)
 		{
-			$this->courseService->create($teacherSubjectId, $groupId);
+			$this->courseService->create($inputs);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteCourse(string $courseId): void
+	public function deleteCourses(array $courseIds): void
 	{
-		self::tryExecute(function () use ($courseId)
+		self::tryExecute(function () use ($courseIds)
 		{
-			$this->courseService->delete($courseId);
+			$this->courseService->delete($courseIds);
 		});
 	}
 
@@ -132,6 +132,14 @@ readonly class SubjectApi implements SubjectApiInterface
 	public function listAllCourses(): array
 	{
 		return $this->courseQueryService->listAllCourses();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listCoursesByGroup(string $groupId): array
+	{
+		return $this->courseQueryService->listCoursesByGroup($groupId);
 	}
 
 	public function isCourseExists(string $courseId): bool

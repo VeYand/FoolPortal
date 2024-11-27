@@ -1,0 +1,78 @@
+components:
+  schemas:
+    CourseData:
+      type: object
+      properties:
+        courseId:
+          type: string
+          format: uuid
+          nullable: false
+        teacherSubjectId:
+          type: string
+          format: uuid
+          nullable: false
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - courseId
+        - teacherSubjectId
+        - groupId
+
+    CoursesList:
+      type: object
+      properties:
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseData'
+      required:
+        - courses
+
+    ListCoursesRequest:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - groupId
+
+    CreateCourseInput:
+      type: object
+      properties:
+        teacherSubjectId:
+          type: string
+          format: uuid
+          nullable: false
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - teacherSubjectId
+        - groupId
+
+    CreateCoursesRequest:
+      type: object
+      properties:
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCourseInput'
+      required:
+        - courses
+
+    DeleteCoursesRequest:
+      type: object
+      properties:
+        courseIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - teacherSubjectId

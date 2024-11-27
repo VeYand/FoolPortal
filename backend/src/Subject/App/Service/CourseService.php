@@ -5,6 +5,7 @@ namespace App\Subject\App\Service;
 
 use App\Subject\App\Adapter\UserAdapterInterface;
 use App\Subject\App\Exception\AppException;
+use App\Subject\App\Service\Input\CreateCourseInput;
 use App\Subject\Domain\Service\CourseService as DomainCourseService;
 
 readonly class CourseService
@@ -18,28 +19,36 @@ readonly class CourseService
 	}
 
 	/**
+	 * @param CreateCourseInput[] $inputs
 	 * @throws AppException
 	 */
-	public function create(string $teacherSubjectId, string $groupId): void
+	public function create(array $inputs): void // TODO Избавиться от вызова методов в цикле
 	{
-		$this->assertGroupExists($groupId);
-
-		$callback = function () use ($teacherSubjectId, $groupId): void
+		foreach ($inputs as $input)
 		{
-			$this->courseService->create($teacherSubjectId, $groupId);
+			$this->assertGroupExists($input->groupId);
+		}
+
+		$callback = function () use ($inputs): void
+		{
+			foreach ($inputs as $input)
+			{
+				$this->courseService->create($input->teacherSubjectId, $input->groupId);
+			}
 		};
 
 		$this->transactionService->execute($callback);
 	}
 
 	/**
+	 * @param string[] $courseIds
 	 * @throws AppException
 	 */
-	public function delete(string $courseId): void
+	public function delete(array $courseIds): void
 	{
-		$callback = function () use ($courseId): void
+		$callback = function () use ($courseIds): void
 		{
-			$this->courseService->delete([$courseId]);
+			$this->courseService->delete($courseIds);
 		};
 
 		$this->transactionService->execute($callback);
