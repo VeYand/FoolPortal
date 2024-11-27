@@ -1,5 +1,5 @@
 import {Layout, Menu} from 'antd'
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import styles from './Tabs.module.css'
 
 type TabType = {
@@ -20,6 +20,9 @@ const Tabs = ({tabs}: TabsProps) => {
 		setActiveTabKey(key)
 	}
 
+
+	const activeTab = useMemo(() => tabs.find(tab => tab.key === activeTabKey), [tabs, activeTabKey])
+
 	return (
 		<Layout className={styles.layout}>
 			<Layout.Sider width={200}>
@@ -37,7 +40,7 @@ const Tabs = ({tabs}: TabsProps) => {
 			</Layout.Sider>
 			<Layout>
 				<Layout.Content className={styles.content}>
-					{tabs.find(tab => tab.key === activeTabKey)?.content}
+					{activeTab?.content ?? <></>}
 				</Layout.Content>
 			</Layout>
 		</Layout>
