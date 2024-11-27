@@ -8,6 +8,7 @@ use App\Controller\Exception\ExceptionHandler;
 use App\Subject\Api\SubjectApiInterface;
 use OpenAPI\Server\Api\SubjectApiInterface as SubjectApiHandlerInterface;
 use OpenAPI\Server\Model\CreateSubjectRequest;
+use OpenAPI\Server\Model\DeleteSubjectRequest;
 use OpenAPI\Server\Model\SubjectsList as ApiSubjectsList;
 use OpenAPI\Server\Model\UpdateSubjectRequest;
 
@@ -54,6 +55,17 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		$this->exceptionHandler->executeWithHandle(function () use ($updateSubjectRequest)
 		{
 			$this->subjectApi->updateSubject($updateSubjectRequest->getSubjectId(), $updateSubjectRequest->getName());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function deleteSubject(DeleteSubjectRequest $deleteSubjectRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteSubjectRequest)
+		{
+			$this->subjectApi->deleteSubject($deleteSubjectRequest->getSubjectId());
 		}, $responseCode, $responseHeaders);
 	}
 }

@@ -47,3 +47,13 @@ components:
       required:
         - subjectId
         - name
+
+    DeleteSubjectRequest:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - subjectId

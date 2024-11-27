@@ -104,6 +104,25 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/subject/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/DeleteSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
 components:
   schemas:
     BadResponse:
