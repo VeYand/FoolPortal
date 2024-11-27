@@ -1,5 +1,6 @@
 import {BookOutlined, CalendarOutlined, HomeOutlined, TeamOutlined, UserOutlined} from '@ant-design/icons'
 import {useMemo} from 'react'
+import {GroupList} from 'widgets/groupList/GroupList'
 import {LocationsList} from 'widgets/locationList/locationsList'
 import {SubjectsList} from 'widgets/subjectList/subjectsList'
 
@@ -20,7 +21,7 @@ const useTabs = () => useMemo(() => ([
 		key: '3',
 		name: 'Groups',
 		icon: <TeamOutlined />,
-		content: <div>{'Groups'}</div>,
+		content: <GroupList/>,
 	},
 	{
 		key: '4',
