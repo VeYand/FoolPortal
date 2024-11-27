@@ -1,4 +1,5 @@
-import {useEffect, useMemo} from 'react'
+import {message} from 'antd'
+import {useCallback, useEffect, useMemo} from 'react'
 import {useLazyCreateSubject} from 'shared/libs/query/useLazyCreateSubject'
 import {useLazyDeleteSubject} from 'shared/libs/query/useLazyDeleteSubject'
 import {useLazyUpdateSubject} from 'shared/libs/query/useLazyUpdateSubject'
@@ -13,49 +14,61 @@ const SubjectList = () => {
 	const [deleteSubject] = useLazyDeleteSubject()
 	const {initialize} = useInitializeSubjects()
 	const {subjects} = useAppSelector(state => state.subjectEntity)
-	const items = useMemo((): EditableItem[] => subjects.map(
-		subject => ({id: subject.subjectId, name: subject.name}),
-	), [subjects])
+
+	const items = useMemo(
+		(): EditableItem[] =>
+			subjects.map(subject => ({id: subject.subjectId, name: subject.name})),
+		[subjects],
+	)
 
 	useEffect(initialize, [initialize])
 
-	const handleSave = async (newName: string, id?: string) => {
-		if (id) {
-			const data = await updateSubject({subjectId: id, name: newName})
-
+	const refreshSubjects = useCallback(async (action: () => Promise<any>, successMessage: string) => {
+		try {
+			const data = await action()
 			if (data.isSuccess) {
 				initialize()
+				message.success(successMessage)
 			}
 			else {
-				console.log('Не удалось обновить')// TODO добавить тостики
+				throw new Error(data.error.data)
 			}
 		}
-		else {
-			const data = await createSubject({name: newName})
+		catch (error) {
+			message.error('Что-то пошло не так. Попробуйте ещё раз.')
+		}
+	}, [initialize])
 
-			if (data.isSuccess) {
-				initialize()
-			}
-			else {
-				console.log('Не удалось сохранить')
-			}
+	const handleSave = (newName: string, id?: string) => {
+		if (id) {
+			refreshSubjects(
+				() => updateSubject({subjectId: id, name: newName}),
+				'Предмет успешно обновлён',
+			)
+		}
+		else {
+			refreshSubjects(
+				() => createSubject({name: newName}),
+				'Предмет успешно добавлен',
+			)
 		}
 	}
 
-	const handleDelete = async (id: string) => {
-		const data = await deleteSubject({subjectId: id})
-
-		if (data.isSuccess) {
-			initialize()
-		}
-		else {
-			console.log('Не удалось удалить')// TODO добавить тостики
-		}
+	const handleDelete = (id: string) => {
+		refreshSubjects(
+			() => deleteSubject({subjectId: id}),
+			'Предмет успешно удалён',
+		)
 	}
 
 	return (
 		<div>
-			<EditableListWidget title="Предметы" data={items} onSave={handleSave} onDelete={handleDelete} />
+			<EditableListWidget
+				title="Предметы"
+				data={items}
+				onSave={handleSave}
+				onDelete={handleDelete}
+			/>
 		</div>
 	)
 }
