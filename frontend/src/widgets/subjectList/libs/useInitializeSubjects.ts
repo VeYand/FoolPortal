@@ -1,6 +1,6 @@
 import {subjectEntitySlice} from 'entities/subject'
 import {useCallback} from 'react'
-import {useLazyListSubjects} from 'shared/libs/query/useLazyListSubjects'
+import {useLazyListSubjects} from 'shared/libs/query'
 import {remapApiSubjectsToSubjectsList} from 'shared/libs/remmapers/remapApiSubjectsToSubjectsList'
 import {useAppDispatch, useAppSelector} from 'shared/redux'
 
