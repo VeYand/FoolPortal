@@ -19,11 +19,9 @@ use OpenAPI\Server\Model\CreateTeacherSubjectsRequest;
 use OpenAPI\Server\Model\DeleteCoursesRequest;
 use OpenAPI\Server\Model\DeleteSubjectRequest;
 use OpenAPI\Server\Model\DeleteTeacherSubjectsRequest;
-use OpenAPI\Server\Model\ListCoursesRequest;
-use OpenAPI\Server\Model\ListTeacherSubjectRequest;
 use OpenAPI\Server\Model\SubjectsList as ApiSubjectsList;
 use OpenAPI\Server\Model\CoursesList as ApiCoursesList;
-use OpenAPI\Server\Model\TeacherSubjectList as ApiTeacherSubjectList;
+use OpenAPI\Server\Model\TeacherSubjectsList as ApiTeacherSubjectsList;
 use OpenAPI\Server\Model\UpdateSubjectRequest;
 
 readonly class SubjectApiHandler implements SubjectApiHandlerInterface
@@ -105,12 +103,12 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listTeacherSubjects(ListTeacherSubjectRequest $listTeacherSubjectRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	public function listTeacherSubjects(int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function () use ($listTeacherSubjectRequest)
+		return $this->exceptionHandler->executeWithHandle(function ()
 		{
-			$teacherSubjects = $this->subjectApi->listTeacherSubjectsByGroup($listTeacherSubjectRequest->getGroupId());
-			return new ApiTeacherSubjectList([
+			$teacherSubjects = $this->subjectApi->listAllTeacherSubjects();
+			return new ApiTeacherSubjectsList([
 				'teacherSubjects' => TeacherSubjectModelConverter::convertTeacherSubjectsToApiTeacherSubjects($teacherSubjects),
 			]);
 		}, $responseCode, $responseHeaders);
@@ -160,11 +158,11 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listCourses(ListCoursesRequest $listCoursesRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	public function listCourses(int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function () use ($listCoursesRequest)
+		return $this->exceptionHandler->executeWithHandle(function ()
 		{
-			$courses = $this->subjectApi->listCoursesByGroup($listCoursesRequest->getGroupId());
+			$courses = $this->subjectApi->listAllCourses();
 
 			return new ApiCoursesList([
 				'courses' => CourseModelConverter::convertCoursesToApiCourses($courses),

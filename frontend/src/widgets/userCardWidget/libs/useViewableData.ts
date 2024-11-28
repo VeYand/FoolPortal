@@ -1,3 +1,4 @@
+import {getViewableUserName} from 'shared/libs'
 import {UserData} from 'shared/types'
 import {USER_ROLE} from 'shared/types/types'
 
@@ -12,7 +13,7 @@ const useViewableData = (user: UserData): ViewableData => {
 	const groupNamesTitle = useViewableGroupNamesTitle(user.groupIds)
 	const groupNames = useViewableGroupNames(user.groupIds)
 	const role = useViewableUserRole(user.role)
-	const name = useViewableName(user)
+	const name = getViewableUserName(user)
 
 	return {
 		groupNamesTitle,
@@ -44,7 +45,6 @@ const roleLabels: Record<USER_ROLE, string> = {
 
 const useViewableUserRole = (role: USER_ROLE) => roleLabels[role]
 
-const useViewableName = (user: UserData) => [user.firstName, user.lastName, user.patronymic].filter(Boolean).join(' ')
 
 export {
 	useViewableData,

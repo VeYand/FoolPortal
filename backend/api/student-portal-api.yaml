@@ -52,12 +52,12 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
 
   /api/v1/user/list:
-    get:
+    post:
       tags:
         - User
       operationId: ListUsers
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
@@ -168,19 +168,13 @@ paths:
       tags:
         - Subject
       operationId: ListTeacherSubjects
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: './Subject/teacherSubject.yaml#/components/schemas/ListTeacherSubjectRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: './Subject/teacherSubject.yaml#/components/schemas/TeacherSubjectList'
+                $ref: './Subject/teacherSubject.yaml#/components/schemas/TeacherSubjectsList'
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
@@ -227,12 +221,6 @@ paths:
       tags:
         - Subject
       operationId: ListCourses
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: './Subject/course.yaml#/components/schemas/ListCoursesRequest'
       responses:
         '200':
           description: OK

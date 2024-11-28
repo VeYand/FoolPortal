@@ -1,10 +1,9 @@
-import {CoursesList, ListCoursesRequest} from 'shared/api'
 import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
-		listCourses: builder.query<CoursesList, ListCoursesRequest>({
-			queryFn: async request => await studentPortalApi.get().subjectApi.listCourses(request),
+		listCourses: builder.query({
+			queryFn: async () => await studentPortalApi.get().subjectApi.listCourses(),
 		}),
 	}),
 })

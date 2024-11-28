@@ -47,12 +47,12 @@ const SubjectTeacherTags = ({subject, teachers, removeTeacherSubject}: SubjectTe
 )
 
 const SubjectListForGroup = ({
-	                             availableSubjects,
-	                             availableTeachers,
-	                             availableTeacherSubjects,
-	                             selectedTeacherSubjectIds,
-	                             addTeacherSubject,
-	                             removeTeacherSubject,
+	availableSubjects,
+	availableTeachers,
+	availableTeacherSubjects,
+	selectedTeacherSubjectIds,
+	addTeacherSubject,
+	removeTeacherSubject,
 }: SubjectListForGroupProps) => {
 	const [isAddTeacherSubjectsModalOpen, setIsAddTeacherSubjectsModalOpen] = useState(false)
 	const [selectedSubjectId, setSelectedSubjectId] = useState<string | undefined>()
