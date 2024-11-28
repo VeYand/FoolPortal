@@ -18,14 +18,16 @@ readonly class GroupService
 	/**
 	 * @throws AppException
 	 */
-	public function create(string $groupName): void
+	public function create(string $groupName): string
 	{
-		$callback = function () use ($groupName): void
+		$createdGroupId = '';
+		$callback = function () use ($groupName, &$createdGroupId): void
 		{
-			$this->domainGroupService->create($groupName);
+			$createdGroupId = $this->domainGroupService->create($groupName);
 		};
 
 		$this->transactionService->execute($callback);
+		return $createdGroupId;
 	}
 
 

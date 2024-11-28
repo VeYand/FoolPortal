@@ -65,7 +65,7 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function createGroup(string $groupName): void;
+	public function createGroup(string $groupName): string;
 
 	/**
 	 * @throws ApiException

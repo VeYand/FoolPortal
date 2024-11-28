@@ -135,11 +135,11 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createGroup(string $groupName): void
+	public function createGroup(string $groupName): string
 	{
-		self::tryExecute(function () use ($groupName)
+		return self::tryExecute(function () use ($groupName)
 		{
-			$this->groupService->create($groupName);
+			return $this->groupService->create($groupName);
 		});
 	}
 

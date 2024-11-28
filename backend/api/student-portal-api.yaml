@@ -91,6 +91,29 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/group/create:
+    post:
+      tags:
+        - User
+      operationId: CreateGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/CreateGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/group.yaml#/components/schemas/CreateGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/subject/list:
     get:
       tags:
