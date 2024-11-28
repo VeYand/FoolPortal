@@ -4,38 +4,8 @@ import {Preloader} from '../preloader/Preloader'
 import {Group, GroupDetailsModal} from './groupDetailsModal/GroupDetailsModal'
 import {useInitialize} from './libs/useInitialize'
 
-// const availableStudents = [
-// 	{id: '1', name: 'Nikita Test'},
-// 	{id: '2', name: 'Vasiliy Chehov'},
-// 	{id: '3', name: 'Gosha Dudar Ivanovich'},
-// 	{id: '4', name: 'Qwerty Mili'},
-// ]
-// const availableTeachers = [
-// 	{id: '5', name: 'Преподаватель Умный'},
-// 	{id: '6', name: 'Преподаватель Красивый'},
-// ]
-// const availableSubjects = [
-// 	{id: '1', name: 'OOD'},
-// 	{id: '2', name: 'MLITA'},
-// 	{id: '3', name: 'Physics'},
-// 	{id: '4', name: 'Math'},
-// ]
-// const availableTeacherSubjects = [
-// 	{teacherSubjectId: '1', subjectId: '1', teacherId: '5'},
-// 	{teacherSubjectId: '2', subjectId: '2', teacherId: '5'},
-// 	{teacherSubjectId: '3', subjectId: '3', teacherId: '5'},
-// 	{teacherSubjectId: '4', subjectId: '1', teacherId: '6'},
-// ]
-// const initialGroups: Group[] = [
-// 	{id: '1', name: 'Group A', studentIds: [], teacherSubjectIds: []},
-// 	{id: '2', name: 'Group B', studentIds: [], teacherSubjectIds: []},
-// ]
-
-
 const GroupList = () => {
-	const {loading, data} = useInitialize()
-
-	// const [groups, setGroups] = useState<Group[]>(initialGroups)
+	const {loading, data, saveGroup, deleteGroup} = useInitialize()
 	const [selectedGroup, setSelectedGroup] = useState<Group | undefined>()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -50,17 +20,11 @@ const GroupList = () => {
 	}
 
 	const handleDeleteGroup = (id: string) => {
-		console.log('delete', id)
-		// setGroups(groups.filter(group => group.id !== id))
+		deleteGroup(id)
 	}
 
 	const handleSaveGroup = (updatedGroup: Group) => {
-		console.log('save', updatedGroup.id)
-		// setGroups(prev =>
-		// 	(prev.some(group => group.id === updatedGroup.id)
-		// 		? prev.map(group => (group.id === updatedGroup.id ? updatedGroup : group))
-		// 		: [...prev, updatedGroup]),
-		// )
+		saveGroup(updatedGroup)
 		setIsModalOpen(false)
 	}
 
