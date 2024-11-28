@@ -1,15 +1,16 @@
-import {AddStudentsToGroupRequest} from 'shared/api'
 import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 type AddStudentToGroupInput = {
-	request: AddStudentsToGroupRequest,
+	studentIds: string[],
 	groupId: string,
 }
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
 		addStudentsToGroup: builder.query<void, AddStudentToGroupInput>({
-			queryFn: async request => await studentPortalApi.get().userApi.addStudentsToGroup(request.groupId, request.request),
+			queryFn: async request => await studentPortalApi.get().userApi.addStudentsToGroup(request.groupId, {
+				studentIds: request.studentIds,
+			}),
 		}),
 	}),
 })
