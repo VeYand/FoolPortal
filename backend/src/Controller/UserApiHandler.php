@@ -11,8 +11,10 @@ use App\User\App\Query\Spec\ListUsersSpec;
 use OpenAPI\Server\Api\UserApiInterface as UserApiHandlerInterface;
 use OpenAPI\Server\Model\CreateGroupRequest as ApiCreateGroupRequest;
 use OpenAPI\Server\Model\CreateGroupResponse as ApiCreateGroupResponse;
+use OpenAPI\Server\Model\DeleteGroupRequest;
 use OpenAPI\Server\Model\GroupsList as ApiGroupsList;
 use OpenAPI\Server\Model\ListUsersSpec as ApiListUsersSpec;
+use OpenAPI\Server\Model\UpdateGroupRequest;
 use OpenAPI\Server\Model\UsersList as ApiUsersList;
 
 readonly class UserApiHandler implements UserApiHandlerInterface
@@ -66,6 +68,28 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 			return new ApiCreateGroupResponse([
 				'groupId' => $groupId,
 			]);
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function deleteGroup(DeleteGroupRequest $deleteGroupRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteGroupRequest)
+		{
+			$this->userApi->deleteGroup($deleteGroupRequest->getGroupId());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function updateGroup(UpdateGroupRequest $updateGroupRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($updateGroupRequest)
+		{
+			$this->userApi->updateGroup($updateGroupRequest->getGroupId(), $updateGroupRequest->getName());
 		}, $responseCode, $responseHeaders);
 	}
 }

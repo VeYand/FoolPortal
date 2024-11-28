@@ -15,5 +15,8 @@ export {useLazyDeleteTeacherSubjects} from './subject/useLazyDeleteTeacherSubjec
 export {useLazyListCourses} from './subject/useLazyListCourses'
 export {useLazyCreateCourses} from './subject/useLazyCreateCourses'
 export {useLazyDeleteCourses} from './subject/useLazyDeleteCourses'
+export {useLazyCreateGroup} from './user/useLazyCreateGroup'
+export {useLazyUpdateGroup} from './user/useLazyUpdateGroup'
+export {useLazyDeleteGroup} from './user/useLazyDeleteGroup'
 export {useLazyListGroups} from './user/useLazyListGroups'
 export {useLazyListUsers} from './user/useLazyListUsers'

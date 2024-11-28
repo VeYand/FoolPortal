@@ -114,6 +114,44 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/group/update:
+    post:
+      tags:
+        - User
+      operationId: UpdateGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/UpdateGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/delete:
+    post:
+      tags:
+        - User
+      operationId: DeleteGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/DeleteGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/subject/list:
     get:
       tags:
