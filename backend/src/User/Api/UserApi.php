@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
@@ -24,6 +25,7 @@ readonly class UserApi implements UserApiInterface
 		private UserService                $userService,
 		private GroupService               $groupService,
 		private GroupMemberService         $groupMemberService,
+		private UuidProviderInterface      $uuidProvider,
 	)
 	{
 	}
@@ -139,7 +141,9 @@ readonly class UserApi implements UserApiInterface
 	{
 		return self::tryExecute(function () use ($groupName)
 		{
-			return $this->groupService->create($groupName);
+			return $this->uuidProvider->toString(
+				$this->groupService->create($groupName),
+			);
 		});
 	}
 
