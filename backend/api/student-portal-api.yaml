@@ -204,6 +204,21 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/subject/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListSubjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/subject.yaml#/components/schemas/SubjectsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/subject/create:
     post:
       tags:
