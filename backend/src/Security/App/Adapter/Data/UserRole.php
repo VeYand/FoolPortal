@@ -5,8 +5,8 @@ namespace App\Security\App\Adapter\Data;
 
 enum UserRole: string
 {
-	case OWNER = 'OWNER';
-	case ADMIN = 'ADMIN';
-	case TEACHER = 'TEACHER';
-	case STUDENT = 'STUDENT';
+	case OWNER = 'ROLE_OWNER';
+	case ADMIN = 'ROLE_ADMIN';
+	case TEACHER = 'ROLE_TEACHER';
+	case STUDENT = 'ROLE_STUDENT';
 }

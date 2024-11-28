@@ -32,6 +32,14 @@ class LocationRepository implements LocationRepositoryInterface
 		return $this->repository->findBy(['locationId' => $locationIds]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function findAll(): array
+	{
+		return $this->repository->findAll();
+	}
+
 	public function store(Location $location): string
 	{
 		$this->entityManager->persist($location);

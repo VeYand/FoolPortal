@@ -1,0 +1,504 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Student Portal API
+  x-api-identifier: StudentPortal
+  description: API for Student Portal
+
+paths:
+  /api/v1/user:
+    get:
+      tags:
+        - Authorization
+      operationId: GetLoggedUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/user.yaml#/components/schemas/UserData'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/login:
+    post:
+      tags:
+        - Authorization
+      operationId: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/authorization.yaml#/components/schemas/LoginInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/logout:
+    post:
+      tags:
+        - Authorization
+      operationId: Logout
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+  /api/v1/user/list:
+    post:
+      tags:
+        - User
+      operationId: ListUsers
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: './User/user.yaml#/components/schemas/ListUsersSpec'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/user.yaml#/components/schemas/UsersList'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/list:
+    get:
+      tags:
+        - User
+      operationId: ListGroups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/group.yaml#/components/schemas/GroupsList'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/create:
+    post:
+      tags:
+        - User
+      operationId: CreateGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/CreateGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './User/group.yaml#/components/schemas/CreateGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/update:
+    post:
+      tags:
+        - User
+      operationId: UpdateGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/UpdateGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/delete:
+    post:
+      tags:
+        - User
+      operationId: DeleteGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/DeleteGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/{groupId}/members/create:
+    post:
+      tags:
+        - User
+      operationId: AddStudentsToGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/AddStudentsToGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/{groupId}/members/delete:
+    post:
+      tags:
+        - User
+      operationId: RemoveStudentsFromGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/RemoveStudentsFromGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListSubjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/subject.yaml#/components/schemas/SubjectsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/CreateSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/update:
+    post:
+      tags:
+        - Subject
+      operationId: UpdateSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/UpdateSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/subject/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteSubject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/subject.yaml#/components/schemas/DeleteSubjectRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListTeacherSubjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/teacherSubject.yaml#/components/schemas/TeacherSubjectsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/CreateTeacherSubjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/teacher-subject/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/DeleteTeacherSubjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/course/list:
+    get:
+      tags:
+        - Subject
+      operationId: ListCourses
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Subject/course.yaml#/components/schemas/CoursesList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/course/create:
+    post:
+      tags:
+        - Subject
+      operationId: CreateCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/CreateCoursesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/course/delete:
+    post:
+      tags:
+        - Subject
+      operationId: DeleteCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/DeleteCoursesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/list:
+    get:
+      tags:
+        - Lesson
+      operationId: ListLocations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Lesson/location.yaml#/components/schemas/LocationsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/create:
+    post:
+      tags:
+        - Lesson
+      operationId: CreateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/location.yaml#/components/schemas/CreateLocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/update:
+    post:
+      tags:
+        - Lesson
+      operationId: UpdateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/location.yaml#/components/schemas/UpdateLocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/location/delete:
+    post:
+      tags:
+        - Lesson
+      operationId: DeleteLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/location.yaml#/components/schemas/DeleteLocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+components:
+  schemas:
+    BadResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+  responses:
+    SuccessResponse:
+      description: OK
+
+    BadRequestResponse:
+      description: BadRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    UnauthorizedResponse:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    NotFoundResponse:
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    ConflictResponse:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'
+
+    InternalServerErrorResponse:
+      description: InternalServerError
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadResponse'

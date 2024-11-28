@@ -28,6 +28,11 @@ const remapApiUserToUserData = (user: ApiUserData): UserData => ({
 	groupIds: user.groupIds,
 })
 
+const remapApiUsersToUsersList = (users: ApiUserData[]): UserData[] => (
+	users.map(remapApiUserToUserData, users)
+)
+
 export {
 	remapApiUserToUserData,
+	remapApiUsersToUsersList,
 }

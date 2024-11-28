@@ -149,6 +149,14 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
+	public function listAllLocations(): array
+	{
+		return $this->locationQueryService->listAllLocations();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function listAttachmentsByIds(array $attachmentIds): array
 	{
 		return $this->attachmentQueryService->listAttachmentsByIds($attachmentIds);

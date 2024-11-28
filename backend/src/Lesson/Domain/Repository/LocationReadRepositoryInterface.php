@@ -15,4 +15,9 @@ interface LocationReadRepositoryInterface
 	 * @return Location[]
 	 */
 	public function findByIds(array $locationIds): array;
+
+	/**
+	 * @return Location[]
+	 */
+	public function findAll(): array;
 }

@@ -61,44 +61,44 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createTeacherSubject(string $teacherId, string $subjectId): void
+	public function createTeacherSubjects(array $inputs): void
 	{
-		self::tryExecute(function () use ($teacherId, $subjectId)
+		self::tryExecute(function () use ($inputs)
 		{
-			$this->teacherSubjectService->create($teacherId, $subjectId);
+			$this->teacherSubjectService->create($inputs);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteTeacherSubject(string $teacherSubjectId): void
+	public function deleteTeacherSubjects(array $teacherSubjectIds): void
 	{
-		self::tryExecute(function () use ($teacherSubjectId)
+		self::tryExecute(function () use ($teacherSubjectIds)
 		{
-			$this->teacherSubjectService->delete($teacherSubjectId);
+			$this->teacherSubjectService->delete($teacherSubjectIds);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function createCourse(string $teacherSubjectId, string $groupId): void
+	public function createCourses(array $inputs): void
 	{
-		self::tryExecute(function () use ($teacherSubjectId, $groupId)
+		self::tryExecute(function () use ($inputs)
 		{
-			$this->courseService->create($teacherSubjectId, $groupId);
+			$this->courseService->create($inputs);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteCourse(string $courseId): void
+	public function deleteCourses(array $courseIds): void
 	{
-		self::tryExecute(function () use ($courseId)
+		self::tryExecute(function () use ($courseIds)
 		{
-			$this->courseService->delete($courseId);
+			$this->courseService->delete($courseIds);
 		});
 	}
 
@@ -121,9 +121,25 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array
+	{
+		return $this->teacherSubjectQueryService->listTeacherSubjectsByGroup($groupId);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function listAllCourses(): array
 	{
 		return $this->courseQueryService->listAllCourses();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listCoursesByGroup(string $groupId): array
+	{
+		return $this->courseQueryService->listCoursesByGroup($groupId);
 	}
 
 	public function isCourseExists(string $courseId): bool

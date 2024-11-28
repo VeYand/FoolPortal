@@ -12,5 +12,10 @@ interface CourseQueryServiceInterface
 	 */
 	public function listAllCourses(): array;
 
+	/**
+	 * @return CourseData[]
+	 */
+	public function listCoursesByGroup(string $groupId): array;
+
 	public function isCourseExists(string $courseId): bool;
 }

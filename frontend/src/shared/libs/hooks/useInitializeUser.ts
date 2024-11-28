@@ -1,34 +1,36 @@
 import {userEntitySlice} from 'entities/user'
-import {useEffect} from 'react'
+import {useCallback} from 'react'
 import {useLazyGetLoggedUser} from 'shared/libs/query'
 import {remapApiUserToUserData} from 'shared/libs/remmapers'
-import {useAppDispatch} from 'shared/redux'
+import {useAppDispatch, useAppSelector} from 'shared/redux'
 
-const useInitializeUser = () => {
+type UseInitializeUserReturnType = {
+	isLoading: boolean,
+	initialize: () => void,
+}
+
+const useInitializeUser = (): UseInitializeUserReturnType => {
 	const dispatch = useAppDispatch()
+	const loadingState = useAppSelector(state => state.userEntity.loading)
 	const [getLoggedUser, {isLoading, isFetching}] = useLazyGetLoggedUser()
 
-	useEffect(() => {
-		const initializeUser = async () => {
-			dispatch(userEntitySlice.actions.setLoading(true))
+	const initialize = useCallback(async () => {
+		dispatch(userEntitySlice.actions.setLoading(true))
 
-			const response = await getLoggedUser({})
+		const response = await getLoggedUser({})
 
-			if (response.isError) {
-				dispatch(userEntitySlice.actions.setLoading(false))
-				return
-			}
-
-			if (response.data) {
-				const user = remapApiUserToUserData(response.data)
-				dispatch(userEntitySlice.actions.setUser(user))
-			}
+		if (response.isError) {
+			dispatch(userEntitySlice.actions.setLoading(false))
+			return
 		}
 
-		initializeUser()
+		if (response.data) {
+			const user = remapApiUserToUserData(response.data)
+			dispatch(userEntitySlice.actions.setUser(user))
+		}
 	}, [dispatch, getLoggedUser])
 
-	return {isLoading: isLoading || isFetching}
+	return {isLoading: isLoading || isFetching || loadingState, initialize}
 }
 
 

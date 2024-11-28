@@ -7,6 +7,8 @@ use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Data\SubjectData;
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Service\Input\CreateCourseInput;
+use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 
 interface SubjectApiInterface
 {
@@ -26,24 +28,28 @@ interface SubjectApiInterface
 	public function deleteSubject(string $subjectId): void;
 
 	/**
+	 * @param CreateTeacherSubjectInput[] $inputs
 	 * @throws ApiException
 	 */
-	public function createTeacherSubject(string $teacherId, string $subjectId): void;
+	public function createTeacherSubjects(array $inputs): void;
 
 	/**
+	 * @param string[] $teacherSubjectIds
 	 * @throws ApiException
 	 */
-	public function deleteTeacherSubject(string $teacherSubjectId): void;
+	public function deleteTeacherSubjects(array $teacherSubjectIds): void;
 
 	/**
+	 * @param CreateCourseInput[] $inputs
 	 * @throws ApiException
 	 */
-	public function createCourse(string $teacherSubjectId, string $groupId): void;
+	public function createCourses(array $inputs): void;
 
 	/**
+	 * @param string[] $courseIds
 	 * @throws ApiException
 	 */
-	public function deleteCourse(string $courseId): void;
+	public function deleteCourses(array $courseIds): void;
 
 	/**
 	 * @return SubjectData[]
@@ -56,9 +62,19 @@ interface SubjectApiInterface
 	public function listAllTeacherSubjects(): array;
 
 	/**
+	 * @return TeacherSubjectData[]
+	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array;
+
+	/**
 	 * @return CourseData[]
 	 */
 	public function listAllCourses(): array;
+
+	/**
+	 * @return CourseData[]
+	 */
+	public function listCoursesByGroup(string $groupId): array;
 
 	public function isCourseExists(string $courseId): bool;
 }

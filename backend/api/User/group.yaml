@@ -1,0 +1,92 @@
+components:
+  schemas:
+    GroupData:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - groupId
+        - name
+
+    GroupsList:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupData'
+      required:
+        - groups
+
+    CreateGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+      required:
+        - name
+
+    CreateGroupResponse:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - groupId
+
+    UpdateGroupRequest:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - groupId
+        - name
+
+    DeleteGroupRequest:
+      type: object
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - groupId
+
+    AddStudentsToGroupRequest:
+      type: object
+      properties:
+        studentIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - studentIds
+
+    RemoveStudentsFromGroupRequest:
+      type: object
+      properties:
+        studentIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - studentIds

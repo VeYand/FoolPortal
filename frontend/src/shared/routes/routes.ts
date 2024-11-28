@@ -13,7 +13,13 @@ const UserPortalRoute: RouteType = {
 	getUrl: () => UserPortalRoute.path,
 }
 
+const ProfileRoute: RouteType = {
+	path: '/profile',
+	getUrl: () => ProfileRoute.path,
+}
+
 export {
 	LoginRoute,
 	UserPortalRoute,
+	ProfileRoute,
 }

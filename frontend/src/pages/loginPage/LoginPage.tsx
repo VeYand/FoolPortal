@@ -1,10 +1,10 @@
 import {Layout, Row, Col} from 'antd'
-import {Authorization} from 'features/authorization/authorization'
-import {Preloader} from 'features/preloader/Preloader'
 import {useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAppSelector} from 'shared/redux'
 import {UserPortalRoute} from 'shared/routes'
+import {Authorization} from 'widgets/authorization/authorization'
+import {Preloader} from 'widgets/preloader/Preloader'
 
 const LoginPage = () => {
 	const navigate = useNavigate()

@@ -16,26 +16,40 @@ readonly class GroupMemberService
 	}
 
 	/**
+	 * TODO Проверить, что это действительно студенты
+	 * TODO Избавиться от запросов в цикле
+	 *
+	 * @param string[] $studentIds
 	 * @throws AppException
 	 */
-	public function addUserToGroup(string $groupId, string $userId): void
+	public function addStudentToGroup(string $groupId, array $studentIds): void
 	{
-		$callback = function () use ($groupId, $userId): void
+		$callback = function () use ($groupId, $studentIds): void
 		{
-			$this->groupMemberService->addUserToGroup($groupId, $userId);
+			foreach ($studentIds as $studentId)
+			{
+				$this->groupMemberService->addStudentToGroup($groupId, $studentId);
+			}
 		};
 
 		$this->transactionService->execute($callback);
 	}
 
 	/**
+	 * TODO Проверить, что это действительно студенты
+	 * TODO Избавиться от запросов в цикле
+	 *
+	 * @param string[] $studentIds
 	 * @throws AppException
 	 */
-	public function removeUserFromGroup(string $groupId, string $userId): void
+	public function removeStudentFromGroup(string $groupId, array $studentIds): void
 	{
-		$callback = function () use ($groupId, $userId): void
+		$callback = function () use ($groupId, $studentIds): void
 		{
-			$this->groupMemberService->removeUserFromGroup($groupId, $userId);
+			foreach ($studentIds as $studentId)
+			{
+				$this->groupMemberService->removeStudentFromGroup($groupId, $studentId);
+			}
 		};
 
 		$this->transactionService->execute($callback);

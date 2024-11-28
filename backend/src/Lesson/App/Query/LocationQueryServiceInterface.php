@@ -12,4 +12,9 @@ interface LocationQueryServiceInterface
 	 * @return LocationData[]
 	 */
 	public function findLocationsByIds(array $locationIds): array;
+
+	/**
+	 * @return LocationData[]
+	 */
+	public function listAllLocations(): array;
 }

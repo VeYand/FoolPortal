@@ -47,7 +47,7 @@
             "config/packages/jms_serializer.yaml"
         ]
     },
-    "openapitools/fool-portal": {
+    "openapitools/student-portal": {
         "version": "dev-main"
     },
     "pentatrion/vite-bundle": {

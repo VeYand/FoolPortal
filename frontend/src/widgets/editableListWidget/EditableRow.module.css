@@ -1,0 +1,21 @@
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nameCell {
+    flex: 1;
+}
+
+.actionCell {
+    text-align: right;
+}
+
+.input {
+    max-width: 240px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}

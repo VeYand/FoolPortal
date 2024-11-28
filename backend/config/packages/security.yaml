@@ -33,7 +33,12 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/v1/user, roles: ROLE_USER }
         - { path: ^/api/v1/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/logout, roles: ROLE_USER }
+        - { path: ^/api/v1/(subject|location)/(list|create|update|delete), roles: [ROLE_OWNER, ROLE_ADMIN] }
+        - { path: ^/api/v1/(teacher-subject|course)/(list|create|delete), roles: [ROLE_OWNER, ROLE_ADMIN] }
+        - { path: ^/api/v1/(user|group)/list, roles: [ROLE_OWNER, ROLE_ADMIN] }
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
 

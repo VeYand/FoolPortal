@@ -21,12 +21,29 @@ readonly class TeacherSubjectQueryService implements TeacherSubjectQueryServiceI
 	 */
 	public function listAllTeacherSubjects(): array
 	{
-		$subjects = $this->teacherSubjectReadRepository->findAll();
+		$teacherSubjects = $this->teacherSubjectReadRepository->findAll();
+		return self::convertTeacherSubjectsToTeacherSubjectList($teacherSubjects);
+	}
 
-		return array_map(static fn(TeacherSubject $subject) => new TeacherSubjectData(
-			$subject->getTeacherSubjectId(),
-			$subject->getTeacherId(),
-			$subject->getSubjectId(),
-		), $subjects);
+	/**
+	 * @inheritDoc
+	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array
+	{
+		$teacherSubjects = $this->teacherSubjectReadRepository->findByGroup($groupId);
+		return self::convertTeacherSubjectsToTeacherSubjectList($teacherSubjects);
+	}
+
+	/**
+	 * @param TeacherSubject[] $teacherSubjects
+	 * @return TeacherSubjectData[]
+	 */
+	public static function convertTeacherSubjectsToTeacherSubjectList(array $teacherSubjects): array
+	{
+		return array_map(static fn(TeacherSubject $teacherSubject) => new TeacherSubjectData(
+			$teacherSubject->getTeacherSubjectId(),
+			$teacherSubject->getTeacherId(),
+			$teacherSubject->getSubjectId(),
+		), $teacherSubjects);
 	}
 }

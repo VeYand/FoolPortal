@@ -23,9 +23,36 @@ readonly class LocationQueryService implements LocationQueryServiceInterface
 	{
 		$locations = $this->locationReadRepository->findByIds($locationIds);
 
-		return array_map(static fn(Location $location) => new LocationData(
+		return self::convertLocationsToLocationsList($locations);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listAllLocations(): array
+	{
+		$locations = $this->locationReadRepository->findAll();
+
+		return self::convertLocationsToLocationsList($locations);
+	}
+
+	private static function convertLocationToLocationData(Location $location): LocationData
+	{
+		return new LocationData(
 			$location->getLocationId(),
 			$location->getName(),
-		), $locations);
+		);
+	}
+
+	/**
+	 * @param Location[] $locations
+	 * @return LocationData[]
+	 */
+	private static function convertLocationsToLocationsList(array $locations): array
+	{
+		return array_map(
+			static fn(Location $location) => self::convertLocationToLocationData($location),
+			$locations,
+		);
 	}
 }

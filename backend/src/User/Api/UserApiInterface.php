@@ -7,6 +7,7 @@ use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\Data\UserData;
+use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
 
@@ -38,7 +39,7 @@ interface UserApiInterface
 	 * @return DetailedUserData[]
 	 * @throws ApiException
 	 */
-	public function listAllUsers(): array;
+	public function listUsers(ListUsersSpec $spec): array;
 
 	/**
 	 * @return GroupData[]
@@ -64,7 +65,7 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function createGroup(string $groupName): void;
+	public function createGroup(string $groupName): string;
 
 	/**
 	 * @throws ApiException
@@ -77,12 +78,14 @@ interface UserApiInterface
 	public function deleteGroup(string $groupId): void;
 
 	/**
+	 * @param string[] $studentIds
 	 * @throws ApiException
 	 */
-	public function addUserToGroup(string $groupId, string $userId): void;
+	public function addStudentsToGroup(string $groupId, array $studentIds): void;
 
 	/**
+	 * @param string[] $studentIds
 	 * @throws ApiException
 	 */
-	public function removeUserFromGroup(string $groupId, string $userId): void;
+	public function removeStudentsFromGroup(string $groupId, array $studentIds): void;
 }

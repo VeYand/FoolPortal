@@ -11,4 +11,9 @@ interface TeacherSubjectQueryServiceInterface
 	 * @return TeacherSubjectData[]
 	 */
 	public function listAllTeacherSubjects(): array;
+
+	/**
+	 * @return TeacherSubjectData[]
+	 */
+	public function listTeacherSubjectsByGroup(string $groupId): array;
 }

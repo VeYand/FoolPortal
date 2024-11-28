@@ -1,0 +1,59 @@
+components:
+  schemas:
+    SubjectData:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - subjectId
+        - name
+
+    SubjectsList:
+      type: object
+      properties:
+        subjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubjectData'
+          nullable: false
+      required:
+        - subjects
+
+    CreateSubjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+      required:
+        - name
+
+    UpdateSubjectRequest:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - subjectId
+        - name
+
+    DeleteSubjectRequest:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - subjectId

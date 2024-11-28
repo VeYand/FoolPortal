@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
+use App\Lesson\Domain\Model\Lesson;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\ImageQueryServiceInterface;
+use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\App\Query\UserQueryServiceInterface;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\GroupMemberReadRepositoryInterface;
 use App\User\Domain\Repository\UserReadRepositoryInterface;
+use App\User\Domain\Model\GroupMember;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class UserQueryService implements UserQueryServiceInterface
 {
@@ -18,6 +22,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		private UserReadRepositoryInterface        $userReadRepository,
 		private GroupMemberReadRepositoryInterface $groupMemberReadRepository,
 		private ImageQueryServiceInterface         $imageQueryService,
+		private EntityManagerInterface             $entityManager,
 	)
 	{
 	}
@@ -86,9 +91,22 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllUsers(): array
+	public function listUsers(ListUsersSpec $spec): array
 	{
-		$users = $this->userReadRepository->findAll();
+		$qb = $this->entityManager->createQueryBuilder();
+
+		$qb->select('u')
+			->from(User::class, 'u')
+			->leftJoin(GroupMember::class, 'gm', 'WITH', 'u.userId = gm.userId');
+
+		if (!empty($spec->groupIds))
+		{
+			$qb->andWhere('gm.groupId IN (:groupIds)')
+				->setParameter('groupIds', $spec->groupIds);
+		}
+
+		$users = $qb->getQuery()->getResult();
+
 		$userIds = array_map(
 			static fn(User $user) => $user->getUserId(),
 			$users,

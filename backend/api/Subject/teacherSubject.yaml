@@ -1,0 +1,68 @@
+components:
+  schemas:
+    TeacherSubjectData:
+      type: object
+      properties:
+        teacherSubjectId:
+          type: string
+          format: uuid
+          nullable: false
+        teacherId:
+          type: string
+          format: uuid
+          nullable: false
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - teacherSubjectId
+        - subjectId
+        - teacherId
+
+    TeacherSubjectsList:
+      type: object
+      properties:
+        teacherSubjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeacherSubjectData'
+      required:
+        - teacherSubjects
+
+    CreateTeacherSubjectInput:
+      type: object
+      properties:
+        teacherId:
+          type: string
+          format: uuid
+          nullable: false
+        subjectId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - teacherId
+        - subjectId
+
+    CreateTeacherSubjectsRequest:
+      type: object
+      properties:
+        teacherSubjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateTeacherSubjectInput'
+      required:
+        - teacherSubjects
+
+    DeleteTeacherSubjectsRequest:
+      type: object
+      properties:
+        teacherSubjectIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - teacherSubjectId

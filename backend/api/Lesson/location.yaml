@@ -1,0 +1,59 @@
+components:
+  schemas:
+    LocationData:
+      type: object
+      properties:
+        locationId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - locationId
+        - name
+
+    LocationsList:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationData'
+          nullable: false
+      required:
+        - locations
+
+    CreateLocationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+      required:
+        - name
+
+    UpdateLocationRequest:
+      type: object
+      properties:
+        locationId:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - locationId
+        - name
+
+    DeleteLocationRequest:
+      type: object
+      properties:
+        locationId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - locationId

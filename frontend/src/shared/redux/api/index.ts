@@ -1,2 +1,2 @@
 export {apiSlice} from './apiSlice'
-export {foolPortalApi} from './foolPortalApi'
+export {studentPortalApi} from './studentPortalApi'

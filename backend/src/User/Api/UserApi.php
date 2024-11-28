@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
+use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\App\Query\UserQueryServiceInterface;
 use App\User\App\Service\GroupMemberService;
 use App\User\App\Service\GroupService;
@@ -23,6 +25,7 @@ readonly class UserApi implements UserApiInterface
 		private UserService                $userService,
 		private GroupService               $groupService,
 		private GroupMemberService         $groupMemberService,
+		private UuidProviderInterface      $uuidProvider,
 	)
 	{
 	}
@@ -79,11 +82,11 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllUsers(): array
+	public function listUsers(ListUsersSpec $spec): array
 	{
-		return self::tryExecute(function ()
+		return self::tryExecute(function () use ($spec)
 		{
-			return $this->userQueryService->listAllUsers();
+			return $this->userQueryService->listUsers($spec);
 		});
 	}
 
@@ -134,11 +137,13 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createGroup(string $groupName): void
+	public function createGroup(string $groupName): string
 	{
-		self::tryExecute(function () use ($groupName)
+		return self::tryExecute(function () use ($groupName)
 		{
-			$this->groupService->create($groupName);
+			return $this->uuidProvider->toString(
+				$this->groupService->create($groupName),
+			);
 		});
 	}
 
@@ -167,22 +172,22 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function addUserToGroup(string $groupId, string $userId): void
+	public function addStudentsToGroup(string $groupId, array $studentIds): void
 	{
-		self::tryExecute(function () use ($groupId, $userId)
+		self::tryExecute(function () use ($groupId, $studentIds)
 		{
-			$this->groupMemberService->addUserToGroup($groupId, $userId);
+			$this->groupMemberService->addStudentToGroup($groupId, $studentIds);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function removeUserFromGroup(string $groupId, string $userId): void
+	public function removeStudentsFromGroup(string $groupId, array $studentIds): void
 	{
-		self::tryExecute(function () use ($groupId, $userId)
+		self::tryExecute(function () use ($groupId, $studentIds)
 		{
-			$this->groupMemberService->removeUserFromGroup($groupId, $userId);
+			$this->groupMemberService->removeStudentFromGroup($groupId, $studentIds);
 		});
 	}
 
