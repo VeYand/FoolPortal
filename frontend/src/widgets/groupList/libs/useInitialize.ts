@@ -1,15 +1,24 @@
 import {useCallback, useEffect, useState} from 'react'
-import {CourseData, GroupData, UserData, UsersList} from 'shared/api'
+import {
+	CourseData,
+	GroupData,
+	UserData,
+	UsersList,
+} from 'shared/api'
 import {getViewableUserName} from 'shared/libs'
 import {
 	useLazyAddStudentsToGroup,
 	useLazyCreateCourses,
-	useLazyCreateGroup, useLazyDeleteCourses, useLazyDeleteGroup,
+	useLazyCreateGroup,
+	useLazyDeleteCourses,
+	useLazyDeleteGroup,
 	useLazyListCourses,
 	useLazyListGroups,
 	useLazyListSubjects,
 	useLazyListTeacherSubjects,
-	useLazyListUsers, useLazyRemoveStudentsFromGroup, useLazyUpdateGroup,
+	useLazyListUsers,
+	useLazyRemoveStudentsFromGroup,
+	useLazyUpdateGroup,
 } from 'shared/libs/query'
 import {remapApiUsersToUsersList} from 'shared/libs/remmapers/remapApiUserToUserData'
 import {USER_ROLE} from 'shared/types'
@@ -17,51 +26,46 @@ import {Group} from '../groupDetailsModal/GroupDetailsModal'
 import {Student} from '../groupDetailsModal/StudentListForGroup'
 import {Subject, Teacher, TeacherSubject} from '../groupDetailsModal/SubjectListForGroup'
 
-const retrieveStudentsAndTeachersFromUsersResponse = (response?: UsersList): [Student[], Teacher[]] => {
+const mapUsersToStudentsAndTeachers = (response?: UsersList): [Student[], Teacher[]] => {
 	if (!response) {
 		return [[], []]
 	}
 
 	const users = remapApiUsersToUsersList(response.users)
+	const students = users
+		.filter(user => user.role === USER_ROLE.STUDENT)
+		.map(student => ({
+			id: student.userId,
+			name: getViewableUserName(student),
+		}))
 
-	const students = users.filter(user => user.role === USER_ROLE.STUDENT).map(student => ({
-		id: student.userId,
-		name: getViewableUserName(student),
-	}))
-
-	const teachers = users.filter(user => user.role === USER_ROLE.TEACHER).map(teacher => ({
-		id: teacher.userId,
-		name: getViewableUserName(teacher),
-	}))
+	const teachers = users
+		.filter(user => user.role === USER_ROLE.TEACHER)
+		.map(teacher => ({
+			id: teacher.userId,
+			name: getViewableUserName(teacher),
+		}))
 
 	return [students, teachers]
 }
 
-const findUserIdsByGroup = (users: UserData[], groupId: string): string[] => (
-	users.filter(user => user.groupIds.includes(groupId)).map(user => user.userId)
-)
+const getUserIdsByGroup = (users: UserData[], groupId: string): string[] =>
+	users
+		.filter(user => user.groupIds.includes(groupId))
+		.map(user => user.userId)
 
-const findTeacherSubjectIdsByGroup = (courses: CourseData[], groupId: string): string[] => (
-	[...courses.filter(course => course.groupId === groupId).map(course => course.teacherSubjectId)]
-)
+const getTeacherSubjectIdsByGroup = (courses: CourseData[], groupId: string): string[] =>
+	courses
+		.filter(course => course.groupId === groupId)
+		.map(course => course.teacherSubjectId)
 
-const retrieveGroupsList = (groups: GroupData[], users: UserData[], courses: CourseData[]): Group[] => (
-	groups.map((group): Group => ({
+const mapApiDataToGroups = (groups: GroupData[], users: UserData[], courses: CourseData[]): Group[] =>
+	groups.map(group => ({
 		id: group.groupId,
 		name: group.name,
-		studentIds: findUserIdsByGroup(users, group.groupId),
-		teacherSubjectIds: findTeacherSubjectIdsByGroup(courses, group.groupId),
+		studentIds: getUserIdsByGroup(users, group.groupId),
+		teacherSubjectIds: getTeacherSubjectIdsByGroup(courses, group.groupId),
 	}))
-)
-
-const findGroupById = (groups: Group[], groupId: string): Group | undefined => {
-	for (const group of groups) {
-		if (group.id === groupId) {
-			return group
-		}
-	}
-	return undefined
-}
 
 type AvailableData = {
 	availableStudents: Student[],
@@ -78,7 +82,7 @@ type UseInitializeReturns = {
 	deleteGroup: (groupId: string) => void,
 }
 
-const useInitialize = (): UseInitializeReturns => {
+export const useInitialize = (): UseInitializeReturns => {
 	const [createGroup] = useLazyCreateGroup()
 	const [deleteGroup] = useLazyDeleteGroup()
 	const [updateGroup] = useLazyUpdateGroup()
@@ -91,191 +95,121 @@ const useInitialize = (): UseInitializeReturns => {
 	const [listTeacherSubjects] = useLazyListTeacherSubjects()
 	const [listGroups] = useLazyListGroups()
 	const [listCourses] = useLazyListCourses()
-	const [loading, setLoading] = useState(true)
 
+	const [loading, setLoading] = useState(true)
 	const [data, setData] = useState<AvailableData | undefined>()
 	const [courses, setCourses] = useState<CourseData[]>([])
 
-	const deleteGroupHandler = async (groupId: string) => {
-		if (data) {
-			await deleteGroup({groupId})
-			setData({
-				...data,
-				initialGroups: data.initialGroups.filter(group => group.id !== groupId) ?? [],
-			})
-		}
-	}
-
-	const saveGroup = async (group: Group) => {
-		const existGroup = findGroupById(data?.initialGroups ?? [], group.id)
-
-		let newName: string | undefined
-		let groupId = ''
-		const tsToAdd: string[] = []
-		const tsToRemove: string[] = []
-		const studToAdd: string[] = []
-		const studToRemove: string[] = []
-
-		const shouldRefetchUsers = false
-		const shouldRefetchSubjects = false
-		const shouldRefetchTeacherSubjects = false
-		const shouldRefetchGroups = false
-		const shouldRefetchCourses = false
-
-		if (!existGroup) {
-			const response = await createGroup({name: group.name})
-			if (response.isSuccess && response.data) {
-				groupId = response.data.groupId
-			}
-		}
-		if (!groupId) {
-			return
-		}
-		if (existGroup) {
-			if (existGroup.name !== group.name) {
-				newName = group.name
-			}
-
-			const tsOld = existGroup.teacherSubjectIds
-			const tsUpdated = group.teacherSubjectIds
-
-
-			for (const tsU of tsUpdated) {
-				if (!tsOld.includes(tsU)) {
-					tsToAdd.push(tsU)
-				}
-			}
-
-			for (const tsO of tsOld) {
-				if (!tsUpdated.includes(tsO)) {
-					tsToRemove.push(tsO)
-				}
-			}
-
-			const stdudOld = existGroup.studentIds
-			const stUpdated = group.studentIds
-
-
-			for (const stU of stUpdated) {
-				if (!stdudOld.includes(stU)) {
-					studToAdd.push(stU)
-				}
-			}
-
-			for (const stO of stdudOld) {
-				if (!stUpdated.includes(stO)) {
-					studToRemove.push(stO)
-				}
-			}
-		}
-
-		let changed = false
-		if (newName !== undefined) {
-			changed = true
-			updateGroup({groupId, name: newName})
-		}
-
-		if (tsToAdd.length) {
-			changed = true
-			createCourses({courses: tsToAdd.map(ts => ({
-				teacherSubjectId: ts,
-				groupId,
-			}))})
-		}
-		if (tsToRemove.length) {
-			const courseIdsToRemove: string[] = []
-
-			for (const course of courses) {
-				if (course.groupId === groupId && tsToRemove.includes(course.teacherSubjectId)) {
-					courseIdsToRemove.push(course.courseId)
-				}
-			}
-
-			changed = true
-			deleteCourses({courseIds: courseIdsToRemove})
-		}
-		if (studToAdd.length) {
-			changed = true
-			addStudentsToGroup({groupId, studentIds: studToAdd})
-		}
-		if (studToRemove.length) {
-			changed = true
-			removeStudentsFromGroup({groupId, studentIds: studToAdd})
-		}
-		if (changed) {
-			fetchData(
-				shouldRefetchUsers,
-				shouldRefetchSubjects,
-				shouldRefetchTeacherSubjects,
-				shouldRefetchGroups,
-				shouldRefetchCourses,
-			)
-		}
-	}
-
-	const fetchData = useCallback(async(
-		shouldRefetchUsers = true,
-		shouldRefetchSubjects = true,
-		shouldRefetchTeacherSubjects = true,
-		shouldRefetchGroups = true,
-		shouldRefetchCourses = true,
-	) => {
+	const handleDeleteGroup = async (groupId: string) => {
 		try {
-			setLoading(true)
-			const [
-				usersResponse,
-				subjectsResponse,
-				teacherSubjectsResponse,
-				groupsResponse,
-				coursesResponse,
-			] = await Promise.all([
-				listUsers({}),
-				listSubjects({}),
-				listTeacherSubjects({}),
-				listGroups({}),
-				listCourses({}),
-			])
-
-			const [availableStudents, availableTeachers] = retrieveStudentsAndTeachersFromUsersResponse(usersResponse.data)
-
-			const availableSubjects = subjectsResponse.data?.subjects.map(subject => ({
-				id: subject.subjectId,
-				name: subject.name,
-			})) ?? []
-
-			const availableTeacherSubjects = teacherSubjectsResponse.data?.teacherSubjects.map(ts => ({
-				teacherSubjectId: ts.teacherSubjectId,
-				subjectId: ts.subjectId,
-				teacherId: ts.teacherId,
-			})) ?? []
-
-			const initialGroups = retrieveGroupsList(
-				groupsResponse.data?.groups ?? [],
-				usersResponse.data?.users ?? [],
-				coursesResponse.data?.courses ?? [],
-			)
-			setCourses(coursesResponse.data?.courses ?? [])
-			setData({
-				availableStudents,
-				availableTeachers,
-				availableSubjects,
-				availableTeacherSubjects,
-				initialGroups,
-			})
-			setLoading(false)
+			if (data) {
+				await deleteGroup({groupId})
+				setData(prev =>
+					(prev
+						? {...prev, initialGroups: prev.initialGroups.filter(group => group.id !== groupId)}
+						: undefined),
+				)
+			}
 		}
 		catch (error) {
-			console.error('Error fetching data:', error)
+			console.error(`Error deleting group: ${error}`)
 		}
-	}, [listCourses, listGroups, listSubjects, listTeacherSubjects, listUsers])
+	}
+
+	const handleSaveGroup = async (group: Group) => {
+		try {
+			const existingGroup = data?.initialGroups.find(g => g.id === group.id)
+			let groupId = existingGroup ? group.id : ''
+
+			if (!existingGroup) {
+				const response = await createGroup({name: group.name})
+				if (response.isSuccess && response.data) {
+					groupId = response.data.groupId
+				}
+			}
+
+			if (existingGroup && existingGroup.name !== group.name) {
+				await updateGroup({groupId, name: group.name})
+			}
+
+			const tsToAdd = group.teacherSubjectIds.filter(id => !existingGroup?.teacherSubjectIds.includes(id))
+			const tsToRemove = existingGroup?.teacherSubjectIds.filter(id => !group.teacherSubjectIds.includes(id)) || []
+			if (tsToAdd.length) {
+				await createCourses({courses: tsToAdd.map(id => ({teacherSubjectId: id, groupId}))})
+			}
+			if (tsToRemove.length) {
+				const courseIdsToRemove = courses
+					.filter(course => course.groupId === groupId && tsToRemove.includes(course.teacherSubjectId))
+					.map(course => course.courseId)
+				await deleteCourses({courseIds: courseIdsToRemove})
+			}
+
+			const studentsToAdd = group.studentIds.filter(id => !existingGroup?.studentIds.includes(id))
+			const studentsToRemove
+				= existingGroup?.studentIds.filter(id => !group.studentIds.includes(id)) || []
+			if (studentsToAdd.length) {
+				await addStudentsToGroup({groupId, studentIds: studentsToAdd})
+			}
+			if (studentsToRemove.length) {
+				await removeStudentsFromGroup({groupId, studentIds: studentsToRemove})
+			}
+
+			await fetchData()
+		}
+		catch (error) {
+			console.error(`Error saving group: ${error}`)
+		}
+	}
+
+	const fetchData = useCallback(async () => {
+		try {
+			setLoading(true)
+			const [usersResponse, subjectsResponse, teacherSubjectsResponse, groupsResponse, coursesResponse]
+				= await Promise.all([
+					listUsers({}),
+					listSubjects({}),
+					listTeacherSubjects({}),
+					listGroups({}),
+					listCourses({}),
+				])
+
+			const [availableStudents, availableTeachers] = mapUsersToStudentsAndTeachers(usersResponse.data)
+			const availableSubjects
+				= subjectsResponse.data?.subjects.map(subject => ({
+					id: subject.subjectId,
+					name: subject.name,
+				})) || []
+			const availableTeacherSubjects
+				= teacherSubjectsResponse.data?.teacherSubjects.map(ts => ({
+					teacherSubjectId: ts.teacherSubjectId,
+					subjectId: ts.subjectId,
+					teacherId: ts.teacherId,
+				})) || []
+			const initialGroups = mapApiDataToGroups(
+				groupsResponse.data?.groups || [],
+				usersResponse.data?.users || [],
+				coursesResponse.data?.courses || [],
+			)
+
+			setCourses(coursesResponse.data?.courses || [])
+			setData({availableStudents, availableTeachers, availableSubjects, availableTeacherSubjects, initialGroups})
+		}
+		catch (error) {
+			console.error(`Error fetching data: ${error}`)
+		}
+		finally {
+			setLoading(false)
+		}
+	}, [listUsers, listSubjects, listTeacherSubjects, listGroups, listCourses])
 
 	useEffect(() => {
 		fetchData()
 	}, [fetchData])
 
-	return {loading, data, saveGroup, deleteGroup: deleteGroupHandler}
-}
-
-export {
-	useInitialize,
+	return {
+		loading,
+		data,
+		saveGroup: handleSaveGroup,
+		deleteGroup: handleDeleteGroup,
+	}
 }
