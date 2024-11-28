@@ -19,7 +19,7 @@ const useTabs = () => useMemo(() => ([
 	},
 	{
 		key: '3',
-		name: 'Groups',
+		name: 'Группы',
 		icon: <TeamOutlined />,
 		content: <GroupList/>,
 	},
