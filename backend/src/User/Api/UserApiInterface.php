@@ -78,12 +78,14 @@ interface UserApiInterface
 	public function deleteGroup(string $groupId): void;
 
 	/**
+	 * @param string[] $studentIds
 	 * @throws ApiException
 	 */
-	public function addUserToGroup(string $groupId, string $userId): void;
+	public function addStudentsToGroup(string $groupId, array $studentIds): void;
 
 	/**
+	 * @param string[] $studentIds
 	 * @throws ApiException
 	 */
-	public function removeUserFromGroup(string $groupId, string $userId): void;
+	public function removeStudentsFromGroup(string $groupId, array $studentIds): void;
 }

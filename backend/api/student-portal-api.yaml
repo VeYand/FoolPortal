@@ -152,18 +152,55 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/subject/list:
-    get:
+  /api/v1/group/{groupId}/members/create:
+    post:
       tags:
-        - Subject
-      operationId: ListSubjects
+        - User
+      operationId: AddStudentsToGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/AddStudentsToGroupRequest'
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './Subject/subject.yaml#/components/schemas/SubjectsList'
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/group/{groupId}/members/delete:
+    post:
+      tags:
+        - User
+      operationId: RemoveStudentsFromGroup
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/RemoveStudentsFromGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 

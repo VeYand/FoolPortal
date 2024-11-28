@@ -24,24 +24,24 @@ readonly class GroupMemberService
 	/**
 	 * @throws DomainException
 	 */
-	public function addUserToGroup(string $groupId, string $userId): string
+	public function addStudentToGroup(string $groupId, string $studentId): string
 	{
 		$this->assertGroupExists($groupId);
-		$this->assertUserExists($userId);
-		$this->assertGroupMemberNotExists($groupId, $userId);
+		$this->assertUserExists($studentId);
+		$this->assertGroupMemberNotExists($groupId, $studentId);
 
 		$groupMember = new GroupMember(
 			$this->uuidProvider->generate(),
 			$groupId,
-			$userId,
+			$studentId,
 		);
 
 		return $this->groupMemberRepository->store($groupMember);
 	}
 
-	public function removeUserFromGroup(string $userId, string $groupId): void
+	public function removeStudentFromGroup(string $groupId, string $studentId): void
 	{
-		$groupMember = $this->groupMemberRepository->find($groupId, $userId);
+		$groupMember = $this->groupMemberRepository->find($groupId, $studentId);
 
 		if (!is_null($groupMember))
 		{
