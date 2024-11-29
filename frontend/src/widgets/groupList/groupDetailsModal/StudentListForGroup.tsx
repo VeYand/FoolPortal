@@ -35,7 +35,7 @@ const StudentListForGroup = ({availableStudents, selectedStudentIds, addStudent,
 				rowKey="id"
 				columns={[
 					{
-						title: 'Пользователь',
+						title: 'Студент',
 						dataIndex: 'name',
 						key: 'name',
 					},
@@ -52,14 +52,14 @@ const StudentListForGroup = ({availableStudents, selectedStudentIds, addStudent,
 			/>
 
 			<Modal
-				title="Добавить пользователя"
+				title="Добавить студента"
 				visible={isAddUserModalOpen}
 				onOk={handleAddUser}
 				onCancel={() => setIsAddUserModalOpen(false)}
 			>
 				<Select
 					style={{width: '100%'}}
-					placeholder="Выберите пользователя"
+					placeholder="Выберите студента"
 					value={selectedUserId}
 					onChange={value => setSelectedUserId(value)}
 				>
