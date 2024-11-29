@@ -3,6 +3,7 @@ import {useMemo} from 'react'
 import {GroupList} from 'widgets/groupList/GroupList'
 import {LocationsList} from 'widgets/locationList/locationsList'
 import {SubjectsList} from 'widgets/subjectList/subjectsList'
+import {UserList} from 'widgets/userList/UserList'
 
 const useTabs = () => useMemo(() => ([
 	{
@@ -13,9 +14,9 @@ const useTabs = () => useMemo(() => ([
 	},
 	{
 		key: '2',
-		name: 'Users',
+		name: 'Пользователи',
 		icon: <UserOutlined />,
-		content: <div>{'Users'}</div>,
+		content: <UserList />,
 	},
 	{
 		key: '3',

@@ -16,6 +16,11 @@ type UserData = {
 	groupIds: string[],
 }
 
+type GroupData = {
+	groupId: string,
+	name: string,
+}
+
 type SubjectData = {
 	subjectId: string,
 	name: string,
@@ -26,9 +31,17 @@ type LocationData = {
 	name: string,
 }
 
+type TeacherSubjectData = {
+	teacherSubjectId: string,
+	subjectId: string,
+	teacherId: string,
+}
+
 export {
 	type UserData,
 	USER_ROLE,
+	type GroupData,
 	type SubjectData,
 	type LocationData,
+	type TeacherSubjectData,
 }

@@ -1,2 +1,2 @@
-export type {UserData, SubjectData, LocationData} from './types'
+export type {UserData, GroupData, SubjectData, LocationData, TeacherSubjectData} from './types'
 export {USER_ROLE} from './types'
