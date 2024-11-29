@@ -1,0 +1,39 @@
+components:
+  schemas:
+    CreateGroupMembersRequest:
+      type: object
+      properties:
+        userIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - userIds
+        - groupIds
+
+    DeleteGroupMembersRequest:
+      type: object
+      properties:
+        userIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+            nullable: false
+      required:
+        - userIds
+        - groupIds

@@ -19,16 +19,20 @@ readonly class GroupMemberService
 	 * TODO Проверить, что это действительно студенты
 	 * TODO Избавиться от запросов в цикле
 	 *
-	 * @param string[] $studentIds
+	 * @param string[] $groupIds
+	 * @param string[] $userIds
 	 * @throws AppException
 	 */
-	public function addStudentToGroup(string $groupId, array $studentIds): void
+	public function createGroupMembers(array $groupIds, array $userIds): void
 	{
-		$callback = function () use ($groupId, $studentIds): void
+		$callback = function () use ($groupIds, $userIds): void
 		{
-			foreach ($studentIds as $studentId)
+			foreach ($groupIds as $groupId)
 			{
-				$this->groupMemberService->addStudentToGroup($groupId, $studentId);
+				foreach ($userIds as $userId)
+				{
+					$this->groupMemberService->createGroupMembers($groupId, $userId);
+				}
 			}
 		};
 
@@ -39,16 +43,20 @@ readonly class GroupMemberService
 	 * TODO Проверить, что это действительно студенты
 	 * TODO Избавиться от запросов в цикле
 	 *
-	 * @param string[] $studentIds
+	 * @param string[] $groupIds
+	 * @param string[] $userIds
 	 * @throws AppException
 	 */
-	public function removeStudentFromGroup(string $groupId, array $studentIds): void
+	public function deleteGroupMembers(array $groupIds, array $userIds): void
 	{
-		$callback = function () use ($groupId, $studentIds): void
+		$callback = function () use ($groupIds, $userIds): void
 		{
-			foreach ($studentIds as $studentId)
+			foreach ($groupIds as $groupId)
 			{
-				$this->groupMemberService->removeStudentFromGroup($groupId, $studentId);
+				foreach ($userIds as $userId)
+				{
+					$this->groupMemberService->deleteGroupMembers($groupId, $userId);
+				}
 			}
 		};
 

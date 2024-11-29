@@ -66,27 +66,3 @@ components:
           nullable: false
       required:
         - groupId
-
-    AddStudentsToGroupRequest:
-      type: object
-      properties:
-        studentIds:
-          type: array
-          items:
-            type: string
-            format: uuid
-            nullable: false
-      required:
-        - studentIds
-
-    RemoveStudentsFromGroupRequest:
-      type: object
-      properties:
-        studentIds:
-          type: array
-          items:
-            type: string
-            format: uuid
-            nullable: false
-      required:
-        - studentIds

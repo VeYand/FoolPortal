@@ -7,7 +7,7 @@ import {
 } from 'shared/api'
 import {getViewableUserName} from 'shared/libs'
 import {
-	useLazyAddStudentsToGroup,
+	useLazyCreateGroupMembers,
 	useLazyCreateCourses,
 	useLazyCreateGroup,
 	useLazyDeleteCourses,
@@ -17,7 +17,7 @@ import {
 	useLazyListSubjects,
 	useLazyListTeacherSubjects,
 	useLazyListUsers,
-	useLazyRemoveStudentsFromGroup,
+	useLazyDeleteGroupMembers,
 	useLazyUpdateGroup,
 } from 'shared/libs/query'
 import {remapApiUsersToUsersList} from 'shared/libs/remmapers/remapApiUserToUserData'
@@ -88,8 +88,8 @@ export const useInitialize = (): UseInitializeReturns => {
 	const [updateGroup] = useLazyUpdateGroup()
 	const [createCourses] = useLazyCreateCourses()
 	const [deleteCourses] = useLazyDeleteCourses()
-	const [addStudentsToGroup] = useLazyAddStudentsToGroup()
-	const [removeStudentsFromGroup] = useLazyRemoveStudentsFromGroup()
+	const [createGroupMembers] = useLazyCreateGroupMembers()
+	const [deleteGroupMembers] = useLazyDeleteGroupMembers()
 	const [listUsers] = useLazyListUsers()
 	const [listSubjects] = useLazyListSubjects()
 	const [listTeacherSubjects] = useLazyListTeacherSubjects()
@@ -148,10 +148,10 @@ export const useInitialize = (): UseInitializeReturns => {
 			const studentsToRemove
 				= existingGroup?.studentIds.filter(id => !group.studentIds.includes(id)) || []
 			if (studentsToAdd.length) {
-				await addStudentsToGroup({groupId, studentIds: studentsToAdd})
+				await createGroupMembers({groupIds: [groupId], userIds: studentsToAdd})
 			}
 			if (studentsToRemove.length) {
-				await removeStudentsFromGroup({groupId, studentIds: studentsToRemove})
+				await deleteGroupMembers({groupIds: [groupId], userIds: studentsToRemove})
 			}
 
 			await fetchData()

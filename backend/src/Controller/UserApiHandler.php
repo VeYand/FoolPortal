@@ -11,10 +11,12 @@ use App\User\Api\UserApiInterface;
 use App\User\App\Query\Spec\ListUsersSpec;
 use OpenAPI\Server\Api\UserApiInterface as UserApiHandlerInterface;
 use OpenAPI\Server\Model\AddStudentsToGroupRequest;
+use OpenAPI\Server\Model\CreateGroupMembersRequest;
 use OpenAPI\Server\Model\CreateGroupRequest as ApiCreateGroupRequest;
 use OpenAPI\Server\Model\CreateGroupResponse as ApiCreateGroupResponse;
 use OpenAPI\Server\Model\CreateUserResponse as ApiCreateUserResponse;
 use OpenAPI\Server\Model\CreateUserRequest;
+use OpenAPI\Server\Model\DeleteGroupMembersRequest;
 use OpenAPI\Server\Model\DeleteGroupRequest;
 use OpenAPI\Server\Model\DeleteUserRequest;
 use OpenAPI\Server\Model\GroupsList as ApiGroupsList;
@@ -104,22 +106,22 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function addStudentsToGroup(string $groupId, AddStudentsToGroupRequest $addStudentsToGroupRequest, int &$responseCode, array &$responseHeaders): void
+	public function createGroupMembers(CreateGroupMembersRequest $createGroupMembersRequest, int &$responseCode, array &$responseHeaders): void
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($groupId, $addStudentsToGroupRequest)
+		$this->exceptionHandler->executeWithHandle(function () use ($createGroupMembersRequest)
 		{
-			$this->userApi->addStudentsToGroup($groupId, $addStudentsToGroupRequest->getStudentIds());
+			$this->userApi->createGroupMembers($createGroupMembersRequest->getGroupIds(), $createGroupMembersRequest->getUserIds());
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function removeStudentsFromGroup(string $groupId, RemoveStudentsFromGroupRequest $removeStudentsFromGroupRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteGroupMembers(DeleteGroupMembersRequest $deleteGroupMembersRequest, int &$responseCode, array &$responseHeaders): void
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($groupId, $removeStudentsFromGroupRequest)
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteGroupMembersRequest)
 		{
-			$this->userApi->removeStudentsFromGroup($groupId, $removeStudentsFromGroupRequest->getStudentIds());
+			$this->userApi->deleteGroupMembers($deleteGroupMembersRequest->getGroupIds(), $deleteGroupMembersRequest->getUserIds());
 		}, $responseCode, $responseHeaders);
 	}
 

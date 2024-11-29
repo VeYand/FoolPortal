@@ -168,22 +168,22 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function addStudentsToGroup(string $groupId, array $studentIds): void
+	public function createGroupMembers(array $groupIds, array $userIds): void
 	{
-		self::tryExecute(function () use ($groupId, $studentIds)
+		self::tryExecute(function () use ($groupIds, $userIds)
 		{
-			$this->groupMemberService->addStudentToGroup($groupId, $studentIds);
+			$this->groupMemberService->createGroupMembers($groupIds, $userIds);
 		});
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function removeStudentsFromGroup(string $groupId, array $studentIds): void
+	public function deleteGroupMembers(array $groupIds, array $userIds): void
 	{
-		self::tryExecute(function () use ($groupId, $studentIds)
+		self::tryExecute(function () use ($groupIds, $userIds)
 		{
-			$this->groupMemberService->removeStudentFromGroup($groupId, $studentIds);
+			$this->groupMemberService->deleteGroupMembers($groupIds, $userIds);
 		});
 	}
 

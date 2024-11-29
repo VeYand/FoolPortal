@@ -213,24 +213,17 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/group/{groupId}/members/create:
+  /api/v1/group/group-member/create:
     post:
       tags:
         - User
-      operationId: AddStudentsToGroup
-      parameters:
-        - name: groupId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      operationId: CreateGroupMembers
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: './User/group.yaml#/components/schemas/AddStudentsToGroupRequest'
+              $ref: './User/groupMember.yaml#/components/schemas/CreateGroupMembersRequest'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -239,24 +232,17 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/group/{groupId}/members/delete:
+  /api/v1/group/group-member/delete:
     post:
       tags:
         - User
-      operationId: RemoveStudentsFromGroup
-      parameters:
-        - name: groupId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      operationId: DeleteGroupMembers
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: './User/group.yaml#/components/schemas/RemoveStudentsFromGroupRequest'
+              $ref: './User/groupMember.yaml#/components/schemas/DeleteGroupMembersRequest'
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
