@@ -17,12 +17,12 @@ components:
           type: string
           nullable: true
         role:
-          type: string
+          type: integer
           enum:
-            - OWNER
-            - ADMIN
-            - TEACHER
-            - STUDENT
+            - 1
+            - 2
+            - 3
+            - 4
           nullable: false
         imageSrc:
           type: string
@@ -63,3 +63,99 @@ components:
             type: string
             format: uuid
             nullable: false
+
+    CreateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          nullable: false
+        lastName:
+          type: string
+          nullable: false
+        patronymic:
+          type: string
+          nullable: true
+        role:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+          nullable: false
+        imageData:
+          type: string
+          format: base64
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: false
+        groupIds:
+          type: array
+          items:
+            type: string
+          nullable: false
+        password:
+          type: string
+          nullable: false
+      required:
+        - firstName
+        - lastName
+        - role
+        - email
+        - groupIds
+        - password
+
+    CreateUserResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        patronymic:
+          type: string
+        role:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        imageData:
+          type: string
+          format: base64
+        email:
+          type: string
+          format: email
+        groupIds:
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+
+    DeleteUserRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId

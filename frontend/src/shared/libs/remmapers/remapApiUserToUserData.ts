@@ -1,16 +1,15 @@
 import {UserData as ApiUserData, UserDataRoleEnum as ApiUserRole} from 'shared/api'
-import {UserData} from 'shared/types'
-import {USER_ROLE} from '../../types/types'
+import {UserData, USER_ROLE} from 'shared/types'
 
 const remapApiUserRoleToUserRole = (role: ApiUserRole): USER_ROLE => {
 	switch (role) {
-		case ApiUserRole.Owner:
+		case ApiUserRole.NUMBER_1:
 			return USER_ROLE.OWNER
-		case ApiUserRole.Admin:
+		case ApiUserRole.NUMBER_2:
 			return USER_ROLE.ADMIN
-		case ApiUserRole.Teacher:
+		case ApiUserRole.NUMBER_3:
 			return USER_ROLE.TEACHER
-		case ApiUserRole.Student:
+		case ApiUserRole.NUMBER_4:
 			return USER_ROLE.STUDENT
 		default:
 			throw new Error('Invalid user role')

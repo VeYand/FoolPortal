@@ -78,6 +78,7 @@ readonly class ExceptionHandler
 			case UserApiException::UNSUPPORTED_IMAGE_FORMAT:
 			case UserApiException::PASSWORD_IS_TOO_LONG:
 			case UserApiException::EMAIL_IS_NOT_UNIQUE:
+			case UserApiException::INVALID_USER_ROLE:
 				return self::constructBadRequestResponse($exception->getMessage(), $responseCode, $responseHeaders);
 			case UserApiException::USER_NOT_FOUND:
 			case UserApiException::GROUP_NOT_FOUND:

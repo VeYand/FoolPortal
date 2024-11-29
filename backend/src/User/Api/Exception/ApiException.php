@@ -7,4 +7,5 @@ use App\User\App\Exception\AppException;
 
 class ApiException extends AppException
 {
+	public const int INVALID_USER_ROLE = 201;
 }

@@ -20,14 +20,16 @@ readonly class UserService
 	/**
 	 * @throws AppException
 	 */
-	public function create(CreateUserInput $input): void
+	public function create(CreateUserInput $input): string
 	{
-		$callback = function () use ($input): void
+		$createdUserId = '';
+		$callback = function () use ($input, &$createdUserId): void
 		{
-			$this->domainUserService->create($input);
+			$createdUserId = $this->domainUserService->create($input);
 		};
 
 		$this->transactionService->execute($callback);
+		return $createdUserId;
 	}
 
 

@@ -50,7 +50,7 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function createUser(CreateUserInput $input): void;
+	public function createUser(CreateUserInput $input): string;
 
 	/**
 	 * @throws ApiException

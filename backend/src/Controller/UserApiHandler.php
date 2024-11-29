@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\Controller\Converter\GroupModelConverter;
 use App\Controller\Converter\UserModelConverter;
 use App\Controller\Exception\ExceptionHandler;
@@ -12,11 +13,15 @@ use OpenAPI\Server\Api\UserApiInterface as UserApiHandlerInterface;
 use OpenAPI\Server\Model\AddStudentsToGroupRequest;
 use OpenAPI\Server\Model\CreateGroupRequest as ApiCreateGroupRequest;
 use OpenAPI\Server\Model\CreateGroupResponse as ApiCreateGroupResponse;
+use OpenAPI\Server\Model\CreateUserResponse as ApiCreateUserResponse;
+use OpenAPI\Server\Model\CreateUserRequest;
 use OpenAPI\Server\Model\DeleteGroupRequest;
+use OpenAPI\Server\Model\DeleteUserRequest;
 use OpenAPI\Server\Model\GroupsList as ApiGroupsList;
 use OpenAPI\Server\Model\ListUsersSpec as ApiListUsersSpec;
 use OpenAPI\Server\Model\RemoveStudentsFromGroupRequest;
 use OpenAPI\Server\Model\UpdateGroupRequest;
+use OpenAPI\Server\Model\UpdateUserRequest;
 use OpenAPI\Server\Model\UsersList as ApiUsersList;
 
 readonly class UserApiHandler implements UserApiHandlerInterface
@@ -24,6 +29,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 	public function __construct(
 		private UserApiInterface $userApi,
 		private ExceptionHandler $exceptionHandler,
+		private UuidProviderInterface      $uuidProvider,
 	)
 	{
 	}
@@ -68,7 +74,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 			$groupId = $this->userApi->createGroup($createGroupRequest->getName());
 
 			return new ApiCreateGroupResponse([
-				'groupId' => $groupId,
+				'groupId' => $this->uuidProvider->toString($groupId),
 			]);
 		}, $responseCode, $responseHeaders);
 	}
@@ -114,6 +120,45 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		$this->exceptionHandler->executeWithHandle(function () use ($groupId, $removeStudentsFromGroupRequest)
 		{
 			$this->userApi->removeStudentsFromGroup($groupId, $removeStudentsFromGroupRequest->getStudentIds());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function createUser(CreateUserRequest $createUserRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function () use ($createUserRequest)
+		{
+			$input = UserModelConverter::convertCreateUserRequestToCreateUserInput($createUserRequest);
+			$userId = $this->userApi->createUser($input);
+
+			return new ApiCreateUserResponse([
+				'userId' => $this->uuidProvider->toString($userId),
+			]);
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function deleteUser(DeleteUserRequest $deleteUserRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($deleteUserRequest)
+		{
+			$this->userApi->deleteUser($deleteUserRequest->getUserId());
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function updateUser(UpdateUserRequest $updateUserRequest, int &$responseCode, array &$responseHeaders): void
+	{
+		$this->exceptionHandler->executeWithHandle(function () use ($updateUserRequest)
+		{
+			$input = UserModelConverter::convertUpdateUserRequestToUpdateUserInput($updateUserRequest);
+			$this->userApi->updateUser($input);
 		}, $responseCode, $responseHeaders);
 	}
 }
