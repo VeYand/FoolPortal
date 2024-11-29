@@ -53,7 +53,8 @@ const UserFormModal = ({
 
 	const handleSubmit = () => {
 		form.validateFields().then(values => {
-			const updatedUser = {...user, ...values}
+			const password = values.password?.length > 0 ? values.password : undefined
+			const updatedUser = {...user, ...values, password}
 			const updatedTeacherSubjects
 				= values.role === USER_ROLE.TEACHER
 					? values.subjects?.map((subjectId: string) => ({
@@ -124,6 +125,23 @@ const UserFormModal = ({
 				>
 					<Input />
 				</Form.Item>
+				{!user && (
+					<Form.Item
+						name="password"
+						label="Пароль"
+						rules={[{required: true, message: 'Пожалуйста, введите пароль!'}]}
+					>
+						<Input.Password />
+					</Form.Item>
+				)}
+				{user && (
+					<Form.Item
+						name="password"
+						label="Пароль (оставьте пустым, если не нужно изменять)"
+					>
+						<Input.Password />
+					</Form.Item>
+				)}
 				{isTeacher && (
 					<Form.Item
 						name="subjects"

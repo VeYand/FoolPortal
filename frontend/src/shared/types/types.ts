@@ -14,6 +14,7 @@ type UserData = {
 	imageSrc?: string,
 	email: string,
 	groupIds: string[],
+	password?: string,
 }
 
 type GroupData = {
