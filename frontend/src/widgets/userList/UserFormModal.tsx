@@ -1,4 +1,4 @@
-import {Modal, Form, Input, Select, Button} from 'antd'
+import {Modal, Form, Input, Select, Button, Upload, message} from 'antd'
 import {useEffect, useMemo, useState} from 'react'
 import {GroupData, SubjectData, TeacherSubjectData, USER_ROLE, UserData} from 'shared/types'
 
@@ -25,6 +25,7 @@ const UserFormModal = ({
 	const [isTeacher, setIsTeacher] = useState(user?.role === USER_ROLE.TEACHER)
 	const [isStudent, setIsStudent] = useState(user?.role === USER_ROLE.STUDENT)
 	const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>(user?.groupIds ?? [])
+	const [imageData, setImageData] = useState<string | undefined>(user?.imageSrc)
 
 	const assignedSubjectIds = useMemo(
 		() => teacherSubjects.filter(ts => ts.teacherId === user?.userId).map(ts => ts.subjectId),
@@ -51,18 +52,37 @@ const UserFormModal = ({
 		}
 	}, [user, assignedSubjectIds, form])
 
+	const handleFileChange = (file: File) => {
+		if (!['image/png', 'image/jpeg'].includes(file.type)) {
+			message.error('Только PNG и JPG изображения поддерживаются.')
+			return false
+		}
+		if (file.size > 5 * 1024 * 1024) {
+			message.error('Размер изображения не должен превышать 5 МБ.')
+			return false
+		}
+
+		const reader = new FileReader()
+		reader.onload = e => {
+			setImageData(e.target?.result as string)
+			message.success('Изображение загружено успешно.')
+		}
+		reader.readAsDataURL(file)
+		return false
+	}
+
 	const handleSubmit = () => {
 		form.validateFields().then(values => {
 			const password = values.password?.length > 0 ? values.password : undefined
-			const updatedUser = {...user, ...values, password}
+			const updatedUser = {...user, ...values, password, imageSrc: imageData}
 			const updatedTeacherSubjects
 				= values.role === USER_ROLE.TEACHER
 					? values.subjects?.map((subjectId: string) => ({
 						teacherSubjectId:
-						teacherSubjects.find(
-							ts => ts.subjectId === subjectId && ts.teacherId === user?.userId,
-						)?.teacherSubjectId || `ts-${subjectId}-${user?.userId}`,
-						teacherId: user?.userId || 'new-teacher-id',
+					teacherSubjects.find(
+						ts => ts.subjectId === subjectId && ts.teacherId === user?.userId,
+					)?.teacherSubjectId || `ts-${subjectId}-${user?.userId}`,
+						teacherId: user?.userId || 'new-teacher-id', //похоже на хрень, нам нужно знать только про id предметов, поэтому удалить передачу teacherSubejcts
 						subjectId,
 					})) || []
 					: []
@@ -144,7 +164,7 @@ const UserFormModal = ({
 				)}
 				{isTeacher && (
 					<Form.Item
-						name="subjects"
+						name="subjects" // TODO неправильный ключ или хз
 						label="Предметы"
 						rules={[{required: true, message: 'Выберите хотя бы один предмет!'}]}
 					>
@@ -168,6 +188,18 @@ const UserFormModal = ({
 						</Select>
 					</Form.Item>
 				)}
+				<Form.Item label="Аватарка">
+					<Upload
+						accept="image/png, image/jpeg"
+						showUploadList={false}
+						beforeUpload={handleFileChange}
+					>
+						<Button>{'Загрузить изображение'}</Button>
+					</Upload>
+					{imageData && (
+						<img src={imageData} alt="Avatar" style={{marginTop: 16, maxWidth: '100%'}} />
+					)}
+				</Form.Item>
 				<Button type="primary" onClick={handleSubmit} style={{marginTop: 16}}>
 					{'Сохранить'}
 				</Button>
