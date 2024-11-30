@@ -1,3 +1,4 @@
+import {message} from 'antd'
 import {useCallback, useEffect, useState} from 'react'
 import {
 	CourseData,
@@ -110,8 +111,10 @@ export const useInitialize = (): UseInitializeReturns => {
 						: undefined),
 				)
 			}
+			message.success('Группа успешно удалена.')
 		}
 		catch (error) {
+			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
 			console.error(`Error deleting group: ${error}`)
 		}
 	}
@@ -120,16 +123,19 @@ export const useInitialize = (): UseInitializeReturns => {
 		try {
 			const existingGroup = data?.initialGroups.find(g => g.id === group.id)
 			let groupId = existingGroup ? group.id : ''
+			let action: 'creating' | 'updating' = 'creating'
 
 			if (!existingGroup) {
 				const response = await createGroup({name: group.name})
 				if (response.isSuccess && response.data) {
 					groupId = response.data.groupId
 				}
+				action = 'creating'
 			}
 
 			if (existingGroup && existingGroup.name !== group.name) {
 				await updateGroup({groupId, name: group.name})
+				action = 'updating'
 			}
 
 			const tsToAdd = group.teacherSubjectIds.filter(id => !existingGroup?.teacherSubjectIds.includes(id))
@@ -153,10 +159,17 @@ export const useInitialize = (): UseInitializeReturns => {
 			if (studentsToRemove.length) {
 				await deleteGroupMembers({groupIds: [groupId], userIds: studentsToRemove})
 			}
+			if (action === 'creating') {
+				message.success('Группа успешно создана.')
+			}
+			if (action === 'updating') {
+				message.success('Группа успешно обновлена.')
+			}
 
 			await fetchData()
 		}
 		catch (error) {
+			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
 			console.error(`Error saving group: ${error}`)
 		}
 	}
