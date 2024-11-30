@@ -1,4 +1,4 @@
-FROM mirror.gcr.io/node:18.12.1-buster-slim
+FROM mirror.gcr.io/node:20.15.0-buster-slim
 
 WORKDIR /frontend
 
