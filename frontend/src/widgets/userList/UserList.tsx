@@ -76,9 +76,11 @@ const UserList = () => {
 			key: 'actions',
 			render: (_: any, user: UserData) => (
 				<Space>
-					<Button onClick={() => handleEdit(user)}>Редактировать</Button>
+					<Button onClick={() => handleEdit(user)}>
+						{'Редактировать'}
+					</Button>
 					<Button danger onClick={() => handleDelete(user)}>
-						Удалить
+						{'Удалить'}
 					</Button>
 				</Space>
 			),
@@ -93,7 +95,13 @@ const UserList = () => {
 		<>
 			<Table columns={columns} dataSource={users} rowKey="id" />
 
-			<Button type="primary" onClick={() => setModalVisible(true)}>
+			<Button
+				type="primary"
+				onClick={() => {
+					setSelectedUser(undefined)
+					setModalVisible(true)
+				}}
+			>
 				{'Добавить пользователя'}
 			</Button>
 
