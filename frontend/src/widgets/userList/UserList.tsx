@@ -1,6 +1,7 @@
-import {Avatar, Button, Space, Table, Tag} from 'antd'
+import {Avatar, Button, Space, Table} from 'antd'
 import {useState} from 'react'
-import {UserData} from 'shared/types'
+import {USER_ROLE, UserData} from 'shared/types'
+import {RoleTag} from 'shared/ui/RoleTag/RoleTag'
 import {Preloader} from '../preloader/Preloader'
 import {DeleteConfirmationModal} from './DeleteConfirmationModal'
 import {useInitialize} from './libs/useInitialize'
@@ -63,7 +64,7 @@ const UserList = () => {
 			title: 'Роль',
 			dataIndex: 'role',
 			key: 'role',
-			render: (role: string) => <Tag color={role === 'STUDENT' ? 'blue' : 'green'}>{role}</Tag>,
+			render: (role: USER_ROLE) => <RoleTag role={role}/>,
 		},
 		{
 			title: 'Группы',

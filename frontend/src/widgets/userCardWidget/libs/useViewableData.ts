@@ -1,24 +1,20 @@
 import {getViewableUserName} from 'shared/libs'
 import {UserData} from 'shared/types'
-import {USER_ROLE} from 'shared/types/types'
 
 type ViewableData = {
 	groupNamesTitle: string,
 	groupNames: string,
-	role: string,
 	name: string,
 }
 
 const useViewableData = (user: UserData): ViewableData => {
 	const groupNamesTitle = useViewableGroupNamesTitle(user.groupIds)
 	const groupNames = useViewableGroupNames(user.groupIds)
-	const role = useViewableUserRole(user.role)
 	const name = getViewableUserName(user)
 
 	return {
 		groupNamesTitle,
 		groupNames,
-		role,
 		name,
 	}
 }
@@ -35,16 +31,6 @@ const useViewableGroupNamesTitle = (groupIds: string[]) => {
 			return 'Вы состоите в группах:'
 	}
 }
-
-const roleLabels: Record<USER_ROLE, string> = {
-	STUDENT: 'Студент',
-	TEACHER: 'Преподаватель',
-	ADMIN: 'Админ',
-	OWNER: 'Владелец',
-}
-
-const useViewableUserRole = (role: USER_ROLE) => roleLabels[role]
-
 
 export {
 	useViewableData,

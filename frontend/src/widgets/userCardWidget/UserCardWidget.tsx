@@ -1,7 +1,7 @@
 import {UserOutlined} from '@ant-design/icons'
-import {Avatar, Badge, Card, Space, Typography} from 'antd'
-import {globalTheme} from 'app/globalTheme'
+import {Avatar, Card, Space, Typography} from 'antd'
 import {useAppSelector} from 'shared/redux'
+import {RoleTag} from '../../shared/ui/RoleTag/RoleTag'
 import {useViewableData} from './libs/useViewableData'
 
 const UserCardWidget = () => {
@@ -23,9 +23,8 @@ const UserCardWidget = () => {
 					<Typography.Title level={3}>
 						{viewableData.name}
 					</Typography.Title>
-					<Badge
-						color={globalTheme.token?.colorPrimary}
-						count={viewableData.role}
+					<RoleTag
+						role={user.role}
 					/>
 				</div>
 
