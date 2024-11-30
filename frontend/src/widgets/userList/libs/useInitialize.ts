@@ -1,3 +1,4 @@
+import {message} from 'antd'
 import {useEffect, useState, useCallback} from 'react'
 import {
 	useLazyListUsers,
@@ -8,7 +9,9 @@ import {
 	useLazyDeleteTeacherSubjects,
 	useLazyDeleteUser,
 	useLazyCreateUser,
-	useLazyUpdateUser, useLazyCreateGroupMembers, useLazyDeleteGroupMembers,
+	useLazyUpdateUser,
+	useLazyCreateGroupMembers,
+	useLazyDeleteGroupMembers,
 } from 'shared/libs/query'
 import {remapUserRoleToApiUserRole} from 'shared/libs/remmapers'
 import {remapApiUsersToUsersList} from 'shared/libs/remmapers/remapApiUserToUserData'
@@ -19,7 +22,7 @@ type UseInitializeReturns = {
 	groups: GroupData[],
 	subjects: SubjectData[],
 	teacherSubjects: TeacherSubjectData[],
-	saveUser: (updatedUser: UserData, updatedTeacherSubjects: TeacherSubjectData[]) => Promise<void>,
+	saveUser: (updatedUser: UserData, selectedSubjectIds: string[]) => Promise<void>,
 	deleteUser: (userId: string) => Promise<void>,
 	loading: boolean,
 }
@@ -71,26 +74,41 @@ const useInitialize = (): UseInitializeReturns => {
 		fetchData()
 	}, [fetchData])
 
-	const saveUser = async (updatedUser: UserData, updatedTeacherSubjects: TeacherSubjectData[]) => {
+	const saveUser = async (updatedUser: UserData, selectedSubjectIds: string[]) => {
 		try {
 			const existingUser = users.find(user => user.userId === updatedUser.userId)
 			const currentUserGroups = (existingUser && groups.filter(
 				group => existingUser.groupIds.includes(group.groupId),
 			)) ?? []
+			const currentTeacherSubjects = (existingUser && teacherSubjects.filter(
+				teacherSubject => existingUser.userId === teacherSubject.teacherId,
+			)) ?? []
 
 			let userId = updatedUser.userId
 			let groupIdsToAdd: string[] = []
 			let groupIdsToRemove: string[] = []
+			let subjectIdsToAdd: string[] = []
+			let subjectIdsToRemove: string[] = []
+			let action: 'creating' | 'updating' = 'creating'
 
 			if (existingUser) {
 				await updateUserQuery({...updatedUser, role: remapUserRoleToApiUserRole(updatedUser.role)})
 
 				groupIdsToAdd = updatedUser.groupIds.filter(
-					updatedGroupId => !currentUserGroups.some(currentGroup => currentGroup.groupId === updatedGroupId),
+					selectedGroupId => !currentUserGroups.some(currentGroup => currentGroup.groupId === selectedGroupId),
 				)
 				groupIdsToRemove = currentUserGroups
-					.filter(cts => !updatedUser.groupIds.some(uts => uts === cts.groupId))
+					.filter(group => !updatedUser.groupIds.some(selectedGroupId => selectedGroupId === group.groupId))
 					.map(group => group.groupId)
+
+				subjectIdsToAdd = selectedSubjectIds.filter(
+					selectedSubjectId => !currentTeacherSubjects.some(currentTeacherSubject => currentTeacherSubject.subjectId === selectedSubjectId),
+				)
+				subjectIdsToRemove = currentTeacherSubjects
+					.filter(currentTeacherSubject => !selectedSubjectIds.some(selectedSubjectId => selectedSubjectId === currentTeacherSubject.subjectId))
+					.map(ts => ts.subjectId)
+
+				action = 'updating'
 			}
 			else {
 				if (!updatedUser.password) {
@@ -108,24 +126,23 @@ const useInitialize = (): UseInitializeReturns => {
 
 				userId = response.data.userId
 				groupIdsToAdd = updatedUser.groupIds
+				subjectIdsToAdd = selectedSubjectIds
+				action = 'creating'
 			}
 
-			const currentTeacherSubjects = teacherSubjects.filter(
-				ts => ts.teacherId === userId,
-			)
-			const teacherSubjectToCreate = updatedTeacherSubjects.filter(
-				uts => !currentTeacherSubjects.some(cts => cts.subjectId === uts.subjectId),
-			)
-			const teacherSubjectToDelete = currentTeacherSubjects.filter(
-				cts => !updatedTeacherSubjects.some(uts => uts.subjectId === cts.subjectId),
-			)
-
-			if (teacherSubjectToCreate.length > 0) {
-				await createTeacherSubjects({teacherSubjects: teacherSubjectToCreate})
+			if (subjectIdsToAdd.length > 0) {
+				await createTeacherSubjects({
+					teacherSubjects: subjectIdsToAdd.map(subjectId => ({subjectId, teacherId: userId})),
+				})
 			}
-			if (teacherSubjectToDelete.length > 0) {
-				const idsToDelete = teacherSubjectToDelete.map(ts => ts.teacherSubjectId)
-				await deleteTeacherSubjects({teacherSubjectIds: idsToDelete})
+			if (subjectIdsToRemove.length > 0) {
+				const tsIdsToRemove = currentTeacherSubjects
+					.filter(
+						teacherSubject => subjectIdsToRemove.includes(teacherSubject.subjectId),
+					)
+					.map(teacherSubject => teacherSubject.teacherSubjectId)
+
+				await deleteTeacherSubjects({teacherSubjectIds: tsIdsToRemove})
 			}
 			if (groupIdsToAdd.length > 0) {
 				await createGroupMembers({groupIds: groupIdsToAdd, userIds: [userId]})
@@ -134,9 +151,17 @@ const useInitialize = (): UseInitializeReturns => {
 				await deleteGroupMembers({groupIds: groupIdsToRemove, userIds: [userId]})
 			}
 
+			if (action === 'creating') {
+				message.success('Пользователь успешно создан.')
+			}
+			if (action === 'updating') {
+				message.success('Пользователь успешно обновлён.')
+			}
+
 			await fetchData()
 		}
 		catch (error) {
+			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
 			console.error('Error saving user:', error)
 		}
 	}

@@ -1,5 +1,5 @@
 import {Modal, Form, Input, Select, Button, Upload, message} from 'antd'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {GroupData, SubjectData, TeacherSubjectData, USER_ROLE, UserData} from 'shared/types'
 
 const {Option} = Select
@@ -7,7 +7,7 @@ const {Option} = Select
 type UserFormModalProps = {
 	user?: UserData,
 	onClose: () => void,
-	onSave: (user: UserData, assignedSubjects: TeacherSubjectData[], groupIds: string[]) => void,
+	onSave: (user: UserData, subjectIds: string[]) => void,
 	groups: GroupData[],
 	subjects: SubjectData[],
 	teacherSubjects: TeacherSubjectData[],
@@ -24,22 +24,20 @@ const UserFormModal = ({
 	const [form] = Form.useForm()
 	const [isTeacher, setIsTeacher] = useState(user?.role === USER_ROLE.TEACHER)
 	const [isStudent, setIsStudent] = useState(user?.role === USER_ROLE.STUDENT)
+	const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>(
+		teacherSubjects.filter(ts => ts.teacherId === user?.userId).map(ts => ts.subjectId),
+	)
 	const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>(user?.groupIds ?? [])
 	const [imageData, setImageData] = useState<string | undefined>(user?.imageSrc)
-
-	const assignedSubjectIds = useMemo(
-		() => teacherSubjects.filter(ts => ts.teacherId === user?.userId).map(ts => ts.subjectId),
-		[teacherSubjects, user],
-	)
 
 	const handleRoleChange = (role: USER_ROLE) => {
 		setIsTeacher(role === USER_ROLE.TEACHER)
 		setIsStudent(role === USER_ROLE.STUDENT)
 		if (role !== USER_ROLE.TEACHER) {
-			form.setFieldsValue({subjects: []})
+			form.setFieldsValue({subjectIds: []})
 		}
 		if (role !== USER_ROLE.STUDENT) {
-			form.setFieldsValue({groups: []})
+			form.setFieldsValue({groupIds: []})
 		}
 	}
 
@@ -47,10 +45,10 @@ const UserFormModal = ({
 		if (user) {
 			form.setFieldsValue({
 				...user,
-				subjects: assignedSubjectIds,
+				subjectIds: selectedSubjectIds,
 			})
 		}
-	}, [user, assignedSubjectIds, form])
+	}, [user, selectedSubjectIds, form])
 
 	const handleFileChange = (file: File) => {
 		if (!['image/png', 'image/jpeg'].includes(file.type)) {
@@ -74,20 +72,8 @@ const UserFormModal = ({
 	const handleSubmit = () => {
 		form.validateFields().then(values => {
 			const password = values.password?.length > 0 ? values.password : undefined
-			const updatedUser = {...user, ...values, password, imageSrc: imageData}
-			const updatedTeacherSubjects
-				= values.role === USER_ROLE.TEACHER
-					? values.subjects?.map((subjectId: string) => ({
-						teacherSubjectId:
-					teacherSubjects.find(
-						ts => ts.subjectId === subjectId && ts.teacherId === user?.userId,
-					)?.teacherSubjectId || `ts-${subjectId}-${user?.userId}`,
-						teacherId: user?.userId || 'new-teacher-id', //похоже на хрень, нам нужно знать только про id предметов, поэтому удалить передачу teacherSubejcts
-						subjectId,
-					})) || []
-					: []
-			const updatedGroupIds = values.groups || []
-			onSave(updatedUser, updatedTeacherSubjects, updatedGroupIds)
+			const updatedUser = {...user, ...values, password, imageSrc: imageData, groupIds: values.groupIds || []}
+			onSave(updatedUser, values.subjectIds || [])
 			onClose()
 		})
 	}
@@ -105,6 +91,9 @@ const UserFormModal = ({
 				onValuesChange={changedValues => {
 					if (changedValues.role) {
 						handleRoleChange(changedValues.role)
+					}
+					if (changedValues.subjectIds) {
+						setSelectedSubjectIds(changedValues.subjectIds)
 					}
 					if (changedValues.groupIds) {
 						setSelectedGroupIds(changedValues.groupIds)
@@ -164,13 +153,13 @@ const UserFormModal = ({
 				)}
 				{isTeacher && (
 					<Form.Item
-						name="subjects" // TODO неправильный ключ или хз
+						name="subjectIds"
 						label="Предметы"
 						rules={[{required: true, message: 'Выберите хотя бы один предмет!'}]}
 					>
 						<Select mode="multiple" placeholder="Выберите предметы">
 							{subjects.map(subject => (
-								<Option key={subject.subjectId} value={subject.subjectId}>
+								<Option key={subject.subjectId} value={subject.subjectId} disabled={selectedSubjectIds.includes(subject.subjectId)}>
 									{subject.name}
 								</Option>
 							))}
