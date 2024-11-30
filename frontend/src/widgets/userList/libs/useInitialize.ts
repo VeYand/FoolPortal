@@ -61,10 +61,8 @@ const useInitialize = (): UseInitializeReturns => {
 			setSubjects(subjectsResponse.data?.subjects || [])
 			setGroups(groupsResponse.data?.groups || [])
 			setTeacherSubjects(teacherSubjectsResponse.data?.teacherSubjects || [])
-			message.success('Пользователь успешно удалён.')
 		}
 		catch (error) {
-			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
 			console.error('Error fetching data:', error)
 		}
 		finally {
@@ -172,8 +170,10 @@ const useInitialize = (): UseInitializeReturns => {
 		try {
 			await deleteUserQuery({userId})
 			setUsers(prev => prev.filter(user => user.userId !== userId))
+			message.success('Пользователь успешно удалён.')
 		}
 		catch (error) {
+			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
 			console.error('Error deleting user:', error)
 		}
 	}
