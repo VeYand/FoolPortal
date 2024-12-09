@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     container_name: student-portal-db
@@ -12,14 +14,16 @@ services:
       - .docker/data/db:/var/lib/mysql
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        APP_ENV: prod
     container_name: student-portal-backend
     restart: always
     environment:
       MYSQL_HOST: student-portal-db
-    ports:
-      - '9000:9000'
     volumes:
+      - ./backend/docker/php/php.ini-production:/usr/local/etc/php/php.ini
       - ./backend:/app
     depends_on:
       - db

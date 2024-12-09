@@ -1,7 +1,12 @@
 FROM mirror.gcr.io/php:8.3-fpm-bullseye
 
-RUN apt-get update && apt-get install -y git libicu-dev sudo zip \
+RUN apt-get update && apt-get install -y libicu-dev sudo zip \
     && docker-php-ext-install intl opcache pdo pdo_mysql
+
+ARG APP_ENV
+RUN if [ "$APP_ENV" = "dev" ]; then \
+    pecl install xdebug && docker-php-ext-enable xdebug; \
+    fi
 
 WORKDIR /app
 

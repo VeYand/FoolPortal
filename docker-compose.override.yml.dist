@@ -1,0 +1,11 @@
+#version: '3.8'
+#
+#services:
+#  backend:
+#    build:
+#      args:
+#        APP_ENV: dev    -    (dev|prod) Аргумент сборки prod и dev режима
+#    environment:
+#      PHP_IDE_CONFIG: "serverName=StudentPortalBackendDocker"    -    Для настройки xdebug
+#    volumes:
+#      - ./backend/docker/php/php.ini-development:/usr/local/etc/php/php.ini    -    Для применения dev настроек php
