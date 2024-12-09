@@ -1,9 +1,9 @@
-import {DeleteGroupMembersRequest} from 'shared/api'
+import {DeleteGroupMembersRequest, EmptyResponse} from 'shared/api'
 import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
-		deleteGroupMembers: builder.query<void, DeleteGroupMembersRequest>({
+		deleteGroupMembers: builder.query<EmptyResponse, DeleteGroupMembersRequest>({
 			queryFn: async request => await studentPortalApi.get().userApi.deleteGroupMembers(request),
 		}),
 	}),

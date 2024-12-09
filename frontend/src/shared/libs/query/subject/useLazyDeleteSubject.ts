@@ -1,9 +1,9 @@
-import {DeleteSubjectRequest} from 'shared/api'
+import {DeleteSubjectRequest, EmptyResponse} from 'shared/api'
 import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
-		deleteSubject: builder.query<void, DeleteSubjectRequest>({
+		deleteSubject: builder.query<EmptyResponse, DeleteSubjectRequest>({
 			queryFn: async request => await studentPortalApi.get().subjectApi.deleteSubject(request),
 		}),
 	}),

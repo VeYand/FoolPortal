@@ -9,6 +9,7 @@ use App\Session\Api\SessionApiInterface;
 use App\User\Api\UserApiInterface;
 use OpenAPI\Server\Api\AuthorizationApiInterface as AuthorizationApiHandlerInterface;
 use OpenAPI\Server\Model\LoginInput;
+use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
 
 readonly class AuthorizationApiHandler implements AuthorizationApiHandlerInterface
 {
@@ -37,14 +38,16 @@ readonly class AuthorizationApiHandler implements AuthorizationApiHandlerInterfa
 	/**
 	 * @inheritDoc
 	 */
-	public function login(LoginInput $loginInput, int &$responseCode, array &$responseHeaders): void
+	public function login(LoginInput $loginInput, int &$responseCode, array &$responseHeaders): array|null|object
 	{
+		return new ApiEmptyResponse();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function logout(int &$responseCode, array &$responseHeaders): void
+	public function logout(int &$responseCode, array &$responseHeaders): array|null|object
 	{
+		return new ApiEmptyResponse();
 	}
 }

@@ -10,6 +10,7 @@ use OpenAPI\Server\Model\CreateLocationRequest;
 use OpenAPI\Server\Model\DeleteLocationRequest;
 use OpenAPI\Server\Model\UpdateLocationRequest;
 use OpenAPI\Server\Model\LocationsList as ApiLocationsList;
+use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
 
 readonly class LessonApiHandler implements LessonApiHandlerInterface
 {
@@ -23,22 +24,24 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createLocation(CreateLocationRequest $createLocationRequest, int &$responseCode, array &$responseHeaders): void
+	public function createLocation(CreateLocationRequest $createLocationRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($createLocationRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($createLocationRequest)
 		{
 			$this->subjectApi->createLocation($createLocationRequest->getName());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteLocation(DeleteLocationRequest $deleteLocationRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteLocation(DeleteLocationRequest $deleteLocationRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($deleteLocationRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($deleteLocationRequest)
 		{
 			$this->subjectApi->deleteLocation($deleteLocationRequest->getLocationId());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
@@ -58,11 +61,12 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function updateLocation(UpdateLocationRequest $updateLocationRequest, int &$responseCode, array &$responseHeaders): void
+	public function updateLocation(UpdateLocationRequest $updateLocationRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($updateLocationRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($updateLocationRequest)
 		{
 			$this->subjectApi->updateLocation($updateLocationRequest->getLocationId(), $updateLocationRequest->getName());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 }

@@ -12,6 +12,7 @@ use OpenAPI\Server\Api\SubjectApiInterface as SubjectApiHandlerInterface;
 use OpenAPI\Server\Model\CreateCourseInput as ApiCreateCourseInput;
 use App\Subject\App\Service\Input\CreateCourseInput;
 use OpenAPI\Server\Model\CreateCoursesRequest as ApiCreateCoursesRequest;
+use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
 use OpenAPI\Server\Model\CreateSubjectRequest;
 use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 use OpenAPI\Server\Model\CreateTeacherSubjectInput as ApiCreateTeacherSubjectInput;
@@ -36,11 +37,12 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createSubject(CreateSubjectRequest $createSubjectRequest, int &$responseCode, array &$responseHeaders): void
+	public function createSubject(CreateSubjectRequest $createSubjectRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($createSubjectRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($createSubjectRequest)
 		{
 			$this->subjectApi->createSubject($createSubjectRequest->getName());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
@@ -62,31 +64,33 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function updateSubject(UpdateSubjectRequest $updateSubjectRequest, int &$responseCode, array &$responseHeaders): void
+	public function updateSubject(UpdateSubjectRequest $updateSubjectRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($updateSubjectRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($updateSubjectRequest)
 		{
 			$this->subjectApi->updateSubject($updateSubjectRequest->getSubjectId(), $updateSubjectRequest->getName());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteSubject(DeleteSubjectRequest $deleteSubjectRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteSubject(DeleteSubjectRequest $deleteSubjectRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($deleteSubjectRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($deleteSubjectRequest)
 		{
 			$this->subjectApi->deleteSubject($deleteSubjectRequest->getSubjectId());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function createTeacherSubjects(CreateTeacherSubjectsRequest $createTeacherSubjectsRequest, int &$responseCode, array &$responseHeaders): void
+	public function createTeacherSubjects(CreateTeacherSubjectsRequest $createTeacherSubjectsRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($createTeacherSubjectsRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($createTeacherSubjectsRequest)
 		{
 			$this->subjectApi->createTeacherSubjects(
 				array_map(
@@ -97,6 +101,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 					$createTeacherSubjectsRequest->getTeacherSubjects(),
 				),
 			);
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
@@ -117,20 +122,21 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteTeacherSubjects(DeleteTeacherSubjectsRequest $deleteTeacherSubjectsRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteTeacherSubjects(DeleteTeacherSubjectsRequest $deleteTeacherSubjectsRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($deleteTeacherSubjectsRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($deleteTeacherSubjectsRequest)
 		{
 			$this->subjectApi->deleteTeacherSubjects($deleteTeacherSubjectsRequest->getTeacherSubjectIds());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function createCourses(ApiCreateCoursesRequest $createCoursesRequest, int &$responseCode, array &$responseHeaders): void
+	public function createCourses(ApiCreateCoursesRequest $createCoursesRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($createCoursesRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($createCoursesRequest)
 		{
 			$this->subjectApi->createCourses(
 				array_map(
@@ -141,17 +147,19 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 					$createCoursesRequest->getCourses(),
 				),
 			);
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteCourses(DeleteCoursesRequest $deleteCoursesRequest, int &$responseCode, array &$responseHeaders): void
+	public function deleteCourses(DeleteCoursesRequest $deleteCoursesRequest, int &$responseCode, array &$responseHeaders): array|null|object
 	{
-		$this->exceptionHandler->executeWithHandle(function () use ($deleteCoursesRequest)
+		return $this->exceptionHandler->executeWithHandle(function () use ($deleteCoursesRequest)
 		{
 			$this->subjectApi->deleteCourses($deleteCoursesRequest->getCourseIds());
+			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
 
