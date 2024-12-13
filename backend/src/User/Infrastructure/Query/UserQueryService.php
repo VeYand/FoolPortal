@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
-use App\Lesson\Domain\Model\Lesson;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
