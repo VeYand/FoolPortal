@@ -13,6 +13,20 @@ services:
     volumes:
       - .docker/data/db:/var/lib/mysql
 
+  backend-api-generator:
+    image: mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0
+    command: generate -i /backend/api/student-portal-api.yaml -g php-symfony --additional-properties composerPackageName=openapitools/student-portal -o /backend/open-api
+    volumes:
+      - ./backend:/backend
+    restart: no
+
+  frontend-api-generator:
+    image: mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0
+    command: generate -i /app/backend/api/student-portal-api.yaml -g typescript-axios -o /app/frontend/src/shared/api
+    volumes:
+      - .:/app
+    restart: no
+
   backend:
     build:
       context: ./backend
@@ -27,6 +41,7 @@ services:
       - ./backend:/app
     depends_on:
       - db
+      - backend-api-generator
 
   nginx:
     build: ./backend/docker/nginx
@@ -48,6 +63,8 @@ services:
     volumes:
       - ./backend:/backend
       - ./frontend:/frontend
+    depends_on:
+      - frontend-api-generator
 
 volumes:
   db-data: {}
