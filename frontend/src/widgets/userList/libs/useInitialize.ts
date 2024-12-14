@@ -114,7 +114,8 @@ const useInitialize = (): UseInitializeReturns => {
 			}
 			else {
 				if (!updatedUser.password) {
-					throw new Error('User password cannot be undefined')
+					message.error('Пользовательский пароль не может быть пустым')
+					return
 				}
 
 				const response = await createUserQuery({
@@ -123,7 +124,8 @@ const useInitialize = (): UseInitializeReturns => {
 					password: updatedUser.password,
 				})
 				if (response.isError || !response.data) {
-					throw new Error('Error in user creating')
+					message.error('Не удалось создать пользователя, попробуйте позже')
+					return
 				}
 
 				userId = response.data.userId
