@@ -83,7 +83,7 @@ readonly class UserService
 			$user->setRole($input->role);
 		}
 
-		if (!is_null($input->email))
+		if (!is_null($input->email) && $user->getEmail() !== $input->email)
 		{
 			$this->assertEmailIsUnique($input->email);
 			$user->setEmail($input->email);
@@ -97,7 +97,6 @@ readonly class UserService
 
 		if (!is_null($input->base64ImageData))
 		{
-			$this->imageUploader->uploadImage($user->getImagePath());
 			$imagePath = $this->imageUploader->uploadImage($input->base64ImageData);
 			$user->setImagePath($imagePath);
 		}

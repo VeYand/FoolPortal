@@ -1,5 +1,7 @@
 import {message} from 'antd'
 import {useEffect, useState, useCallback} from 'react'
+import {UpdateUserRequest} from 'shared/api'
+import {areListsEqual} from 'shared/libs'
 import {
 	useLazyListUsers,
 	useLazyListSubjects,
@@ -92,7 +94,7 @@ const useInitialize = (): UseInitializeReturns => {
 			let action: 'creating' | 'updating' = 'creating'
 
 			if (existingUser) {
-				await updateUserQuery({...updatedUser, role: remapUserRoleToApiUserRole(updatedUser.role)})
+				await updateUserQuery(constructUpdateUserRequest(existingUser, updatedUser))
 
 				groupIdsToAdd = updatedUser.groupIds.filter(
 					selectedGroupId => !currentUserGroups.some(currentGroup => currentGroup.groupId === selectedGroupId),
@@ -188,6 +190,47 @@ const useInitialize = (): UseInitializeReturns => {
 		loading,
 	}
 }
+
+const constructUpdateUserRequest = (existingUser: UserData, updatedUser: UserData): UpdateUserRequest => {
+	const data: UpdateUserRequest = {
+		userId: updatedUser.userId,
+	}
+
+	if (updatedUser.firstName !== undefined && existingUser.firstName !== updatedUser.firstName) {
+		data.firstName = updatedUser.firstName
+	}
+
+	if (updatedUser.lastName !== undefined && existingUser.lastName !== updatedUser.lastName) {
+		data.lastName = updatedUser.lastName
+	}
+
+	if (updatedUser.patronymic !== undefined && existingUser.patronymic !== updatedUser.patronymic) {
+		data.patronymic = updatedUser.patronymic
+	}
+
+	if (updatedUser.role !== undefined && existingUser.role !== updatedUser.role) {
+		data.role = remapUserRoleToApiUserRole(updatedUser.role)
+	}
+
+	if (updatedUser.imageSrc !== undefined && existingUser.imageSrc !== updatedUser.imageSrc) {
+		data.imageData = updatedUser.imageSrc
+	}
+
+	if (updatedUser.email !== undefined && existingUser.email !== updatedUser.email) {
+		data.email = updatedUser.email
+	}
+
+	if (updatedUser.groupIds !== undefined && areListsEqual(existingUser.groupIds, updatedUser.groupIds)) {
+		data.groupIds = updatedUser.groupIds
+	}
+
+	if (updatedUser.password !== undefined && existingUser.password !== updatedUser.password) {
+		data.password = updatedUser.password
+	}
+
+	return data
+}
+
 
 export {
 	useInitialize,
