@@ -15,6 +15,7 @@ services:
 
   backend-api-generator:
     image: mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0
+    container_name: student-portal-backend-api-generator
     command: generate -i /backend/api/student-portal-api.yaml -g php-symfony --additional-properties composerPackageName=openapitools/student-portal -o /backend/open-api
     volumes:
       - ./backend:/backend
@@ -22,6 +23,7 @@ services:
 
   frontend-api-generator:
     image: mirror.gcr.io/openapitools/openapi-generator-cli:v7.9.0
+    container_name: student-portal-frontend-api-generator
     command: generate -i /app/backend/api/student-portal-api.yaml -g typescript-axios -o /app/frontend/src/shared/api
     volumes:
       - .:/app
