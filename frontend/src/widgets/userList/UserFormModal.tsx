@@ -81,7 +81,7 @@ const UserFormModal = ({
 	return (
 		<Modal
 			title={user ? 'Редактировать пользователя' : 'Создать пользователя'}
-			visible
+			open={true}
 			onCancel={onClose}
 			footer={null}
 		>
@@ -111,6 +111,12 @@ const UserFormModal = ({
 					name="lastName"
 					label="Фамилия"
 					rules={[{required: true, message: 'Пожалуйста, введите фамилию!'}]}
+				>
+					<Input />
+				</Form.Item>
+				<Form.Item
+					name="patronymic"
+					label="Отчество"
 				>
 					<Input />
 				</Form.Item>
