@@ -4,14 +4,16 @@ declare(strict_types=1);
 namespace App\Subject\Infrastructure\Query;
 
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 use App\Subject\App\Query\TeacherSubjectQueryServiceInterface;
+use App\Subject\Domain\Model\Course;
 use App\Subject\Domain\Model\TeacherSubject;
-use App\Subject\Domain\Repository\TeacherSubjectReadRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class TeacherSubjectQueryService implements TeacherSubjectQueryServiceInterface
 {
 	public function __construct(
-		private TeacherSubjectReadRepositoryInterface $teacherSubjectReadRepository,
+		private EntityManagerInterface $entityManager,
 	)
 	{
 	}
@@ -19,18 +21,21 @@ readonly class TeacherSubjectQueryService implements TeacherSubjectQueryServiceI
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllTeacherSubjects(): array
+	public function listTeacherSubjects(ListTeacherSubjectsSpec $spec): array
 	{
-		$teacherSubjects = $this->teacherSubjectReadRepository->findAll();
-		return self::convertTeacherSubjectsToTeacherSubjectList($teacherSubjects);
-	}
+		$qb = $this->entityManager->createQueryBuilder();
 
-	/**
-	 * @inheritDoc
-	 */
-	public function listTeacherSubjectsByGroup(string $groupId): array
-	{
-		$teacherSubjects = $this->teacherSubjectReadRepository->findByGroup($groupId);
+		$qb->select('ts')
+			->from(TeacherSubject::class, 'ts')
+			->leftJoin(Course::class, 'c', 'WITH', 'c.teacherSubjectId = ts.teacherSubjectId');
+
+		if (!empty($spec->courseIds))
+		{
+			$qb->andWhere('c.courseId IN (:courseIds)')
+				->setParameter('courseIds', $spec->courseIds);
+		}
+
+		$teacherSubjects = $qb->getQuery()->getResult();
 		return self::convertTeacherSubjectsToTeacherSubjectList($teacherSubjects);
 	}
 

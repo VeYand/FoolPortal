@@ -324,10 +324,16 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v1/teacher-subject/list:
-    get:
+    post:
       tags:
         - Subject
       operationId: ListTeacherSubjects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/teacherSubject.yaml#/components/schemas/ListTeacherSubjectsRequest'
       responses:
         '200':
           description: OK

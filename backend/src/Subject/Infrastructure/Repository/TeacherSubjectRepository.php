@@ -64,16 +64,6 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByGroup(string $groupId): array
-	{
-		return $this->repository->findBy([
-			'groupId' => $groupId,
-		]);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function findByTeachers(array $teacherIds): array
 	{
 		return $this->repository->findBy([

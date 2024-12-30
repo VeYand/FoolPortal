@@ -30,6 +30,14 @@ components:
       required:
         - teacherSubjects
 
+    ListTeacherSubjectsRequest:
+      type: object
+      properties:
+        courseIds:
+          type: array
+          items:
+            type: string
+
     CreateTeacherSubjectInput:
       type: object
       properties:

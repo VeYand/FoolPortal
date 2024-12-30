@@ -7,6 +7,7 @@ use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Data\SubjectData;
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 use App\Subject\App\Service\Input\CreateCourseInput;
 use App\Subject\App\Service\Input\CreateTeacherSubjectInput;
 
@@ -59,12 +60,7 @@ interface SubjectApiInterface
 	/**
 	 * @return TeacherSubjectData[]
 	 */
-	public function listAllTeacherSubjects(): array;
-
-	/**
-	 * @return TeacherSubjectData[]
-	 */
-	public function listTeacherSubjectsByGroup(string $groupId): array;
+	public function listTeacherSubjects(ListTeacherSubjectsSpec $spec): array;
 
 	/**
 	 * @return CourseData[]

@@ -4,16 +4,12 @@ declare(strict_types=1);
 namespace App\Subject\App\Query;
 
 use App\Subject\App\Query\Data\TeacherSubjectData;
+use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 
 interface TeacherSubjectQueryServiceInterface
 {
 	/**
 	 * @return TeacherSubjectData[]
 	 */
-	public function listAllTeacherSubjects(): array;
-
-	/**
-	 * @return TeacherSubjectData[]
-	 */
-	public function listTeacherSubjectsByGroup(string $groupId): array;
+	public function listTeacherSubjects(ListTeacherSubjectsSpec $spec): array;
 }

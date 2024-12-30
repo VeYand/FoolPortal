@@ -8,6 +8,7 @@ use App\Controller\Converter\SubjectModelConverter;
 use App\Controller\Converter\TeacherSubjectModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\Subject\Api\SubjectApiInterface;
+use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 use OpenAPI\Server\Api\SubjectApiInterface as SubjectApiHandlerInterface;
 use OpenAPI\Server\Model\CreateCourseInput as ApiCreateCourseInput;
 use App\Subject\App\Service\Input\CreateCourseInput;
@@ -20,6 +21,7 @@ use OpenAPI\Server\Model\CreateTeacherSubjectsRequest;
 use OpenAPI\Server\Model\DeleteCoursesRequest;
 use OpenAPI\Server\Model\DeleteSubjectRequest;
 use OpenAPI\Server\Model\DeleteTeacherSubjectsRequest;
+use OpenAPI\Server\Model\ListTeacherSubjectsRequest as ApiListTeacherSubjectsRequest;
 use OpenAPI\Server\Model\SubjectsList as ApiSubjectsList;
 use OpenAPI\Server\Model\CoursesList as ApiCoursesList;
 use OpenAPI\Server\Model\TeacherSubjectsList as ApiTeacherSubjectsList;
@@ -108,11 +110,15 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listTeacherSubjects(int &$responseCode, array &$responseHeaders): array|object|null
+	public function listTeacherSubjects(ApiListTeacherSubjectsRequest $listTeacherSubjectsRequest, int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function ()
+		return $this->exceptionHandler->executeWithHandle(function () use ($listTeacherSubjectsRequest)
 		{
-			$teacherSubjects = $this->subjectApi->listAllTeacherSubjects();
+			$teacherSubjects = $this->subjectApi->listTeacherSubjects(
+				new ListTeacherSubjectsSpec(
+					$listTeacherSubjectsRequest->getCourseIds(),
+				),
+			);
 			return new ApiTeacherSubjectsList([
 				'teacherSubjects' => TeacherSubjectModelConverter::convertTeacherSubjectsToApiTeacherSubjects($teacherSubjects),
 			]);

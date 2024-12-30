@@ -5,22 +5,23 @@ namespace App\Subject\Api;
 
 use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Exception\AppException;
+use App\Subject\App\Query\CourseQueryServiceInterface;
+use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
+use App\Subject\App\Query\SubjectQueryServiceInterface;
+use App\Subject\App\Query\TeacherSubjectQueryServiceInterface;
 use App\Subject\App\Service\CourseService;
 use App\Subject\App\Service\SubjectService;
 use App\Subject\App\Service\TeacherSubjectService;
-use App\Subject\Infrastructure\Query\CourseQueryService;
-use App\Subject\Infrastructure\Query\SubjectQueryService;
-use App\Subject\Infrastructure\Query\TeacherSubjectQueryService;
 
 readonly class SubjectApi implements SubjectApiInterface
 {
 	public function __construct(
-		private SubjectService             $subjectService,
-		private TeacherSubjectService      $teacherSubjectService,
-		private CourseService              $courseService,
-		private SubjectQueryService        $subjectQueryService,
-		private TeacherSubjectQueryService $teacherSubjectQueryService,
-		private CourseQueryService         $courseQueryService,
+		private SubjectService                      $subjectService,
+		private TeacherSubjectService               $teacherSubjectService,
+		private CourseService                       $courseService,
+		private SubjectQueryServiceInterface        $subjectQueryService,
+		private TeacherSubjectQueryServiceInterface $teacherSubjectQueryService,
+		private CourseQueryServiceInterface         $courseQueryService,
 	)
 	{
 	}
@@ -113,17 +114,9 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllTeacherSubjects(): array
+	public function listTeacherSubjects(ListTeacherSubjectsSpec $spec): array
 	{
-		return $this->teacherSubjectQueryService->listAllTeacherSubjects();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function listTeacherSubjectsByGroup(string $groupId): array
-	{
-		return $this->teacherSubjectQueryService->listTeacherSubjectsByGroup($groupId);
+		return $this->teacherSubjectQueryService->listTeacherSubjects($spec);
 	}
 
 	/**
