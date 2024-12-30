@@ -383,10 +383,16 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v1/course/list:
-    get:
+    post:
       tags:
         - Subject
       operationId: ListCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Subject/course.yaml#/components/schemas/ListCoursesRequest'
       responses:
         '200':
           description: OK

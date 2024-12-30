@@ -30,6 +30,15 @@ components:
       required:
         - courses
 
+    ListCoursesRequest:
+      type: object
+      properties:
+        courseIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
     CreateCourseInput:
       type: object
       properties:

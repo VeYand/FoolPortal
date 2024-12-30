@@ -6,6 +6,7 @@ namespace App\Subject\Api;
 use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Exception\AppException;
 use App\Subject\App\Query\CourseQueryServiceInterface;
+use App\Subject\App\Query\Spec\ListCoursesSpec;
 use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 use App\Subject\App\Query\SubjectQueryServiceInterface;
 use App\Subject\App\Query\TeacherSubjectQueryServiceInterface;
@@ -122,17 +123,9 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllCourses(): array
+	public function listCourses(ListCoursesSpec $spec): array
 	{
-		return $this->courseQueryService->listAllCourses();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function listCoursesByGroup(string $groupId): array
-	{
-		return $this->courseQueryService->listCoursesByGroup($groupId);
+		return $this->courseQueryService->listCourses($spec);
 	}
 
 	public function isCourseExists(string $courseId): bool

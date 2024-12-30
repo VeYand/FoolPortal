@@ -5,13 +5,16 @@ namespace App\Subject\Infrastructure\Query;
 
 use App\Subject\App\Query\CourseQueryServiceInterface;
 use App\Subject\App\Query\Data\CourseData;
+use App\Subject\App\Query\Spec\ListCoursesSpec;
 use App\Subject\Domain\Model\Course;
 use App\Subject\Domain\Repository\CourseReadRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class CourseQueryService implements CourseQueryServiceInterface
 {
 	public function __construct(
 		private CourseReadRepositoryInterface $courseReadRepository,
+		private EntityManagerInterface $entityManager,
 	)
 	{
 	}
@@ -19,9 +22,20 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllCourses(): array
+	public function listCourses(ListCoursesSpec $spec): array
 	{
-		$courses = $this->courseReadRepository->findAll();
+		$qb = $this->entityManager->createQueryBuilder();
+
+		$qb->select('c')
+			->from(Course::class, 'c');
+
+		if (!empty($spec->courseIds))
+		{
+			$qb->andWhere('c.courseId IN (:courseIds)')
+				->setParameter('courseIds', $spec->courseIds);
+		}
+
+		$courses = $qb->getQuery()->getResult();
 		return self::convertCoursesToCoursesList($courses);
 	}
 
