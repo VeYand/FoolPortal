@@ -2,15 +2,16 @@ import {BookOutlined, CalendarOutlined, HomeOutlined, TeamOutlined, UserOutlined
 import {useMemo} from 'react'
 import {GroupList} from 'widgets/groupList/GroupList'
 import {LocationsList} from 'widgets/locationList/locationsList'
+import {Schedule} from 'widgets/shedule/Schedule'
 import {SubjectsList} from 'widgets/subjectList/subjectsList'
 import {UserList} from 'widgets/userList/UserList'
 
 const useTabs = () => useMemo(() => ([
 	{
 		key: '1',
-		name: 'Schedule',
+		name: 'Расписание',
 		icon: <CalendarOutlined />,
-		content: <div>{'Schedule'}</div>,
+		content: <Schedule/>,
 	},
 	{
 		key: '2',

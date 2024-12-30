@@ -25,6 +25,17 @@ components:
       required:
         - locations
 
+    ListLocationByIdsRequest:
+      type: object
+      properties:
+        locationIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - locationIds
+
     CreateLocationRequest:
       type: object
       properties:

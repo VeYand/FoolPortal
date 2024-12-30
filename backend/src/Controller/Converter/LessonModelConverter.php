@@ -41,7 +41,6 @@ readonly class LessonModelConverter
 
 	/**
 	 * @param LessonData[] $lessons
-	 * @return ApiLessonsList
 	 */
 	public static function convertAppLessonsToApiLessons(array $lessons): ApiLessonsList
 	{

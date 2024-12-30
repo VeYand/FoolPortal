@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\Converter\LessonModelConverter;
+use App\Controller\Converter\LocationModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\Lesson\Api\LessonApiInterface;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
@@ -19,9 +20,9 @@ use OpenAPI\Server\Model\DeleteAttachmentRequest;
 use OpenAPI\Server\Model\DeleteLessonRequest;
 use OpenAPI\Server\Model\DeleteLocationRequest;
 use OpenAPI\Server\Model\ListLessonsRequest;
+use OpenAPI\Server\Model\ListLocationByIdsRequest as ApiListLocationByIdsRequest;
 use OpenAPI\Server\Model\UpdateLessonRequest;
 use OpenAPI\Server\Model\UpdateLocationRequest;
-use OpenAPI\Server\Model\LocationsList as ApiLocationsList;
 use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -65,9 +66,18 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function ()
 		{
-			return new ApiLocationsList([
-				'locations' => $this->lessonApi->listAllLocations(),
-			]);
+			$locations = $this->lessonApi->listAllLocations();
+			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
+
+		}, $responseCode, $responseHeaders);
+	}
+
+	public function listLocationsByIds(ApiListLocationByIdsRequest $listLocationByIdsRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function () use ($listLocationByIdsRequest)
+		{
+			$locations = $this->lessonApi->findLocationsByIds($listLocationByIdsRequest->getLocationIds());
+			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
 		}, $responseCode, $responseHeaders);
 	}
 
