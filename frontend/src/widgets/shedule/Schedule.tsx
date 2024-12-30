@@ -1,22 +1,16 @@
-import {Col, Row} from 'antd'
 import moment from 'moment'
 import {useState} from 'react'
 import {LessonData} from '../../shared/types'
 import {Preloader} from '../preloader/Preloader'
-import {DatePicker, formatDateToISO} from './DatePicker'
-import {LessonCard} from './LessonCard'
+import {DatePicker} from './DatePicker'
 import {LessonModal} from './LessonModal'
 import {useInitialize} from './libs/useInitialize'
+import {TimeGrid} from './TimeGrid'
 
 const Schedule = () => {
 	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
-	const [startDate, setStartDate] = useState(formatDateToISO(moment().startOf('week').toDate()))
-	const [endDate, setEndDate] = useState(formatDateToISO(moment().endOf('week').toDate()))
-
-	const onSelectedDateChange = (start: string, end: string) => {
-		setStartDate(start)
-		setEndDate(end)
-	}
+	const [startDate, setStartDate] = useState(moment().startOf('week').toDate())
+	const [endDate, setEndDate] = useState(moment().endOf('week').toDate())
 
 	const {
 		loading,
@@ -27,40 +21,35 @@ const Schedule = () => {
 		subjects,
 		groups,
 		users,
-	} = useInitialize(
-		startDate,
-		endDate,
-	)
+	} = useInitialize(startDate, endDate)
+
+	const handleDateChange = (start: Date, end: Date) => {
+		setStartDate(start)
+		setEndDate(end)
+	}
 
 	const handleCardClick = (lesson: LessonData) => {
 		setSelectedLessonId(lesson.lessonId)
 	}
 
-
 	if (loading) {
-		return <Preloader/>
+		return <Preloader />
 	}
 
 	return (
 		<div>
-			<h1>{'Расписание'}</h1>
-			<DatePicker onSelectedDateChange={onSelectedDateChange}/>
-			<Row gutter={[16, 16]}>
-				{lessons.map(lesson => (
-					<Col key={lesson.lessonId} span={8}>
-						<LessonCard
-							lesson={lesson}
-							locations={locations}
-							courses={courses}
-							teacherSubjects={teacherSubjects}
-							subjects={subjects}
-							groups={groups}
-							users={users}
-							onCardClick={handleCardClick}
-						/>
-					</Col>
-				))}
-			</Row>
+			<h1>Расписание</h1>
+			<DatePicker onSelectedDateChange={handleDateChange} />
+			<TimeGrid
+				lessons={lessons}
+				locations={locations}
+				courses={courses}
+				teacherSubjects={teacherSubjects}
+				subjects={subjects}
+				groups={groups}
+				users={users}
+				onCardClick={handleCardClick}
+			/>
 			<LessonModal
 				unselectLesson={() => setSelectedLessonId(undefined)}
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
@@ -70,6 +59,4 @@ const Schedule = () => {
 	)
 }
 
-export {
-	Schedule,
-}
+export {Schedule}

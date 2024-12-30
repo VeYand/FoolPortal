@@ -1,16 +1,8 @@
 import {Card} from 'antd'
-import {
-	CourseData,
-	GroupData,
-	LessonData,
-	LocationData,
-	SubjectData,
-	TeacherSubjectData,
-	UserData,
-} from '../../shared/types'
+import {LessonData, LocationData, CourseData, TeacherSubjectData, SubjectData, GroupData, UserData} from '../../shared/types'
 import {getColorByLessonType} from './libs/getColorByLessonType'
 
-type LessonCardProps = {
+type LessonBlockProps = {
 	lesson: LessonData,
 	locations: LocationData[],
 	courses: CourseData[],
@@ -21,21 +13,9 @@ type LessonCardProps = {
 	onCardClick: (lesson: LessonData) => void,
 }
 
-
-const LessonCard = ({
-	lesson,
-	// locations,
-	courses,
-	teacherSubjects,
-	subjects,
-	// groups,
-	users,
-	onCardClick,
-}: LessonCardProps) => {
+const LessonBlock = ({lesson, courses, teacherSubjects, subjects, users, onCardClick}: LessonBlockProps) => {
 	const course = courses.find(c => c.courseId === lesson.courseId)
-	const teacherSubject = teacherSubjects.find(
-		ts => ts.teacherSubjectId === course?.teacherSubjectId,
-	)
+	const teacherSubject = teacherSubjects.find(ts => ts.teacherSubjectId === course?.teacherSubjectId)
 	const subject = subjects.find(s => s.subjectId === teacherSubject?.subjectId)
 	const teacher = users.find(u => u.userId === teacherSubject?.teacherId)
 
@@ -45,11 +25,10 @@ const LessonCard = ({
 			onClick={() => onCardClick(lesson)}
 		>
 			<h3>{subject?.name}</h3>
-			<p>{teacher ? `${teacher.firstName} ${teacher.lastName}` : ''}</p>
+			<p>{teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Преподаватель не указан'}</p>
+			<p>Время: {lesson.startTime}</p>
 		</Card>
 	)
 }
 
-export {
-	LessonCard,
-}
+export {LessonBlock}

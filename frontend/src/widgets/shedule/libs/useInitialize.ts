@@ -37,9 +37,7 @@ type InitializedData = {
 	users: UserData[],
 }
 
-const useInitialize = (startTime: string, endTime: string): InitializedData => {
-	console.log({startTime, endTime})
-
+const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 	const [listLessons] = useLazyListLessons()
 	const [listLocations] = useLazyListLocations()
 	const [listCourses] = useLazyListCourses()
@@ -59,7 +57,7 @@ const useInitialize = (startTime: string, endTime: string): InitializedData => {
 
 	useEffect(() => {
 		const callback = async () => {
-			const {data: lessonsData} = await listLessons({startTime, endTime})
+			const {data: lessonsData} = await listLessons({startTime: startTime.toISOString(), endTime: endTime.toISOString()})
 			setLessons(remapApiLessonsToLessonsList(lessonsData?.lessons ?? []))
 
 			const locationIds = lessonsData?.lessons.map(lesson => lesson.locationId) ?? []
@@ -82,11 +80,11 @@ const useInitialize = (startTime: string, endTime: string): InitializedData => {
 
 			const {data: usersData} = await listUsers({})
 			setUsers(remapApiUsersToUsersList(usersData?.users ?? []))
+			setLoading(false)
 		}
 
 		setLoading(true)
 		callback()
-		setLoading(false)
 	}, [])
 
 	return {
