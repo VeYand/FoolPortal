@@ -8,6 +8,7 @@ use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
+use App\User\App\Query\Spec\ListGroupsSpec;
 use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\App\Query\UserQueryServiceInterface;
 use App\User\App\Service\GroupMemberService;
@@ -91,11 +92,11 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAllGroups(): array
+	public function listGroups(ListGroupsSpec $spec): array
 	{
-		return self::tryExecute(function ()
+		return self::tryExecute(function () use ($spec)
 		{
-			return $this->groupQueryService->listAllGroups();
+			return $this->groupQueryService->listGroups($spec);
 		});
 	}
 

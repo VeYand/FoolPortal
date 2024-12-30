@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\User\App\Query;
 
 use App\User\App\Query\Data\GroupData;
+use App\User\App\Query\Spec\ListGroupsSpec;
 
 interface GroupQueryServiceInterface
 {
@@ -12,5 +13,5 @@ interface GroupQueryServiceInterface
 	/**
 	 * @return GroupData[]
 	 */
-	public function listAllGroups(): array;
+	public function listGroups(ListGroupsSpec $spec): array;
 }

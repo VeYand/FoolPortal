@@ -24,6 +24,15 @@ components:
       required:
         - groups
 
+    ListGroupsRequest:
+      type: object
+      properties:
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
     CreateGroupRequest:
       type: object
       properties:

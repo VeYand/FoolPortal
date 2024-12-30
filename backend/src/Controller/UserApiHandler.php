@@ -8,6 +8,7 @@ use App\Controller\Converter\GroupModelConverter;
 use App\Controller\Converter\UserModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\User\Api\UserApiInterface;
+use App\User\App\Query\Spec\ListGroupsSpec;
 use App\User\App\Query\Spec\ListUsersSpec;
 use OpenAPI\Server\Api\UserApiInterface as UserApiHandlerInterface;
 use OpenAPI\Server\Model\CreateGroupMembersRequest;
@@ -20,6 +21,7 @@ use OpenAPI\Server\Model\DeleteGroupMembersRequest;
 use OpenAPI\Server\Model\DeleteGroupRequest;
 use OpenAPI\Server\Model\DeleteUserRequest;
 use OpenAPI\Server\Model\GroupsList as ApiGroupsList;
+use OpenAPI\Server\Model\ListGroupsRequest;
 use OpenAPI\Server\Model\ListUsersSpec as ApiListUsersSpec;
 use OpenAPI\Server\Model\UpdateGroupRequest;
 use OpenAPI\Server\Model\UpdateUserRequest;
@@ -53,11 +55,13 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listGroups(int &$responseCode, array &$responseHeaders): array|object|null
+	public function listGroups(ListGroupsRequest $listGroupsRequest, int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function ()
+		return $this->exceptionHandler->executeWithHandle(function () use ($listGroupsRequest)
 		{
-			$groups = $this->userApi->listAllGroups();
+			$groups = $this->userApi->listGroups(
+				new ListgroupsSpec($listGroupsRequest->getGroupIds()),
+			);
 
 			return new ApiGroupsList([
 				'groups' => GroupModelConverter::convertGroupsToApiGroups($groups),

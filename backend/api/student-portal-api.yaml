@@ -136,10 +136,16 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v1/group/list:
-    get:
+    post:
       tags:
         - User
       operationId: ListGroups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './User/group.yaml#/components/schemas/ListGroupsRequest'
       responses:
         '200':
           description: OK
@@ -213,7 +219,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/group/group-member/create:
+  /api/v1/group-member/create:
     post:
       tags:
         - User
@@ -232,7 +238,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/group/group-member/delete:
+  /api/v1/group-member/delete:
     post:
       tags:
         - User

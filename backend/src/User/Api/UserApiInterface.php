@@ -7,6 +7,7 @@ use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\Data\UserData;
+use App\User\App\Query\Spec\ListGroupsSpec;
 use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
@@ -45,7 +46,7 @@ interface UserApiInterface
 	 * @return GroupData[]
 	 * @throws ApiException
 	 */
-	public function listAllGroups(): array;
+	public function listGroups(ListGroupsSpec $spec): array;
 
 	/**
 	 * @throws ApiException

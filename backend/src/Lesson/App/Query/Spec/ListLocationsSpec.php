@@ -9,7 +9,7 @@ readonly class ListLocationsSpec
 	 * @param string[]|null $locationIds
 	 */
 	public function __construct(
-		public ?array $locationIds
+		public ?array $locationIds = null,
 	)
 	{
 	}
