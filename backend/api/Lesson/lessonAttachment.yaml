@@ -38,6 +38,9 @@ components:
     AttachmentInfo:
       type: object
       properties:
+        attachmentId:
+          type: string
+          format: uuid
         name:
           type: string
         extension:
@@ -45,6 +48,7 @@ components:
         description:
           type: string
       required:
+        - attachmentId
         - name
         - extension
 
@@ -57,6 +61,8 @@ components:
             type: object
             properties:
               attachments:
-                $ref: '#/components/schemas/AttachmentInfo'
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttachmentInfo'
             required:
               - attachments

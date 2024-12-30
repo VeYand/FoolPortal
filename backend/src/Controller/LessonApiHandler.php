@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\Converter\AttachmentModelConverter;
 use App\Controller\Converter\LessonModelConverter;
 use App\Controller\Converter\LocationModelConverter;
 use App\Controller\Exception\ExceptionHandler;
@@ -20,6 +21,7 @@ use OpenAPI\Server\Model\DeleteAttachmentRequest;
 use OpenAPI\Server\Model\DeleteLessonRequest;
 use OpenAPI\Server\Model\DeleteLocationRequest;
 use OpenAPI\Server\Model\ListLessonAttachmentRequest;
+use OpenAPI\Server\Model\ListLessonAttachments200Response;
 use OpenAPI\Server\Model\ListLessonsRequest;
 use OpenAPI\Server\Model\ListLocationByIdsRequest as ApiListLocationByIdsRequest;
 use OpenAPI\Server\Model\UpdateLessonRequest;
@@ -218,8 +220,11 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($listLessonAttachmentRequest)
 		{
-			$this->lessonApi->lis($deleteAttachmentFromLessonRequest->getLessonId(), $deleteAttachmentFromLessonRequest->getAttachmentId());
-			return new ApiEmptyResponse();
+			$attachments = $this->lessonApi->listLessonAttachments($listLessonAttachmentRequest->getLessonId());
+
+			return new ListLessonAttachments200Response([
+				'attachments' => AttachmentModelConverter::convertAppAttachmentsToApiAttachments($attachments),
+			]);
 		}, $responseCode, $responseHeaders);
 	}
 }

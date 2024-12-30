@@ -30,6 +30,7 @@ readonly class AttachmentQueryService implements AttachmentQueryServiceInterface
 
 		return array_map(static fn(Attachment $attachment) => new AttachmentData(
 			$attachment->getAttachmentId(),
+			$attachment->getExtension(),
 			$attachment->getName(),
 			$attachment->getDescription(),
 		), $attachments);
