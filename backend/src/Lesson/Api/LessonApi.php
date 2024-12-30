@@ -8,6 +8,7 @@ use App\Lesson\App\Exception\AppException;
 use App\Lesson\App\Query\AttachmentQueryServiceInterface;
 use App\Lesson\App\Query\LessonQueryServiceInterface;
 use App\Lesson\App\Query\LocationQueryServiceInterface;
+use App\Lesson\App\Query\Spec\ListLocationsSpec;
 use App\Lesson\App\Service\AttachmentService;
 use App\Lesson\App\Service\LessonService;
 use App\Lesson\App\Service\LocationService;
@@ -141,17 +142,9 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findLocationsByIds(array $locationIds): array
+	public function listLocations(ListLocationsSpec $spec): array
 	{
-		return $this->locationQueryService->findLocationsByIds($locationIds);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function listAllLocations(): array
-	{
-		return $this->locationQueryService->listAllLocations();
+		return $this->locationQueryService->listLocations($spec);
 	}
 
 	/**

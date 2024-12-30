@@ -7,6 +7,7 @@ use App\Lesson\Api\Exception\ApiException;
 use App\Lesson\App\Query\Data\AttachmentData;
 use App\Lesson\App\Query\Data\LessonData;
 use App\Lesson\App\Query\Data\LocationData;
+use App\Lesson\App\Query\Spec\ListLocationsSpec;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
 use App\Lesson\Domain\Service\Input\CreateLessonInput;
 use App\Lesson\Domain\Service\Input\UpdateLessonInput;
@@ -64,15 +65,9 @@ interface LessonApiInterface
 	public function removeAttachmentFromLesson(string $lessonId, string $attachmentId): void;
 
 	/**
-	 * @param string[] $locationIds
 	 * @return LocationData[]
 	 */
-	public function findLocationsByIds(array $locationIds): array;
-
-	/**
-	 * @return LocationData[]
-	 */
-	public function listAllLocations(): array;
+	public function listLocations(ListLocationsSpec $spec): array;
 
 	/**
 	 * @return AttachmentData[]

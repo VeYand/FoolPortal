@@ -435,32 +435,17 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v1/location/list/all:
-    get:
-      tags:
-        - Lesson
-      operationId: ListLocations
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './Lesson/location.yaml#/components/schemas/LocationsList'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-
   /api/v1/location/list:
     post:
       tags:
         - Lesson
-      operationId: ListLocationsByIds
+      operationId: ListLocations
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: './Lesson/location.yaml#/components/schemas/ListLocationByIdsRequest'
+              $ref: './Lesson/location.yaml#/components/schemas/ListLocationsRequest'
       responses:
         '200':
           description: OK

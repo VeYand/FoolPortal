@@ -5,13 +5,15 @@ namespace App\Lesson\Infrastructure\Query;
 
 use App\Lesson\App\Query\Data\LocationData;
 use App\Lesson\App\Query\LocationQueryServiceInterface;
+use App\Lesson\App\Query\Spec\ListLocationsSpec;
 use App\Lesson\Domain\Model\Location;
 use App\Lesson\Domain\Repository\LocationReadRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class LocationQueryService implements LocationQueryServiceInterface
 {
 	public function __construct(
-		private LocationReadRepositoryInterface $locationReadRepository,
+		private EntityManagerInterface $entityManager,
 	)
 	{
 	}
@@ -19,29 +21,22 @@ readonly class LocationQueryService implements LocationQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findLocationsByIds(array $locationIds): array
+	public function listLocations(ListLocationsSpec $spec): array
 	{
-		$locations = $this->locationReadRepository->findByIds($locationIds);
+		$qb = $this->entityManager->createQueryBuilder();
+
+		$qb->select('l')
+			->from(Location::class, 'l');
+
+		if (!empty($spec->locationIds))
+		{
+			$qb->andWhere('l.locationId IN (:locationIds)')
+				->setParameter('locationIds', $spec->locationIds);
+		}
+
+		$locations = $qb->getQuery()->getResult();
 
 		return self::convertLocationsToLocationsList($locations);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function listAllLocations(): array
-	{
-		$locations = $this->locationReadRepository->findAll();
-
-		return self::convertLocationsToLocationsList($locations);
-	}
-
-	private static function convertLocationToLocationData(Location $location): LocationData
-	{
-		return new LocationData(
-			$location->getLocationId(),
-			$location->getName(),
-		);
 	}
 
 	/**
@@ -53,6 +48,14 @@ readonly class LocationQueryService implements LocationQueryServiceInterface
 		return array_map(
 			static fn(Location $location) => self::convertLocationToLocationData($location),
 			$locations,
+		);
+	}
+
+	private static function convertLocationToLocationData(Location $location): LocationData
+	{
+		return new LocationData(
+			$location->getLocationId(),
+			$location->getName(),
 		);
 	}
 }

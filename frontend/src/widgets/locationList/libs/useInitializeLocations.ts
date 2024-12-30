@@ -1,6 +1,6 @@
 import {locationEntitySlice} from 'entities/location'
 import {useCallback} from 'react'
-import {useLazyListAllLocations} from 'shared/libs/query'
+import {useLazyListLocations} from 'shared/libs/query'
 import {remapApiLocationsToLocationsList} from 'shared/libs/remmapers/remapApiLocationsToLocationsList'
 import {useAppDispatch, useAppSelector} from 'shared/redux'
 
@@ -12,7 +12,7 @@ type UseInitializeLocations = {
 const useInitializeLocations = (): UseInitializeLocations => {
 	const dispatch = useAppDispatch()
 	const loadingState = useAppSelector(state => state.locationEntity.loading)
-	const [listLocations, {isLoading, isFetching}] = useLazyListAllLocations()
+	const [listLocations, {isLoading, isFetching}] = useLazyListLocations()
 
 	const initialize = useCallback(async () => {
 		dispatch(locationEntitySlice.actions.setLoading(true))

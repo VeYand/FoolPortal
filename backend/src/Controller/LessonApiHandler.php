@@ -8,6 +8,7 @@ use App\Controller\Converter\LessonModelConverter;
 use App\Controller\Converter\LocationModelConverter;
 use App\Controller\Exception\ExceptionHandler;
 use App\Lesson\Api\LessonApiInterface;
+use App\Lesson\App\Query\Spec\ListLocationsSpec;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
 use OpenAPI\Server\Api\LessonApiInterface as LessonApiHandlerInterface;
 use OpenAPI\Server\Model\AddAttachmentToLessonRequest;
@@ -23,7 +24,7 @@ use OpenAPI\Server\Model\DeleteLocationRequest;
 use OpenAPI\Server\Model\ListLessonAttachmentRequest;
 use OpenAPI\Server\Model\ListLessonAttachments200Response;
 use OpenAPI\Server\Model\ListLessonsRequest;
-use OpenAPI\Server\Model\ListLocationByIdsRequest as ApiListLocationByIdsRequest;
+use OpenAPI\Server\Model\ListLocationsRequest;
 use OpenAPI\Server\Model\UpdateLessonRequest;
 use OpenAPI\Server\Model\UpdateLocationRequest;
 use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
@@ -65,21 +66,14 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listLocations(int &$responseCode, array &$responseHeaders): array|object|null
+	public function listLocations(ListLocationsRequest $listLocationsRequest, int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function ()
+		return $this->exceptionHandler->executeWithHandle(function () use ($listLocationsRequest)
 		{
-			$locations = $this->lessonApi->listAllLocations();
-			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
+			$locations = $this->lessonApi->listLocations(
+				new ListLocationsSpec($listLocationsRequest->getLocationIds())
+			);
 
-		}, $responseCode, $responseHeaders);
-	}
-
-	public function listLocationsByIds(ApiListLocationByIdsRequest $listLocationByIdsRequest, int &$responseCode, array &$responseHeaders): array|object|null
-	{
-		return $this->exceptionHandler->executeWithHandle(function () use ($listLocationByIdsRequest)
-		{
-			$locations = $this->lessonApi->findLocationsByIds($listLocationByIdsRequest->getLocationIds());
 			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
 		}, $responseCode, $responseHeaders);
 	}
