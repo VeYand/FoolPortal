@@ -38,7 +38,7 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 
 		if (!empty($spec->groupIds))
 		{
-			$qb->andWhere('gm.groupId IN (:groupIds)')
+			$qb->andWhere('g.groupId IN (:groupIds)')
 				->setParameter('groupIds', $spec->groupIds);
 		}
 

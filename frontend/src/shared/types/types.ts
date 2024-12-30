@@ -38,6 +38,29 @@ type TeacherSubjectData = {
 	teacherId: string,
 }
 
+type CourseData = {
+	courseId: string,
+	teacherSubjectId: string,
+	groupId: string,
+}
+
+type LessonData = {
+	lessonId: string,
+	date: Date,
+	startTime: number,
+	duration: number,
+	courseId: string,
+	locationId: string,
+	description?: string,
+}
+
+type AttachmentData = {
+	attachmentId: string,
+	name: string,
+	extension: string,
+	description?: string,
+}
+
 export {
 	type UserData,
 	USER_ROLE,
@@ -45,4 +68,7 @@ export {
 	type SubjectData,
 	type LocationData,
 	type TeacherSubjectData,
+	type CourseData,
+	type LessonData,
+	type AttachmentData,
 }
