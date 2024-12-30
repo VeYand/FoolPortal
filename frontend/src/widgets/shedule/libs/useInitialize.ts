@@ -24,6 +24,7 @@ import {
 	TeacherSubjectData,
 	SubjectData,
 } from 'shared/types/types'
+import {formatDateToISO} from '../../../shared/libs'
 
 
 type InitializedData = {
@@ -57,7 +58,7 @@ const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 
 	useEffect(() => {
 		const callback = async () => {
-			const {data: lessonsData} = await listLessons({startTime: startTime.toISOString(), endTime: endTime.toISOString()})
+			const {data: lessonsData} = await listLessons({startTime: formatDateToISO(startTime), endTime: formatDateToISO(endTime)})
 			setLessons(remapApiLessonsToLessonsList(lessonsData?.lessons ?? []))
 
 			const locationIds = lessonsData?.lessons.map(lesson => lesson.locationId) ?? []

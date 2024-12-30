@@ -1,11 +1,14 @@
 import moment from 'moment'
 import {useState} from 'react'
+import {useLazyCreateLesson, useLazyUpdateLesson} from 'shared/libs/query'
+import {formatDateToISO} from '../../shared/libs'
 import {LessonData} from '../../shared/types'
 import {Preloader} from '../preloader/Preloader'
 import {DatePicker} from './DatePicker'
 import {LessonModal} from './LessonModal'
 import {useInitialize} from './libs/useInitialize'
 import {TimeGrid} from './TimeGrid'
+
 
 const Schedule = () => {
 	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
@@ -23,6 +26,9 @@ const Schedule = () => {
 		users,
 	} = useInitialize(startDate, endDate)
 
+	const [createLesson] = useLazyCreateLesson()
+	const [updateLesson] = useLazyUpdateLesson()
+
 	const handleDateChange = (start: Date, end: Date) => {
 		setStartDate(start)
 		setEndDate(end)
@@ -30,6 +36,26 @@ const Schedule = () => {
 
 	const handleCardClick = (lesson: LessonData) => {
 		setSelectedLessonId(lesson.lessonId)
+	}
+
+	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
+		if (lesson.lessonId) {
+			await updateLesson({
+				...lesson,
+				date: lesson.date ? formatDateToISO(lesson.date) : undefined,
+				lessonId: lesson.lessonId,
+			})
+		}
+		else {
+			await createLesson({
+				date: formatDateToISO(lesson.date as Date),
+				startTime: lesson.startTime as number,
+				duration: lesson.duration as number,
+				courseId: lesson.courseId as string,
+				locationId: lesson.locationId as string,
+				description: lesson.description,
+			})
+		}
 	}
 
 	if (loading) {
@@ -54,6 +80,7 @@ const Schedule = () => {
 				unselectLesson={() => setSelectedLessonId(undefined)}
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
 				locations={locations}
+				onSave={handleSaveLesson}
 			/>
 		</div>
 	)
