@@ -501,6 +501,163 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/attachment/create:
+    post:
+      tags:
+        - Lesson
+      operationId: CreateAttachment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: './Lesson/attachment.yaml#/components/schemas/CreateAttachmentRequest'
+            encoding:
+              file:
+                contentType: application/octet-stream
+      responses:
+        '200':
+          $ref: './Lesson/attachment.yaml#/components/responses/CreateAttachmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/attachment/delete:
+    post:
+      tags:
+        - Lesson
+      operationId: DeleteAttachment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/attachment.yaml#/components/schemas/DeleteAttachmentRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson/list:
+    post:
+      tags:
+        - Lesson
+      operationId: ListLessons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lesson.yaml#/components/schemas/ListLessonsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './Lesson/lesson.yaml#/components/schemas/LessonsList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson/create:
+    post:
+      tags:
+        - Lesson
+      operationId: CreateLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lesson.yaml#/components/schemas/CreateLessonRequest'
+      responses:
+        '200':
+          $ref: './Lesson/lesson.yaml#/components/responses/CreateLessonResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson/update:
+    post:
+      tags:
+        - Lesson
+      operationId: UpdateLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lesson.yaml#/components/schemas/UpdateLessonRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson/delete:
+    post:
+      tags:
+        - Lesson
+      operationId: DeleteLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lesson.yaml#/components/schemas/DeleteLessonRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson-attachment/create:
+    post:
+      tags:
+        - Lesson
+      operationId: AddAttachmentToLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lessonAttachment.yaml#/components/schemas/AddAttachmentToLessonRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v1/lesson-attachment/delete:
+    post:
+      tags:
+        - Lesson
+      operationId: DeleteAttachmentFromLesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lessonAttachment.yaml#/components/schemas/DeleteAttachmentFromLessonRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
 components:
   schemas:
     BadResponse:

@@ -1,0 +1,125 @@
+components:
+  schemas:
+    LessonData:
+      type: object
+      properties:
+        lessonId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        startTime:
+          type: integer
+        duration:
+          type: integer
+        courseId:
+          type: string
+          format: uuid
+        locationId:
+          type: string
+          format: uuid
+        description:
+          type: string
+      required:
+        - lessonId
+        - date
+        - startTime
+        - duration
+        - courseId
+        - locationId
+
+    LessonsList:
+      type: object
+      properties:
+        lessons:
+          type: array
+          items:
+            $ref: '#/components/schemas/LessonData'
+      required:
+        - lessons
+
+    ListLessonsRequest:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+      required:
+        - startTime
+        - endTime
+
+    CreateLessonRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        startTime:
+          type: integer
+        duration:
+          type: integer
+        courseId:
+          type: string
+          format: uuid
+        locationId:
+          type: string
+          format: uuid
+        description:
+          type: string
+      required:
+        - date
+        - startTime
+        - duration
+        - courseId
+        - locationId
+
+    UpdateLessonRequest:
+      type: object
+      properties:
+        lessonId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        startTime:
+          type: integer
+        duration:
+          type: integer
+        courseId:
+          type: string
+          format: uuid
+        locationId:
+          type: string
+          format: uuid
+        description:
+          type: string
+      required:
+        - lessonId
+
+    DeleteLessonRequest:
+      type: object
+      properties:
+        lessonId:
+          type: string
+          format: uuid
+      required:
+        - lessonId
+
+  responses:
+    CreateLessonResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              lessonId:
+                type: string
+                format: uuid
+            required:
+              - lessonId

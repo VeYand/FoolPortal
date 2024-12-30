@@ -1,0 +1,46 @@
+components:
+  schemas:
+    AttachmentData:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - file
+        - name
+
+    CreateAttachmentRequest:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/AttachmentData'
+      required:
+        - attachment
+
+    DeleteAttachmentRequest:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+      required:
+        - attachmentId
+
+  responses:
+    CreateAttachmentResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              attachmentId:
+                type: string
+                format: uuid
+            required:
+              - attachmentId

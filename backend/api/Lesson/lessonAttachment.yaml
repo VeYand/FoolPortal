@@ -1,0 +1,27 @@
+components:
+  schemas:
+    AddAttachmentToLessonRequest:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+        lessonId:
+          type: string
+          format: uuid
+      required:
+        - attachmentId
+        - lessonId
+
+    DeleteAttachmentFromLessonRequest:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+        lessonId:
+          type: string
+          format: uuid
+      required:
+        - attachmentId
+        - lessonId
