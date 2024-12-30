@@ -19,6 +19,7 @@ use OpenAPI\Server\Model\DeleteAttachmentFromLessonRequest;
 use OpenAPI\Server\Model\DeleteAttachmentRequest;
 use OpenAPI\Server\Model\DeleteLessonRequest;
 use OpenAPI\Server\Model\DeleteLocationRequest;
+use OpenAPI\Server\Model\ListLessonAttachmentRequest;
 use OpenAPI\Server\Model\ListLessonsRequest;
 use OpenAPI\Server\Model\ListLocationByIdsRequest as ApiListLocationByIdsRequest;
 use OpenAPI\Server\Model\UpdateLessonRequest;
@@ -206,6 +207,18 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteAttachmentFromLessonRequest)
 		{
 			$this->lessonApi->removeAttachmentFromLesson($deleteAttachmentFromLessonRequest->getLessonId(), $deleteAttachmentFromLessonRequest->getAttachmentId());
+			return new ApiEmptyResponse();
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function listLessonAttachments(ListLessonAttachmentRequest $listLessonAttachmentRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function () use ($listLessonAttachmentRequest)
+		{
+			$this->lessonApi->lis($deleteAttachmentFromLessonRequest->getLessonId(), $deleteAttachmentFromLessonRequest->getAttachmentId());
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}

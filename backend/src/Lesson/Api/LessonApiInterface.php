@@ -75,10 +75,9 @@ interface LessonApiInterface
 	public function listAllLocations(): array;
 
 	/**
-	 * @param string[] $attachmentIds
 	 * @return AttachmentData[]
 	 */
-	public function listAttachmentsByIds(array $attachmentIds): array;
+	public function listLessonAttachments(string $lessonId): array;
 
 	/**
 	 * @return LessonData[]

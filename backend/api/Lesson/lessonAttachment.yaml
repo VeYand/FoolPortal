@@ -25,3 +25,38 @@ components:
       required:
         - attachmentId
         - lessonId
+
+    ListLessonAttachmentRequest:
+      type: object
+      properties:
+        lessonId:
+          type: string
+          format: uuid
+      required:
+        - lessonId
+
+    AttachmentInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        extension:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - extension
+
+  responses:
+    ListLessonAttachmentResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              attachments:
+                $ref: '#/components/schemas/AttachmentInfo'
+            required:
+              - attachments

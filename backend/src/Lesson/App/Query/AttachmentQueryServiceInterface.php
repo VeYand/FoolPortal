@@ -8,8 +8,7 @@ use App\Lesson\App\Query\Data\AttachmentData;
 interface AttachmentQueryServiceInterface
 {
 	/**
-	 * @param string[] $attachmentIds
 	 * @return AttachmentData[]
 	 */
-	public function listAttachmentsByIds(array $attachmentIds): array;
+	public function listLessonAttachments(string $lessonId): array;
 }

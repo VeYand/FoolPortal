@@ -641,6 +641,25 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/lesson/attachment/list:
+    post:
+      tags:
+        - Lesson
+      operationId: ListLessonAttachments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/lessonAttachment.yaml#/components/schemas/ListLessonAttachmentRequest'
+      responses:
+        '200':
+          $ref: './Lesson/lessonAttachment.yaml#/components/responses/ListLessonAttachmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/lesson-attachment/create:
     post:
       tags:

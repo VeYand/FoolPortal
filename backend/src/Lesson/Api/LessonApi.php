@@ -157,9 +157,9 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listAttachmentsByIds(array $attachmentIds): array
+	public function listLessonAttachments(string $lessonId): array
 	{
-		return $this->attachmentQueryService->listAttachmentsByIds($attachmentIds);
+		return $this->attachmentQueryService->listLessonAttachments($lessonId);
 	}
 
 	/**
