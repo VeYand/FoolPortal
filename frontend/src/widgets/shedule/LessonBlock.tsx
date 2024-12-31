@@ -1,4 +1,5 @@
 import {Card} from 'antd'
+import moment from 'moment'
 import {LessonData, LocationData, CourseData, TeacherSubjectData, SubjectData, GroupData, UserData} from '../../shared/types'
 import {getColorByLessonType} from './libs/getColorByLessonType'
 
@@ -26,7 +27,8 @@ const LessonBlock = ({lesson, courses, teacherSubjects, subjects, users, onCardC
 		>
 			<h3>{subject?.name}</h3>
 			<p>{teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Преподаватель не указан'}</p>
-			<p>Время: {lesson.startTime}</p>
+			<p>Время: {moment(lesson.startTime, 'HHmm').format('HH:mm')}</p>
+			<p>Продолжительность: {lesson.duration} мин</p>
 		</Card>
 	)
 }

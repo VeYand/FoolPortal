@@ -9,7 +9,6 @@ import {LessonModal} from './LessonModal'
 import {useInitialize} from './libs/useInitialize'
 import {TimeGrid} from './TimeGrid'
 
-
 const Schedule = () => {
 	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
 	const [startDate, setStartDate] = useState(moment().startOf('week').toDate())
@@ -81,6 +80,7 @@ const Schedule = () => {
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
 				locations={locations}
 				onSave={handleSaveLesson}
+				groups={groups}
 			/>
 		</div>
 	)

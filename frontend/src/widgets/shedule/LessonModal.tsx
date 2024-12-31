@@ -1,14 +1,15 @@
 import {Modal, Form, Input, DatePicker, Select, Button} from 'antd'
-import {LessonData, LocationData} from '../../shared/types'
+import {LessonData, LocationData, GroupData} from '../../shared/types'
 
 type LessonModalProps = {
 	selectedLesson?: LessonData,
 	unselectLesson: () => void,
 	locations: LocationData[],
+	groups: GroupData[],
 	onSave: (lesson: Partial<LessonData>) => void,
 }
 
-const LessonModal = ({selectedLesson, unselectLesson, locations, onSave}: LessonModalProps) => {
+const LessonModal = ({selectedLesson, unselectLesson, locations, groups, onSave}: LessonModalProps) => {
 	const [form] = Form.useForm()
 
 	const handleSubmit = () => {
@@ -65,6 +66,19 @@ const LessonModal = ({selectedLesson, unselectLesson, locations, onSave}: Lesson
 					rules={[{required: true, message: 'Пожалуйста, укажите продолжительность!'}]}
 				>
 					<Input type="number" />
+				</Form.Item>
+				<Form.Item
+					name="groupId"
+					label="Группа"
+					rules={[{required: true, message: 'Пожалуйста, выберите группу!'}]}
+				>
+					<Select>
+						{groups.map(group => (
+							<Select.Option key={group.groupId} value={group.groupId}>
+								{group.name}
+							</Select.Option>
+						))}
+					</Select>
 				</Form.Item>
 				<Form.Item
 					name="locationId"
