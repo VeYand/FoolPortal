@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Query;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\App\Query\CourseQueryServiceInterface;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Spec\ListCoursesSpec;
@@ -15,6 +16,7 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 	public function __construct(
 		private CourseReadRepositoryInterface $courseReadRepository,
 		private EntityManagerInterface $entityManager,
+		private UuidProviderInterface $uuidProvider,
 	)
 	{
 	}
@@ -32,19 +34,10 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		if (!empty($spec->courseIds))
 		{
 			$qb->andWhere('c.courseId IN (:courseIds)')
-				->setParameter('courseIds', $spec->courseIds);
+				->setParameter('courseIds', $this->uuidProvider->toBinaryList($spec->courseIds));
 		}
 
 		$courses = $qb->getQuery()->getResult();
-		return self::convertCoursesToCoursesList($courses);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function listCoursesByGroup(string $groupId): array
-	{
-		$courses = $this->courseReadRepository->findByGroups([$groupId]);
 		return self::convertCoursesToCoursesList($courses);
 	}
 

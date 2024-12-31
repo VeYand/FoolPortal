@@ -16,4 +16,15 @@ class UuidProvider implements UuidProviderInterface
 	{
 		return Uuid::v7()::fromBinary($uuid)->toString();
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function toBinaryList(array $uuids): array
+	{
+		return array_map(
+			static fn(string $uuid) => Uuid::fromString($uuid)->toBinary(),
+			$uuids,
+		);
+	}
 }
