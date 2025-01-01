@@ -10,9 +10,10 @@ type ScheduleProps = {
 	subjects: SubjectData[],
 	users: UserData[],
 	locations: LocationData[],
+	selectLesson: (lessonId: string) => void,
 }
 
-const ScheduleTable = ({weekStartDate, lessons, groups, subjects, users, locations}: ScheduleProps) => {
+const ScheduleTable = ({weekStartDate, lessons, groups, subjects, users, locations, selectLesson}: ScheduleProps) => {
 	const weekDays = Array.from({length: 7}, (_, i) => {
 		const day = new Date(weekStartDate)
 		day.setDate(day.getDate() + i)
@@ -37,7 +38,9 @@ const ScheduleTable = ({weekStartDate, lessons, groups, subjects, users, locatio
 						textAlign: 'center',
 						background: '#bae7ff',
 						userSelect: 'none',
+						cursor: 'pointer',
 					}}
+					onClick={() => selectLesson(lesson.lessonId)}
 				>
 					<div>{`${formatStartTime(lesson.startTime)} - ${formatStartTime(lesson.startTime + lesson.duration)}`}</div>
 					<div>{subjects.find(s => s.subjectId === lesson.subjectId)?.name ?? ' Урок'}</div>

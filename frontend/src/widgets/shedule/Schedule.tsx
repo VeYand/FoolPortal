@@ -65,6 +65,10 @@ const Schedule = () => {
 					subjects={subjects}
 					users={users}
 					locations={locations}
+					selectLesson={lessonId => {
+						setSelectedLessonId(lessonId)
+						setLessonModalOpened(true)
+					}}
 				/>
 			</div>
 			<LessonModal

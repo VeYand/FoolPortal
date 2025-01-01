@@ -1,7 +1,7 @@
 import {Modal, Form, Input, Select, Button, message} from 'antd'
 import {useState, useEffect} from 'react'
 import {formatDateToISO} from '../../shared/libs'
-import {useLazyCreateLesson, useLazyUpdateLesson} from '../../shared/libs/query'
+import {useLazyCreateLesson, useLazyDeleteLesson, useLazyUpdateLesson} from '../../shared/libs/query'
 import {
 	LessonData,
 	LocationData,
@@ -49,6 +49,20 @@ const LessonModal = ({
 
 	const [createLesson] = useLazyCreateLesson()
 	const [updateLesson] = useLazyUpdateLesson()
+	const [deleteLesson] = useLazyDeleteLesson()
+
+	const handleDeleteLesson = async (lessonId: string) => {
+		const data = await deleteLesson({lessonId})
+		if (data.isSuccess) {
+			message.success('Пара успешно удалена.')
+			form.resetFields()
+			setOpened(false)
+			refetch()
+		}
+		else {
+			message.error('Что-то пошло не так, повторите попытку позже.')
+		}
+	}
 
 	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
 		if (lesson.lessonId) {
@@ -203,6 +217,17 @@ const LessonModal = ({
 			open={open}
 			onCancel={onCancel}
 			footer={[
+				...(selectedLesson
+					? [
+						<Button
+							key="delete"
+							danger
+							onClick={() => handleDeleteLesson(selectedLesson?.lessonId ?? '')}
+						>
+							{'Удалить'}
+						</Button>,
+					]
+					: []),
 				<Button key="cancel" onClick={onCancel}>{'Отмена'}</Button>,
 				<Button key="submit" type="primary" onClick={handleSubmit}>{'Сохранить'}</Button>,
 			]}
@@ -217,21 +242,21 @@ const LessonModal = ({
 					label="Дата"
 					rules={[{required: true, message: 'Пожалуйста, выберите дату!'}]}
 				>
-					<Input type="date" />
+					<Input type="date"/>
 				</Form.Item>
 				<Form.Item
 					name="startTime"
 					label="Время начала"
 					rules={[{required: true, message: 'Пожалуйста, укажите время начала!'}]}
 				>
-					<Input type="time" />
+					<Input type="time"/>
 				</Form.Item>
 				<Form.Item
 					name="duration"
 					label="Продолжительность (минуты)"
 					rules={[{required: true, message: 'Пожалуйста, укажите продолжительность!'}]}
 				>
-					<Input type="number" min={1} />
+					<Input type="number" min={1}/>
 				</Form.Item>
 				<Form.Item
 					name="teacherId"
@@ -301,7 +326,7 @@ const LessonModal = ({
 					name="description"
 					label="Описание"
 				>
-					<Input.TextArea rows={4} placeholder="Введите описание" />
+					<Input.TextArea rows={4} placeholder="Введите описание"/>
 				</Form.Item>
 			</Form>
 		</Modal>

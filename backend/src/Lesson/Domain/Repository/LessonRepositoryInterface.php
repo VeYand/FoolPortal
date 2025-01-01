@@ -14,5 +14,8 @@ interface LessonRepositoryInterface extends LessonReadRepositoryInterface
 	 */
 	public function storeList(array $lessons): void;
 
-	public function delete(Lesson $lesson): void;
+	/**
+	 * @param Lesson[] $lessons
+	 */
+	public function delete(array $lessons): void;
 }
