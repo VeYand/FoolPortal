@@ -1,5 +1,5 @@
 import {DatePicker as AntdDatePicker} from 'antd'
-import moment from 'moment/moment'
+import moment from 'moment'
 import {useState} from 'react'
 
 type DatePickerProps = {
@@ -7,7 +7,7 @@ type DatePickerProps = {
 }
 
 const DatePicker = (props: DatePickerProps) => {
-	const [selectedWeek, setSelectedWeek] = useState<moment.Moment>(moment())
+	const [selectedWeek, setSelectedWeek] = useState<moment.Moment | undefined>(undefined)
 
 	const handleWeekChange = (date?: moment.Moment) => {
 		if (date && selectedWeek !== date) {

@@ -1,4 +1,5 @@
 import {ConfigProvider} from 'antd'
+import moment from 'moment'
 import {useEffect} from 'react'
 import {Route, Routes} from 'react-router-dom'
 import {useInitializeUser} from 'shared/libs/hooks'
@@ -6,6 +7,13 @@ import {LoginRoute, UserPortalRoute, ProfileRoute} from 'shared/routes'
 import {Preloader} from 'widgets/preloader/Preloader'
 import {LoginPage, UserPortalPage, NotFoundPage, ProfilePage} from '../pages'
 import {globalTheme} from './globalTheme'
+
+moment.updateLocale('ru', {
+	week: {
+		dow: 1,
+		doy: 4,
+	},
+})
 
 const App = () => {
 	const {isLoading, initialize} = useInitializeUser()

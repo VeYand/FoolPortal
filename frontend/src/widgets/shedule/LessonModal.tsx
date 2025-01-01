@@ -1,5 +1,7 @@
-import {Modal, Form, Input, Select, Button} from 'antd'
+import {Modal, Form, Input, Select, Button, message} from 'antd'
 import {useState, useEffect} from 'react'
+import {formatDateToISO} from '../../shared/libs'
+import {useLazyCreateLesson, useLazyUpdateLesson} from '../../shared/libs/query'
 import {
 	LessonData,
 	LocationData,
@@ -9,9 +11,11 @@ import {
 	SubjectData,
 	UserData,
 } from '../../shared/types'
+import {formatStartTime} from './libs/formatStartTime'
 
 type LessonModalProps = {
 	open: boolean,
+	setOpened: (opened: boolean) => void,
 	selectedLesson?: LessonData,
 	locations: LocationData[],
 	courses: CourseData[],
@@ -19,12 +23,11 @@ type LessonModalProps = {
 	subjects: SubjectData[],
 	teachers: UserData[],
 	groups: GroupData[],
-	onSave: (lesson: Partial<LessonData>) => void,
-	onCancel: () => void,
 }
 
 const LessonModal = ({
 	open,
+	setOpened,
 	selectedLesson,
 	locations,
 	courses,
@@ -32,8 +35,6 @@ const LessonModal = ({
 	subjects,
 	teachers,
 	groups,
-	onSave,
-	onCancel,
 }: LessonModalProps) => {
 	const [form] = Form.useForm()
 	const [selectedTeacherId, setSelectedTeacherId] = useState<string | undefined>(undefined)
@@ -43,6 +44,46 @@ const LessonModal = ({
 	const [filteredSubjectIds, setFilteredSubjectIds] = useState<string[]>(subjects.map(s => s.subjectId))
 	const [filteredTeacherIds, setFilteredTeacherIds] = useState<string[]>(teachers.map(t => t.userId))
 	const [filteredGroupIds, setFilteredGroupIds] = useState<string[]>(groups.map(g => g.groupId))
+
+	const [createLesson] = useLazyCreateLesson()
+	const [updateLesson] = useLazyUpdateLesson()
+
+	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
+		if (lesson.lessonId) {
+			const data = await updateLesson({
+				...lesson,
+				date: lesson.date ? formatDateToISO(lesson.date) : undefined,
+				lessonId: lesson.lessonId,
+			})
+			if (data.isSuccess) {
+				message.success('Пара успешно создана.')
+				form.resetFields()
+				setOpened(false)
+			}
+			else {
+				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')
+			}
+		}
+		else {
+			const data = await createLesson({
+				...lesson,
+				date: formatDateToISO(lesson.date as Date),
+				startTime: lesson.startTime as number,
+				duration: lesson.duration as number,
+				courseId: lesson.courseId as string,
+				locationId: lesson.locationId as string,
+				description: lesson.description,
+			})
+			if (data.isSuccess) {
+				message.success('Пара успешно обновлена.')
+				form.resetFields()
+				setOpened(false)
+			}
+			else {
+				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')
+			}
+		}
+	}
 
 	const handleTeacherChange = (teacherId: string) => {
 		setSelectedTeacherId(teacherId)
@@ -112,12 +153,6 @@ const LessonModal = ({
 		setFilteredSubjectIds(availableSubjectIds)
 	}
 
-	const formatStartTime = (startTime: number) => {
-		const hours = Math.floor(startTime / 60)
-		const minutes = Math.floor(startTime - hours * 60)
-		return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-	}
-
 	useEffect(() => {
 		if (selectedLesson) {
 			form.setFieldsValue({
@@ -137,7 +172,7 @@ const LessonModal = ({
 				const [hours, minutes] = values.startTime.split(':').map(Number)
 				const startTimeInMinutes = hours * 60 + minutes
 
-				onSave({
+				handleSaveLesson({
 					...selectedLesson,
 					...values,
 					startTime: startTimeInMinutes,
@@ -148,21 +183,21 @@ const LessonModal = ({
 						&& selectedGroupId === c.groupId,
 					)?.courseId,
 				})
-				form.resetFields()
 			})
 			.catch(info => {
 				console.error('Validation failed:', info)
 			})
+	}
+	const onCancel = () => {
+		form.resetFields()
+		setOpened(false)
 	}
 
 	return (
 		<Modal
 			title={selectedLesson ? 'Редактировать пару' : 'Создать пару'}
 			open={open}
-			onCancel={() => {
-				form.resetFields()
-				onCancel()
-			}}
+			onCancel={onCancel}
 			footer={[
 				<Button key="cancel" onClick={onCancel}>{'Отмена'}</Button>,
 				<Button key="submit" type="primary" onClick={handleSubmit}>{'Сохранить'}</Button>,
@@ -269,4 +304,6 @@ const LessonModal = ({
 	)
 }
 
-export {LessonModal}
+export {
+	LessonModal,
+}

@@ -1,16 +1,27 @@
+import {Button} from 'antd'
 import moment from 'moment'
 import {useState} from 'react'
-import {useLazyCreateLesson, useLazyUpdateLesson} from 'shared/libs/query'
-import {formatDateToISO} from '../../shared/libs'
-import {LessonData} from '../../shared/types'
 import {Preloader} from '../preloader/Preloader'
 import {DatePicker} from './DatePicker'
 import {LessonModal} from './LessonModal'
 import {useInitialize} from './libs/useInitialize'
-import {TimeGrid} from './TimeGrid'
+import {ScheduleTable} from './ScheduleTable'
+
+type ScheduleHeaderProps = {
+	onSelectedDateChange: (startDate: Date, endDate: Date) => void,
+	onCreateButtonClick: () => void,
+}
+
+const ScheduleHeader = ({onCreateButtonClick, onSelectedDateChange}: ScheduleHeaderProps) => (
+	<div style={{display: 'flex', gap: 40}}>
+		<DatePicker onSelectedDateChange={onSelectedDateChange} />
+		<Button onClick={onCreateButtonClick}>{'Создать пару'}</Button>
+	</div>
+)
 
 const Schedule = () => {
-	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>('019418cb-e2a8-7bab-9197-b08747672046 0')
+	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
+	const [lessonModalOpened, setLessonModalOpened] = useState(false)
 	const [startDate, setStartDate] = useState(moment().startOf('week').toDate())
 	const [endDate, setEndDate] = useState(moment().endOf('week').toDate())
 
@@ -25,38 +36,12 @@ const Schedule = () => {
 		users,
 	} = useInitialize(startDate, endDate)
 
-	const [createLesson] = useLazyCreateLesson()
-	const [updateLesson] = useLazyUpdateLesson()
 
-	const handleDateChange = (start: Date, end: Date) => {
-		setStartDate(start)
-		setEndDate(end)
+	const onCreateButtonClick = () => {
+		setLessonModalOpened(true)
+		setSelectedLessonId(undefined)
 	}
 
-	const handleCardClick = (lesson: LessonData) => {
-		setSelectedLessonId(lesson.lessonId)
-	}
-
-	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
-		if (lesson.lessonId) {
-			await updateLesson({
-				...lesson,
-				date: lesson.date ? formatDateToISO(lesson.date) : undefined,
-				lessonId: lesson.lessonId,
-			})
-		}
-		else {
-			await createLesson({
-				...lesson,
-				date: formatDateToISO(lesson.date as Date),
-				startTime: lesson.startTime as number,
-				duration: lesson.duration as number,
-				courseId: lesson.courseId as string,
-				locationId: lesson.locationId as string,
-				description: lesson.description,
-			})
-		}
-	}
 
 	if (loading) {
 		return <Preloader />
@@ -64,24 +49,31 @@ const Schedule = () => {
 
 	return (
 		<div>
-			<h1>Расписание</h1>
-			<DatePicker onSelectedDateChange={handleDateChange} />
-			<TimeGrid
-				lessons={lessons}
-				locations={locations}
-				courses={courses}
-				teacherSubjects={teacherSubjects}
-				subjects={subjects}
-				groups={groups}
-				users={users}
-				onCardClick={handleCardClick}
+			<ScheduleHeader
+				onSelectedDateChange={(start: Date, end: Date) => {
+					setStartDate(start)
+					setEndDate(end)
+				}}
+				onCreateButtonClick={onCreateButtonClick}
 			/>
+			<div style={{marginTop: 20}}>
+				<ScheduleTable
+					weekStartDate={startDate}
+					lessons={lessons}
+					groups={groups}
+					subjects={subjects}
+					users={users}
+					locations={locations}
+				/>
+			</div>
 			<LessonModal
-				open={true}
+				open={lessonModalOpened}
+				setOpened={opened => {
+					setLessonModalOpened(opened)
+					setSelectedLessonId(undefined)
+				}}
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
 				locations={locations}
-				onSave={handleSaveLesson}
-				onCancel={() => setSelectedLessonId(undefined)}
 				groups={groups}
 				courses={courses}
 				teacherSubjects={teacherSubjects}
@@ -92,4 +84,6 @@ const Schedule = () => {
 	)
 }
 
-export {Schedule}
+export {
+	Schedule,
+}

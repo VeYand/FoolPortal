@@ -114,7 +114,7 @@ export const useInitialize = (): UseInitializeReturns => {
 			message.success('Группа успешно удалена.')
 		}
 		catch (error) {
-			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
+			message.error('Что-то пошло не так. Попробуйте повторить попытку позже.')
 			console.error(`Error deleting group: ${error}`)
 		}
 	}
@@ -169,7 +169,7 @@ export const useInitialize = (): UseInitializeReturns => {
 			await fetchData()
 		}
 		catch (error) {
-			message.error('Что-то пошло не так. Поробуйте повторить попытку позже.')
+			message.error('Что-то пошло не так. Попробуйте повторить попытку позже.')
 			console.error(`Error saving group: ${error}`)
 		}
 	}
