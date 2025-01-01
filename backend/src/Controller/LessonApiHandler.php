@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\Controller\Converter\AttachmentModelConverter;
 use App\Controller\Converter\LessonModelConverter;
 use App\Controller\Converter\LocationModelConverter;
@@ -33,8 +34,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 readonly class LessonApiHandler implements LessonApiHandlerInterface
 {
 	public function __construct(
-		private LessonApiInterface $lessonApi,
-		private ExceptionHandler   $exceptionHandler,
+		private LessonApiInterface    $lessonApi,
+		private ExceptionHandler      $exceptionHandler,
+		private UuidProviderInterface $uuidProvider,
 	)
 	{
 	}
@@ -71,7 +73,7 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($listLocationsRequest)
 		{
 			$locations = $this->lessonApi->listLocations(
-				new ListLocationsSpec($listLocationsRequest->getLocationIds())
+				new ListLocationsSpec($listLocationsRequest->getLocationIds()),
 			);
 
 			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
@@ -112,7 +114,7 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 				),
 			);
 			return new ApiCreateAttachment200Response([
-				'attachmentId' => $attachmentId,
+				'attachmentId' => $this->uuidProvider->toString($attachmentId),
 			]);
 		}, $responseCode, $responseHeaders);
 	}
@@ -152,7 +154,7 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 				LessonModelConverter::convertCreateLessonRequestToCreateLessonInput($createLessonRequest),
 			);
 			return new ApiCreateLesson200Response([
-				'lessonId' => $lessonId,
+				'lessonId' => $this->uuidProvider->toString($lessonId),
 			]);
 		}, $responseCode, $responseHeaders);
 	}

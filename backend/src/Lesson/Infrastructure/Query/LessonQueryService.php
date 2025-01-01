@@ -22,14 +22,14 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
+	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array // TODO вытащить вложения тут
 	{
 		$lessons = $this->lessonReadRepository->findByTimeInterval($startTime, $endTime);
-		$lessonIds = array_map(static fn(LessonAttachment $lessonAttachment) => $lessonAttachment->getLessonId(), $lessons);
-		$attachmentsByLessonMap = $this->getAttachmentsByLessonMap($lessonIds);
+//		$lessonIds = array_map(static fn(LessonAttachment $lessonAttachment) => $lessonAttachment->getLessonId(), $lessons);
+//		$attachmentsByLessonMap = $this->getAttachmentsByLessonMap($lessonIds);
 
 		return array_map(
-			static function (Lesson $lesson) use ($attachmentsByLessonMap)
+			static function (Lesson $lesson)
 			{
 				return new LessonData(
 					$lesson->getLessonId(),
@@ -37,7 +37,7 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 					$lesson->getStartTime(),
 					$lesson->getDuration(),
 					$lesson->getCourseId(),
-					$attachmentsByLessonMap[$lesson->getLessonId()] ?? [],
+					[],
 					$lesson->getLocationId(),
 					$lesson->getDescription(),
 				);
