@@ -34,6 +34,7 @@ const Schedule = () => {
 		subjects,
 		groups,
 		users,
+		refetch,
 	} = useInitialize(startDate, endDate)
 
 
@@ -72,6 +73,7 @@ const Schedule = () => {
 					setLessonModalOpened(opened)
 					setSelectedLessonId(undefined)
 				}}
+				refetch={refetch}
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
 				locations={locations}
 				groups={groups}

@@ -23,6 +23,7 @@ type LessonModalProps = {
 	subjects: SubjectData[],
 	teachers: UserData[],
 	groups: GroupData[],
+	refetch: () => void,
 }
 
 const LessonModal = ({
@@ -35,6 +36,7 @@ const LessonModal = ({
 	subjects,
 	teachers,
 	groups,
+	refetch,
 }: LessonModalProps) => {
 	const [form] = Form.useForm()
 	const [selectedTeacherId, setSelectedTeacherId] = useState<string | undefined>(undefined)
@@ -59,6 +61,7 @@ const LessonModal = ({
 				message.success('Пара успешно создана.')
 				form.resetFields()
 				setOpened(false)
+				refetch()
 			}
 			else {
 				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')
@@ -78,6 +81,7 @@ const LessonModal = ({
 				message.success('Пара успешно обновлена.')
 				form.resetFields()
 				setOpened(false)
+				refetch()
 			}
 			else {
 				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')

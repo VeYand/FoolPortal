@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {
 	useLazyListLocations,
 	useLazyListLessons,
@@ -36,6 +36,7 @@ type InitializedData = {
 	subjects: SubjectData[],
 	groups: GroupData[],
 	users: UserData[],
+	refetch: () => void,
 }
 
 const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
@@ -56,49 +57,49 @@ const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 	const [groups, setGroups] = useState<GroupData[]>([])
 	const [users, setUsers] = useState<UserData[]>([])
 
+	const callback = useCallback(async () => {
+		const {data: lessonsData} = await listLessons({startTime: formatDateToISO(startTime), endTime: formatDateToISO(endTime)})
+
+		const {data: locationsData} = await listLocations({})
+		const locationsList = remapApiLocationsToLocationsList(locationsData?.locations ?? [])
+		setLocations(locationsList)
+
+		const {data: coursesData} = await listCourses({})
+		const coursesList = remapApiCoursesToCoursesList(coursesData?.courses ?? [])
+		setCourses(coursesList)
+
+		const {data: teacherSubjectsData} = await listTeacherSubjects({})
+		const teacherSubjectsList = remapApiTeacherSubjectsToTeacherSubjectsList(teacherSubjectsData?.teacherSubjects ?? [])
+		setTeacherSubjects(teacherSubjectsList)
+
+		const {data: subjectsData} = await listSubjects({})
+		const subjectsList = remapApiSubjectsToSubjectsList(subjectsData?.subjects ?? [])
+		setSubjects(subjectsList)
+
+		const {data: groupsData} = await listGroups({})
+		const groupsList = remapApiGroupsToGroupsList(groupsData?.groups ?? [])
+		setGroups(groupsList)
+
+		const {data: usersData} = await listUsers({})
+		const usersList = remapApiUsersToUsersList(usersData?.users ?? [])
+		setUsers(usersList)
+
+		setLessons(remapApiLessonsToLessonsList({
+			lessons: lessonsData?.lessons ?? [],
+			coursesList,
+			teacherSubjectsList,
+			subjectsList,
+			groupsList,
+			usersList,
+		}))
+
+		setLoading(false)
+	}, [endTime, listCourses, listGroups, listLessons, listLocations, listSubjects, listTeacherSubjects, listUsers, startTime])
+
 	useEffect(() => {
-		const callback = async () => {
-			const {data: lessonsData} = await listLessons({startTime: formatDateToISO(startTime), endTime: formatDateToISO(endTime)})
-
-			const {data: locationsData} = await listLocations({})
-			const locationsList = remapApiLocationsToLocationsList(locationsData?.locations ?? [])
-			setLocations(locationsList)
-
-			const {data: coursesData} = await listCourses({})
-			const coursesList = remapApiCoursesToCoursesList(coursesData?.courses ?? [])
-			setCourses(coursesList)
-
-			const {data: teacherSubjectsData} = await listTeacherSubjects({})
-			const teacherSubjectsList = remapApiTeacherSubjectsToTeacherSubjectsList(teacherSubjectsData?.teacherSubjects ?? [])
-			setTeacherSubjects(teacherSubjectsList)
-
-			const {data: subjectsData} = await listSubjects({})
-			const subjectsList = remapApiSubjectsToSubjectsList(subjectsData?.subjects ?? [])
-			setSubjects(subjectsList)
-
-			const {data: groupsData} = await listGroups({})
-			const groupsList = remapApiGroupsToGroupsList(groupsData?.groups ?? [])
-			setGroups(groupsList)
-
-			const {data: usersData} = await listUsers({})
-			const usersList = remapApiUsersToUsersList(usersData?.users ?? [])
-			setUsers(usersList)
-
-			setLessons(remapApiLessonsToLessonsList({
-				lessons: lessonsData?.lessons ?? [],
-				coursesList,
-				teacherSubjectsList,
-				subjectsList,
-				groupsList,
-				usersList,
-			}))
-
-			setLoading(false)
-		}
-
 		setLoading(true)
 		callback()
-	}, [])
+	}, [callback])
 
 	return {
 		loading,
@@ -109,6 +110,7 @@ const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 		subjects,
 		groups,
 		users,
+		refetch: callback,
 	}
 }
 
