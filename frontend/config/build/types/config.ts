@@ -10,6 +10,7 @@ type BuildPaths = {
 type BuildAliases = Record<string, string>
 
 type BuildOptions = {
+	minify: boolean,
 	port: number,
 	isDev: boolean,
 	mode: BuildMode,

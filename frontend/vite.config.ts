@@ -1,11 +1,11 @@
 import * as path from 'path'
-// @ts-ignore
+// @ts-expect-error
 import url from 'url'
 import {ConfigEnv} from 'vite'
-import {BuildAliases, BuildMode, BuildPaths} from './config/build/types/config'
 import {buildViteConfig} from './config/build/buildViteConfig'
+import {BuildAliases, BuildMode, BuildPaths} from './config/build/types/config'
 
-// @ts-ignore
+// @ts-expect-error
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -29,6 +29,7 @@ export default (configEnv: ConfigEnv) => {
 	}
 
 	return buildViteConfig({
+		minify: isDev,
 		isDev,
 		mode,
 		paths,
