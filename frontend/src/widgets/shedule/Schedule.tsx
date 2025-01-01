@@ -10,7 +10,7 @@ import {useInitialize} from './libs/useInitialize'
 import {TimeGrid} from './TimeGrid'
 
 const Schedule = () => {
-	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
+	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>('019418cb-e2a8-7bab-9197-b08747672046 0')
 	const [startDate, setStartDate] = useState(moment().startOf('week').toDate())
 	const [endDate, setEndDate] = useState(moment().endOf('week').toDate())
 
@@ -47,6 +47,7 @@ const Schedule = () => {
 		}
 		else {
 			await createLesson({
+				...lesson,
 				date: formatDateToISO(lesson.date as Date),
 				startTime: lesson.startTime as number,
 				duration: lesson.duration as number,
@@ -76,11 +77,16 @@ const Schedule = () => {
 				onCardClick={handleCardClick}
 			/>
 			<LessonModal
-				unselectLesson={() => setSelectedLessonId(undefined)}
+				open={true}
 				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
 				locations={locations}
 				onSave={handleSaveLesson}
+				onCancel={() => setSelectedLessonId(undefined)}
 				groups={groups}
+				courses={courses}
+				teacherSubjects={teacherSubjects}
+				subjects={subjects}
+				teachers={users}
 			/>
 		</div>
 	)

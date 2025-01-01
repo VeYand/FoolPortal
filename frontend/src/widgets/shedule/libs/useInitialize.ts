@@ -59,28 +59,40 @@ const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 	useEffect(() => {
 		const callback = async () => {
 			const {data: lessonsData} = await listLessons({startTime: formatDateToISO(startTime), endTime: formatDateToISO(endTime)})
-			setLessons(remapApiLessonsToLessonsList(lessonsData?.lessons ?? []))
 
-			const locationIds = lessonsData?.lessons.map(lesson => lesson.locationId) ?? []
-			const {data: locationsData} = await listLocations({locationIds: locationIds})
-			setLocations(remapApiLocationsToLocationsList(locationsData?.locations ?? []))
+			const {data: locationsData} = await listLocations({})
+			const locationsList = remapApiLocationsToLocationsList(locationsData?.locations ?? [])
+			setLocations(locationsList)
 
-			const courseIds = lessonsData?.lessons.map(lesson => lesson.courseId) ?? []
-			const {data: coursesData} = await listCourses({courseIds})
-			setCourses(remapApiCoursesToCoursesList(coursesData?.courses ?? []))
+			const {data: coursesData} = await listCourses({})
+			const coursesList = remapApiCoursesToCoursesList(coursesData?.courses ?? [])
+			setCourses(coursesList)
 
-			const {data: teacherSubjectsData} = await listTeacherSubjects({courseIds})
-			setTeacherSubjects(remapApiTeacherSubjectsToTeacherSubjectsList(teacherSubjectsData?.teacherSubjects ?? []))
+			const {data: teacherSubjectsData} = await listTeacherSubjects({})
+			const teacherSubjectsList = remapApiTeacherSubjectsToTeacherSubjectsList(teacherSubjectsData?.teacherSubjects ?? [])
+			setTeacherSubjects(teacherSubjectsList)
 
 			const {data: subjectsData} = await listSubjects({})
-			setSubjects(remapApiSubjectsToSubjectsList(subjectsData?.subjects ?? []))
+			const subjectsList = remapApiSubjectsToSubjectsList(subjectsData?.subjects ?? [])
+			setSubjects(subjectsList)
 
-			const groupIds = coursesData?.courses.map(course => course.groupId) ?? []
-			const {data: groupsData} = await listGroups({groupIds})
-			setGroups(remapApiGroupsToGroupsList(groupsData?.groups ?? []))
+			const {data: groupsData} = await listGroups({})
+			const groupsList = remapApiGroupsToGroupsList(groupsData?.groups ?? [])
+			setGroups(groupsList)
 
 			const {data: usersData} = await listUsers({})
-			setUsers(remapApiUsersToUsersList(usersData?.users ?? []))
+			const usersList = remapApiUsersToUsersList(usersData?.users ?? [])
+			setUsers(usersList)
+
+			setLessons(remapApiLessonsToLessonsList({
+				lessons: lessonsData?.lessons ?? [],
+				coursesList,
+				teacherSubjectsList,
+				subjectsList,
+				groupsList,
+				usersList,
+			}))
+
 			setLoading(false)
 		}
 
