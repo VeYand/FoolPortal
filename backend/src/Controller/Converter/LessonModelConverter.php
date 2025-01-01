@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Converter;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\App\Query\Data\LessonData;
 use App\Lesson\Domain\Service\Input\CreateLessonInput;
 use App\Lesson\Domain\Service\Input\UpdateLessonInput;
@@ -14,27 +15,27 @@ use OpenAPI\Server\Model\CreateLessonRequest as ApiCreateLessonRequest;
 
 readonly class LessonModelConverter
 {
-	public static function convertCreateLessonRequestToCreateLessonInput(ApiCreateLessonRequest $request): CreateLessonInput
+	public static function convertCreateLessonRequestToCreateLessonInput(ApiCreateLessonRequest $request, UuidProviderInterface $uuidProvider): CreateLessonInput
 	{
 		return new CreateLessonInput(
 			$request->getDate(),
 			$request->getStartTime(),
 			$request->getDuration(),
-			$request->getCourseId(),
-			$request->getLocationId(),
+			$uuidProvider->toBinary($request->getCourseId()),
+			$uuidProvider->toBinary($request->getLocationId()),
 			$request->getDescription(),
 		);
 	}
 
-	public static function convertUpdateLessonRequestToUpdateLessonInput(ApiUpdateLessonRequest $request): UpdateLessonInput
+	public static function convertUpdateLessonRequestToUpdateLessonInput(ApiUpdateLessonRequest $request, UuidProviderInterface $uuidProvider): UpdateLessonInput
 	{
 		return new UpdateLessonInput(
-			$request->getLessonId(),
+			$uuidProvider->toBinary($request->getLessonId()),
 			$request->getDate(),
 			$request->getStartTime(),
 			$request->getDuration(),
-			$request->getCourseId(),
-			$request->getLocationId(),
+			$uuidProvider->toBinary($request->getCourseId()),
+			$uuidProvider->toBinary($request->getLocationId()),
 			$request->getDescription(),
 		);
 	}

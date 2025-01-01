@@ -10,8 +10,16 @@ interface UuidProviderInterface
 	public function toString(string $uuid): string;
 
 	/**
-	 * @param string[] $uuids
-	 * @return string[]
+	 * @param string[]|null $uuids
+	 * @return string[]|null
 	 */
-	public function toBinaryList(array $uuids): array;
+	public function toStringList(?array $uuids): ?array;
+
+	public function toBinary(?string $uuid): ?string;
+
+	/**
+	 * @param string[]|null $uuids
+	 * @return string[]|null
+	 */
+	public function toBinaryList(?array $uuids): ?array;
 }

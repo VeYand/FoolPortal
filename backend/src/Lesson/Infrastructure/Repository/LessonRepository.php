@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Repository;
 
-use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +14,6 @@ class LessonRepository implements LessonRepositoryInterface
 
 	public function __construct(
 		private readonly EntityManagerInterface $entityManager,
-		private UuidProviderInterface           $uuidProvider,
 	)
 	{
 		$this->repository = $this->entityManager->getRepository(Lesson::class);
@@ -32,7 +30,7 @@ class LessonRepository implements LessonRepositoryInterface
 	public function findByIds(array $lessonIds): array
 	{
 		return $this->repository->findBy([
-			'lessonId' => $this->uuidProvider->toBinaryList($lessonIds),
+			'lessonId' => $lessonIds,
 		]);
 	}
 

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
-use App\Common\Uuid\UuidProviderInterface;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\GroupQueryServiceInterface;
 use App\User\App\Query\Spec\ListGroupsSpec;
@@ -16,7 +15,6 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 	public function __construct(
 		private GroupReadRepositoryInterface $groupReadRepository,
 		private EntityManagerInterface       $entityManager,
-		private UuidProviderInterface        $uuidProvider,
 	)
 	{
 	}
@@ -41,7 +39,7 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 		if (!empty($spec->groupIds))
 		{
 			$qb->andWhere('g.groupId IN (:groupIds)')
-				->setParameter('groupIds', $this->uuidProvider->toBinaryList($spec->groupIds));
+				->setParameter('groupIds', $spec->groupIds);
 		}
 
 		$groups = $qb->getQuery()->getResult();

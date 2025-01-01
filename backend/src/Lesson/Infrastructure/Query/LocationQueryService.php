@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Query;
 
-use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\App\Query\Data\LocationData;
 use App\Lesson\App\Query\LocationQueryServiceInterface;
 use App\Lesson\App\Query\Spec\ListLocationsSpec;
@@ -14,7 +13,6 @@ readonly class LocationQueryService implements LocationQueryServiceInterface
 {
 	public function __construct(
 		private EntityManagerInterface $entityManager,
-		private UuidProviderInterface $uuidProvider,
 	)
 	{
 	}
@@ -32,7 +30,7 @@ readonly class LocationQueryService implements LocationQueryServiceInterface
 		if (!empty($spec->locationIds))
 		{
 			$qb->andWhere('l.locationId IN (:locationIds)')
-				->setParameter('locationIds', $this->uuidProvider->toBinaryList($spec->locationIds));
+				->setParameter('locationIds', $spec->locationIds);
 		}
 
 		$locations = $qb->getQuery()->getResult();

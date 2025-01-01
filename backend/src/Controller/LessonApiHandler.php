@@ -60,7 +60,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteLocationRequest)
 		{
-			$this->lessonApi->deleteLocation($deleteLocationRequest->getLocationId());
+			$this->lessonApi->deleteLocation(
+				$this->uuidProvider->toBinary($deleteLocationRequest->getLocationId()),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -73,7 +75,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($listLocationsRequest)
 		{
 			$locations = $this->lessonApi->listLocations(
-				new ListLocationsSpec($listLocationsRequest->getLocationIds()),
+				new ListLocationsSpec(
+					$this->uuidProvider->toBinaryList($listLocationsRequest->getLocationIds()),
+				),
 			);
 
 			return LocationModelConverter::convertAppLocationsToApiLocations($locations);
@@ -87,7 +91,10 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($updateLocationRequest)
 		{
-			$this->lessonApi->updateLocation($updateLocationRequest->getLocationId(), $updateLocationRequest->getName());
+			$this->lessonApi->updateLocation(
+				$this->uuidProvider->toBinary($updateLocationRequest->getLocationId()),
+				$updateLocationRequest->getName(),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -126,7 +133,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteAttachmentRequest)
 		{
-			$this->lessonApi->deleteAttachment($deleteAttachmentRequest->getAttachmentId());
+			$this->lessonApi->deleteAttachment(
+				$this->uuidProvider->toBinary($deleteAttachmentRequest->getAttachmentId()),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -151,7 +160,7 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($createLessonRequest)
 		{
 			$lessonId = $this->lessonApi->createLesson(
-				LessonModelConverter::convertCreateLessonRequestToCreateLessonInput($createLessonRequest),
+				LessonModelConverter::convertCreateLessonRequestToCreateLessonInput($createLessonRequest, $this->uuidProvider),
 			);
 			return new ApiCreateLesson200Response([
 				'lessonId' => $this->uuidProvider->toString($lessonId),
@@ -167,7 +176,7 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($updateLessonRequest)
 		{
 			$this->lessonApi->updateLesson(
-				LessonModelConverter::convertUpdateLessonRequestToUpdateLessonInput($updateLessonRequest),
+				LessonModelConverter::convertUpdateLessonRequestToUpdateLessonInput($updateLessonRequest, $this->uuidProvider),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -180,7 +189,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteLessonRequest)
 		{
-			$this->lessonApi->deleteLesson($deleteLessonRequest->getLessonId());
+			$this->lessonApi->deleteLesson(
+				$this->uuidProvider->toBinary($deleteLessonRequest->getLessonId()),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -192,7 +203,10 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($addAttachmentToLessonRequest)
 		{
-			$this->lessonApi->addAttachmentToLesson($addAttachmentToLessonRequest->getLessonId(), $addAttachmentToLessonRequest->getAttachmentId());
+			$this->lessonApi->addAttachmentToLesson(
+				$this->uuidProvider->toBinary($addAttachmentToLessonRequest->getLessonId()),
+				$this->uuidProvider->toBinary($addAttachmentToLessonRequest->getAttachmentId()),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -204,7 +218,10 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteAttachmentFromLessonRequest)
 		{
-			$this->lessonApi->removeAttachmentFromLesson($deleteAttachmentFromLessonRequest->getLessonId(), $deleteAttachmentFromLessonRequest->getAttachmentId());
+			$this->lessonApi->removeAttachmentFromLesson(
+				$this->uuidProvider->toBinary($deleteAttachmentFromLessonRequest->getLessonId()),
+				$this->uuidProvider->toBinary($deleteAttachmentFromLessonRequest->getAttachmentId()),
+			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
 	}
@@ -216,7 +233,9 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($listLessonAttachmentRequest)
 		{
-			$attachments = $this->lessonApi->listLessonAttachments($listLessonAttachmentRequest->getLessonId());
+			$attachments = $this->lessonApi->listLessonAttachments(
+				$this->uuidProvider->toBinary($listLessonAttachmentRequest->getLessonId()),
+			);
 
 			return new ListLessonAttachments200Response([
 				'attachments' => AttachmentModelConverter::convertAppAttachmentsToApiAttachments($attachments),

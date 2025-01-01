@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Query;
 
-use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\App\Query\CourseQueryServiceInterface;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Spec\ListCoursesSpec;
@@ -15,8 +14,7 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 {
 	public function __construct(
 		private CourseReadRepositoryInterface $courseReadRepository,
-		private EntityManagerInterface $entityManager,
-		private UuidProviderInterface $uuidProvider,
+		private EntityManagerInterface        $entityManager,
 	)
 	{
 	}
@@ -34,7 +32,7 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		if (!empty($spec->courseIds))
 		{
 			$qb->andWhere('c.courseId IN (:courseIds)')
-				->setParameter('courseIds', $this->uuidProvider->toBinaryList($spec->courseIds));
+				->setParameter('courseIds', $spec->courseIds);
 		}
 
 		$courses = $qb->getQuery()->getResult();

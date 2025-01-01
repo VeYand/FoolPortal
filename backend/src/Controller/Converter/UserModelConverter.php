@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Converter;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\User\Api\Exception\ApiException as UserApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\Domain\Model\UserRole;
@@ -67,10 +68,10 @@ readonly class UserModelConverter
 	/**
 	 * @throws UserApiException
 	 */
-	public static function convertUpdateUserRequestToUpdateUserInput(UpdateUserRequest $request): UpdateUserInput
+	public static function convertUpdateUserRequestToUpdateUserInput(UpdateUserRequest $request, UuidProviderInterface $uuidProvider): UpdateUserInput
 	{
 		return new UpdateUserInput(
-			$request->getUserId(),
+			$uuidProvider->toBinary($request->getUserId()),
 			$request->getFirstName(),
 			$request->getLastName(),
 			$request->getPatronymic(),
