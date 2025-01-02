@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
@@ -22,6 +23,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		private GroupMemberReadRepositoryInterface $groupMemberReadRepository,
 		private ImageQueryServiceInterface         $imageQueryService,
 		private EntityManagerInterface             $entityManager,
+		private UuidProviderInterface              $uuidProvider,
 	)
 	{
 	}
@@ -126,7 +128,8 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	 */
 	private function getUserIdToGroupIdsMap(array $userIds): array
 	{
-		$groupMembers = $this->groupMemberReadRepository->findByUsers($userIds);
+		$newUuids = $this->uuidProvider->toBinaryList($userIds);
+		$groupMembers = $this->groupMemberReadRepository->findByUsers($newUuids);
 
 		/** @var array<string, string[]> $userIdToGroupIdsMap */
 		$userIdToGroupIdsMap = [];
