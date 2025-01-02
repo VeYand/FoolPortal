@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Lesson\Infrastructure\Query;
 
 use App\Common\Uuid\UuidInterface;
+use App\Lesson\App\Exception\AppException;
+use App\Lesson\App\Provider\AttachmentProviderInterface;
 use App\Lesson\App\Query\AttachmentQueryServiceInterface;
 use App\Lesson\App\Query\Data\AttachmentData;
 use App\Lesson\Domain\Model\Attachment;
@@ -16,8 +18,21 @@ readonly class AttachmentQueryService implements AttachmentQueryServiceInterface
 	public function __construct(
 		private LessonAttachmentReadRepositoryInterface $lessonAttachmentReadRepository,
 		private AttachmentReadRepositoryInterface       $attachmentReadRepository,
+		private AttachmentProviderInterface             $attachmentProvider,
 	)
 	{
+	}
+
+	/**
+	 * @throws AppException
+	 */
+	public function getAttachmentData(UuidInterface $attachmentId): string
+	{
+		$attachment = $this->attachmentReadRepository->find($attachmentId);
+		if (is_null($attachment)) {
+			throw new AppException('Attachment not found', AppException::ATTACHMENT_NOT_FOUND);
+		}
+		return $this->attachmentProvider->getAttachmentData($attachment->getPath());
 	}
 
 	/**

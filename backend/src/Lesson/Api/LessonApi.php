@@ -64,6 +64,17 @@ readonly class LessonApi implements LessonApiInterface
 	}
 
 	/**
+	 * @throws ApiException
+	 */
+	public function getAttachmentData(UuidInterface $attachmentId): string
+	{
+		return self::tryExecute(function () use ($attachmentId)
+		{
+			return $this->attachmentQueryService->getAttachmentData($attachmentId);
+		});
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function createAttachment(CreateAttachmentInput $input): UuidInterface

@@ -8,6 +8,8 @@ use App\Lesson\App\Query\Data\AttachmentData;
 
 interface AttachmentQueryServiceInterface
 {
+	public function getAttachmentData(UuidInterface $attachmentId): string;
+
 	/**
 	 * @return AttachmentData[]
 	 */

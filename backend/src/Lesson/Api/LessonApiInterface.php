@@ -33,6 +33,11 @@ interface LessonApiInterface
 	/**
 	 * @throws ApiException
 	 */
+	public function getAttachmentData(UuidInterface $attachmentId): string;
+
+	/**
+	 * @throws ApiException
+	 */
 	public function createAttachment(CreateAttachmentInput $input): UuidInterface;
 
 	/**

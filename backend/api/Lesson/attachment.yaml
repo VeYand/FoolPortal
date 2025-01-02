@@ -17,6 +17,15 @@ components:
         - name
         - extension
 
+    GetAttachmentRequest:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+      required:
+        - attachmentId
+
     CreateAttachmentRequest:
       type: object
       properties:
@@ -47,3 +56,16 @@ components:
                 format: uuid
             required:
               - attachmentId
+
+    GetAttachmentResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: string
+                format: base64
+            required:
+              - data

@@ -22,6 +22,8 @@ use OpenAPI\Server\Model\DeleteAttachmentFromLessonRequest;
 use OpenAPI\Server\Model\DeleteAttachmentRequest;
 use OpenAPI\Server\Model\DeleteLessonRequest;
 use OpenAPI\Server\Model\DeleteLocationRequest;
+use OpenAPI\Server\Model\GetAttachment200Response;
+use OpenAPI\Server\Model\GetAttachmentRequest;
 use OpenAPI\Server\Model\ListLessonAttachmentRequest;
 use OpenAPI\Server\Model\ListLessonAttachments200Response;
 use OpenAPI\Server\Model\ListLessonsRequest;
@@ -29,7 +31,6 @@ use OpenAPI\Server\Model\ListLocationsRequest;
 use OpenAPI\Server\Model\UpdateLessonRequest;
 use OpenAPI\Server\Model\UpdateLocationRequest;
 use OpenAPI\Server\Model\EmptyResponse as ApiEmptyResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 readonly class LessonApiHandler implements LessonApiHandlerInterface
 {
@@ -234,6 +235,23 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 
 			return new ListLessonAttachments200Response([
 				'attachments' => AttachmentModelConverter::convertAppAttachmentsToApiAttachments($attachments),
+			]);
+		}, $responseCode, $responseHeaders);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getAttachment(GetAttachmentRequest $getAttachmentRequest, int &$responseCode, array &$responseHeaders): array|object|null
+	{
+		return $this->exceptionHandler->executeWithHandle(function () use ($getAttachmentRequest)
+		{
+			$attachmentData = $this->lessonApi->getAttachmentData(
+				$this->uuidProvider->fromStringToUuid($getAttachmentRequest->getAttachmentId()),
+			);
+
+			return new GetAttachment200Response([
+				'data' => $attachmentData,
 			]);
 		}, $responseCode, $responseHeaders);
 	}

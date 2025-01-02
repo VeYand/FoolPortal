@@ -27,7 +27,7 @@ readonly class ExceptionHandler
 			$response = $callback();
 			$responseCode = Response::HTTP_OK;
 		}
-		catch (\Exception $exception)
+		catch (\Throwable $exception)
 		{
 			return $this->handleException($exception, $responseCode, $responseHeaders);
 		}
@@ -36,9 +36,9 @@ readonly class ExceptionHandler
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws \Throwable
 	 */
-	private function handleException(\Exception $exception, int &$responseCode, array &$responseHeaders): ?BadResponse
+	private function handleException(\Throwable $exception, int &$responseCode, array &$responseHeaders): ?BadResponse
 	{
 		try
 		{
@@ -59,7 +59,7 @@ readonly class ExceptionHandler
 				return self::handleLessonException($exception, $responseCode, $responseHeaders);
 			}
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			$this->logger->logError($e->getMessage());
 		}

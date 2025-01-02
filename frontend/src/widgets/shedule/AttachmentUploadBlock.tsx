@@ -2,22 +2,34 @@ import {UploadOutlined, DeleteOutlined, DownloadOutlined} from '@ant-design/icon
 import {Upload, Button, List, Input, Modal, Space, Typography, message} from 'antd'
 import type {RcFile} from 'antd/es/upload'
 import {useState} from 'react'
-import {useAppSelector} from '../../shared/redux'
-import {USER_ROLE} from '../../shared/types'
+import {useAppSelector} from 'shared/redux'
+import {AttachmentData, USER_ROLE} from 'shared/types'
 import {DetailedAttachmentData} from './LessonModalForAdministration'
+import {downloadBase64, useDownloadAttachment} from './libs/useDownloadAttachment'
 
 type AttachmentUploadBlockProps = {
 	attachments: DetailedAttachmentData[],
 	setAttachments: (attachments: DetailedAttachmentData[]) => void,
+	isTempAttachment: (attachmentId: string) => boolean,
+	getTempAttachmentData: (attachmentId: string) => string | undefined,
 }
 
-const AttachmentUploadBlock = ({attachments, setAttachments}: AttachmentUploadBlockProps) => {
+const AttachmentUploadBlock = ({attachments, setAttachments, isTempAttachment, getTempAttachmentData}: AttachmentUploadBlockProps) => {
 	const currentUser = useAppSelector(state => state.userEntity.user)
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [currentFile, setCurrentFile] = useState<File | null>(null)
 	const [fileName, setFileName] = useState('')
 	const [fileDescription, setFileDescription] = useState('')
+	const downloadAttachment = useDownloadAttachment()
+
+	const handleDownloadAttachment = (attachment: AttachmentData) => {
+		if (isTempAttachment(attachment.attachmentId)) {
+			downloadBase64(getTempAttachmentData(attachment.attachmentId) ?? '', attachment.name)
+			return
+		}
+		downloadAttachment(attachment)
+	}
 
 	const handleUpload = (file: RcFile) => {
 		setCurrentFile(file)
@@ -62,10 +74,6 @@ const AttachmentUploadBlock = ({attachments, setAttachments}: AttachmentUploadBl
 		setAttachments(attachments.filter(item => item.attachmentId !== attachmentId))
 	}
 
-	const handleDownloadAttachment = (attachmentId: string) => {
-		console.log(`Download attachment with id: ${attachmentId}`)
-	}
-
 	return (
 		<div>
 			{currentUser.role !== USER_ROLE.STUDENT && (
@@ -82,7 +90,7 @@ const AttachmentUploadBlock = ({attachments, setAttachments}: AttachmentUploadBl
 						<List.Item
 							actions={[
 								<Button icon={<DownloadOutlined/>}
-									onClick={() => handleDownloadAttachment(item.attachmentId)}>{'Скачать'}</Button>,
+									onClick={() => handleDownloadAttachment(item)}>{'Скачать'}</Button>,
 								...(currentUser.role === USER_ROLE.STUDENT ? [] : [
 									<Button icon={<DeleteOutlined/>} danger
 										onClick={() => handleRemove(item.attachmentId)}>{'Удалить'}</Button>,

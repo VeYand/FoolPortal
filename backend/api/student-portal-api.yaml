@@ -525,6 +525,25 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
+  /api/v1/attachment:
+    post:
+      tags:
+        - Lesson
+      operationId: GetAttachment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './Lesson/attachment.yaml#/components/schemas/GetAttachmentRequest'
+      responses:
+        '200':
+          $ref: './Lesson/attachment.yaml#/components/responses/GetAttachmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+
   /api/v1/attachment/create:
     post:
       tags:

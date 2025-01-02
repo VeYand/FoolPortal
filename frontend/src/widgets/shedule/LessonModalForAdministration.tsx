@@ -69,6 +69,11 @@ const LessonModalForAdministration = ({
 		setModifiedAttachments(originalAttachments)
 	}, [originalAttachments])
 	const processAttachments = useProcessAttachments()
+	const isTempAttachment = (attachmentId: string) => {
+		const originalAttachmentIds = originalAttachments.map(a => a.attachmentId)
+		return !originalAttachmentIds.includes(attachmentId)
+	}
+	const getTempAttachmentData = (attachmentId: string): string | undefined => modifiedAttachments.find(a => a.attachmentId === attachmentId)?.file
 
 	const handleDeleteLesson = async (lessonId: string) => {
 		const data = await deleteLesson({lessonId})
@@ -351,7 +356,12 @@ const LessonModalForAdministration = ({
 				>
 					<Input.TextArea rows={4} placeholder="Введите описание"/>
 				</Form.Item>
-				<AttachmentUploadBlock attachments={modifiedAttachments} setAttachments={setModifiedAttachments}/>
+				<AttachmentUploadBlock
+					attachments={modifiedAttachments}
+					setAttachments={setModifiedAttachments}
+					isTempAttachment={isTempAttachment}
+					getTempAttachmentData={getTempAttachmentData}
+				/>
 			</Form>
 		</Modal>
 	)

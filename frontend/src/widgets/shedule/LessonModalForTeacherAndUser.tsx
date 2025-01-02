@@ -48,6 +48,11 @@ const LessonModalForTeacherAndUser = ({
 		setModifiedAttachments(originalAttachments)
 	}, [originalAttachments])
 	const processAttachments = useProcessAttachments()
+	const isTempAttachment = (attachmentId: string) => {
+		const originalAttachmentIds = originalAttachments.map(a => a.attachmentId)
+		return !originalAttachmentIds.includes(attachmentId)
+	}
+	const getTempAttachmentData = (attachmentId: string): string | undefined => modifiedAttachments.find(a => a.attachmentId === attachmentId)?.file
 
 	const handleSubmit = () => {
 		if (selectedLesson?.lessonId) {
@@ -93,7 +98,12 @@ const LessonModalForTeacherAndUser = ({
 					<div style={{marginBottom: '8px'}}>
 						<strong>Описание:</strong> {selectedLesson.description || '-'}
 					</div>
-					<AttachmentUploadBlock attachments={modifiedAttachments} setAttachments={setModifiedAttachments}/>
+					<AttachmentUploadBlock
+						attachments={modifiedAttachments}
+						setAttachments={setModifiedAttachments}
+						isTempAttachment={isTempAttachment}
+						getTempAttachmentData={getTempAttachmentData}
+					/>
 				</div>
 			) : (
 				<div>Нет данных о выбранной паре.</div>
