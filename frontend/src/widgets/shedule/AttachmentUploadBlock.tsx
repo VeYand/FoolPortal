@@ -1,4 +1,11 @@
-import {UploadOutlined, DeleteOutlined, DownloadOutlined} from '@ant-design/icons'
+import {
+	UploadOutlined,
+	DeleteOutlined,
+	DownloadOutlined,
+	FilePdfOutlined,
+	FileWordOutlined,
+	FileExcelOutlined, FileImageOutlined, FileUnknownOutlined,
+} from '@ant-design/icons'
 import {Upload, Button, List, Input, Modal, Space, Typography, message} from 'antd'
 import type {RcFile} from 'antd/es/upload'
 import {useState} from 'react'
@@ -74,6 +81,25 @@ const AttachmentUploadBlock = ({attachments, setAttachments, isTempAttachment, g
 		setAttachments(attachments.filter(item => item.attachmentId !== attachmentId))
 	}
 
+	const getFileIcon = (extension: string) => {
+		switch (extension.toLowerCase()) {
+			case 'pdf':
+				return <FilePdfOutlined />
+			case 'doc':
+			case 'docx':
+				return <FileWordOutlined />
+			case 'xls':
+			case 'xlsx':
+				return <FileExcelOutlined />
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+				return <FileImageOutlined />
+			default:
+				return <FileUnknownOutlined />
+		}
+	}
+
 	return (
 		<div>
 			{currentUser.role !== USER_ROLE.STUDENT && (
@@ -89,23 +115,25 @@ const AttachmentUploadBlock = ({attachments, setAttachments, isTempAttachment, g
 					renderItem={item => (
 						<List.Item
 							actions={[
-								<Button icon={<DownloadOutlined/>}
-									onClick={() => handleDownloadAttachment(item)}>{'Скачать'}</Button>,
+								<Button icon={<DownloadOutlined />} onClick={() => handleDownloadAttachment(item)}>{'Скачать'}</Button>,
 								...(currentUser.role === USER_ROLE.STUDENT ? [] : [
-									<Button icon={<DeleteOutlined/>} danger
-										onClick={() => handleRemove(item.attachmentId)}>{'Удалить'}</Button>,
+									<Button icon={<DeleteOutlined />} danger onClick={() => handleRemove(item.attachmentId)}>{'Удалить'}</Button>,
 								]),
 							]}
 						>
-							<Space direction="vertical">
-								<Typography.Text strong>{item.name}</Typography.Text>
-								{item.description && <Typography.Text type="secondary">{item.description}</Typography.Text>}
+							<Space direction="vertical" style={{width: '100%'}}>
+								<div style={{display: 'flex', alignItems: 'center'}}>
+									<span style={{marginRight: 8, fontSize: 24}}>{getFileIcon(item.extension)}</span>
+									<Typography.Text strong style={{fontSize: 16}}>{item.name}</Typography.Text>
+								</div>
+								{item.description && (
+									<Typography.Text type="secondary" style={{fontSize: 14}}>{item.description}</Typography.Text>
+								)}
 							</Space>
 						</List.Item>
 					)}
 				/>
 			)}
-
 			<Modal
 				title="Add File Details"
 				open={isModalOpen}
