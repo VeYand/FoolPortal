@@ -135,6 +135,7 @@ readonly class ExceptionHandler
 			case LessonApiException::INVALID_LESSON_DURATION:
 			case LessonApiException::INVALID_LESSON_START_TIME:
 			case LessonApiException::LESSON_DATE_ALREADY_PASSED:
+			case LessonApiException::INVALID_BASE_64_DATA:
 				return self::constructBadRequestResponse($exception->getMessage(), $responseCode, $responseHeaders);
 			case LessonApiException::COURSE_NOT_EXISTS:
 			case LessonApiException::LOCATION_NOT_FOUND:

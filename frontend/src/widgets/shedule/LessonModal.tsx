@@ -1,7 +1,14 @@
 import {Modal, Form, Input, Select, Button, message} from 'antd'
-import {useState, useEffect} from 'react'
-import {formatDateToISO} from '../../shared/libs'
-import {useLazyCreateLesson, useLazyDeleteLesson, useLazyUpdateLesson} from '../../shared/libs/query'
+import {useState, useEffect, useCallback} from 'react'
+import {formatDateToISO} from 'shared/libs'
+import {
+	useLazyAddAttachmentToLesson,
+	useLazyCreateAttachment,
+	useLazyCreateLesson,
+	useLazyDeleteAttachment,
+	useLazyDeleteLesson, useLazyListLessonAttachments,
+	useLazyUpdateLesson,
+} from 'shared/libs/query'
 import {
 	LessonData,
 	LocationData,
@@ -10,7 +17,9 @@ import {
 	TeacherSubjectData,
 	SubjectData,
 	UserData,
-} from '../../shared/types'
+	AttachmentData,
+} from 'shared/types'
+import {AttachmentUploadBlock} from './AttachmentUploadBlock'
 import {formatStartTime} from './libs/formatStartTime'
 
 type LessonModalProps = {
@@ -24,6 +33,10 @@ type LessonModalProps = {
 	teachers: UserData[],
 	groups: GroupData[],
 	refetch: () => void,
+}
+
+type DetailedAttachmentData = AttachmentData & {
+	file?: string,
 }
 
 const LessonModal = ({
@@ -51,6 +64,29 @@ const LessonModal = ({
 	const [updateLesson] = useLazyUpdateLesson()
 	const [deleteLesson] = useLazyDeleteLesson()
 
+	const [originalAttachments, setOriginalAttachments] = useState<AttachmentData[]>([])
+	const [modifiedAttachments, setModifiedAttachments] = useState<DetailedAttachmentData[]>([])
+
+	const [createAttachment] = useLazyCreateAttachment()
+	const [addAttachmentToLesson] = useLazyAddAttachmentToLesson()
+	const [deleteAttachment] = useLazyDeleteAttachment()
+	const [listAttachments] = useLazyListLessonAttachments()
+
+	const fetchLessonAttachments = useCallback(async () => {
+		if (!selectedLesson) {
+			setOriginalAttachments([])
+			setModifiedAttachments([])
+			return
+		}
+
+		const {data} = await listAttachments({lessonId: selectedLesson.lessonId})
+
+		if (data?.attachments) {
+			setOriginalAttachments(data.attachments)
+			setModifiedAttachments(data.attachments)
+		}
+	}, [listAttachments, selectedLesson])
+
 	const handleDeleteLesson = async (lessonId: string) => {
 		const data = await deleteLesson({lessonId})
 		if (data.isSuccess) {
@@ -64,6 +100,37 @@ const LessonModal = ({
 		}
 	}
 
+	const processAttachments = async (lessonId: string) => {
+		const originalAttachmentIds = originalAttachments.map(a => a.attachmentId)
+		const modifiedAttachmentIds = modifiedAttachments.map(a => a.attachmentId)
+
+		const attachmentIdsToDelete = originalAttachmentIds.filter(attachmentId => !modifiedAttachmentIds.includes(attachmentId))
+
+		await Promise.all(attachmentIdsToDelete.map(attachmentIdToDelete =>
+			deleteAttachment({attachmentId: attachmentIdToDelete}),
+		))
+
+		const createdAttachmentIds: string[] = []
+
+		const attachmentIdsToCreate = modifiedAttachmentIds.filter(attachmentId => !originalAttachmentIds.includes(attachmentId))
+
+		const creationPromises = attachmentIdsToCreate.map(async attachmentIdToCreate => {
+			const attachment = modifiedAttachments.find(a => a.attachmentId === attachmentIdToCreate)
+			if (attachment?.file) {
+				const {data: createdAttachmentData} = await createAttachment({attachment: {...attachment, file: attachment.file}})
+				if (createdAttachmentData?.attachmentId) {
+					createdAttachmentIds.push(createdAttachmentData.attachmentId)
+				}
+			}
+		})
+
+		await Promise.all(creationPromises)
+
+		await Promise.all(createdAttachmentIds.map(attachmentId =>
+			addAttachmentToLesson({lessonId, attachmentId}),
+		))
+	}
+
 	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
 		if (lesson.lessonId) {
 			const data = await updateLesson({
@@ -71,15 +138,13 @@ const LessonModal = ({
 				date: lesson.date ? formatDateToISO(lesson.date) : undefined,
 				lessonId: lesson.lessonId,
 			})
-			if (data.isSuccess) {
-				message.success('Пара успешно создана.')
-				form.resetFields()
-				setOpened(false)
-				refetch()
-			}
-			else {
+
+			if (!data.isSuccess) {
 				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')
+				return
 			}
+
+			await processAttachments(lesson.lessonId)
 		}
 		else {
 			const data = await createLesson({
@@ -91,17 +156,23 @@ const LessonModal = ({
 				locationId: lesson.locationId as string,
 				description: lesson.description,
 			})
-			if (data.isSuccess) {
-				message.success('Пара успешно обновлена.')
-				form.resetFields()
-				setOpened(false)
-				refetch()
-			}
-			else {
+
+			const createdLessonId = data.data?.lessonId
+
+			if (!data.isSuccess || !createdLessonId) {
 				message.error('Что-то пошло не так, проверьте правильность заполнения формы!')
+				return
 			}
+
+			await processAttachments(createdLessonId)
 		}
+
+		message.success('Пара успешно обновлена.')
+		form.resetFields()
+		setOpened(false)
+		refetch()
 	}
+
 
 	const handleTeacherChange = (teacherId: string) => {
 		setSelectedTeacherId(teacherId)
@@ -172,6 +243,7 @@ const LessonModal = ({
 	}
 
 	useEffect(() => {
+		fetchLessonAttachments()
 		if (selectedLesson) {
 			form.setFieldsValue({
 				...selectedLesson,
@@ -182,7 +254,7 @@ const LessonModal = ({
 		else {
 			form.resetFields()
 		}
-	}, [selectedLesson, form])
+	}, [selectedLesson, form, fetchLessonAttachments])
 
 	const handleSubmit = () => {
 		form.validateFields()
@@ -210,6 +282,12 @@ const LessonModal = ({
 		form.resetFields()
 		setOpened(false)
 	}
+
+	// if (['png', 'jpg', 'jpeg'].includes(extension)) {
+	// 	return <img src={`/path/to/preview/${extension}`} alt="Preview" style={{width: 50}}/>
+	// }
+	// const renderAttachmentIcon = (extension: string) => <FileOutlined/>
+
 
 	return (
 		<Modal
@@ -328,6 +406,7 @@ const LessonModal = ({
 				>
 					<Input.TextArea rows={4} placeholder="Введите описание"/>
 				</Form.Item>
+				<AttachmentUploadBlock attachments={modifiedAttachments} setAttachments={setModifiedAttachments}/>
 			</Form>
 		</Modal>
 	)
@@ -335,4 +414,8 @@ const LessonModal = ({
 
 export {
 	LessonModal,
+}
+
+export type {
+	DetailedAttachmentData,
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Lesson\Infrastructure\Repository;
 
 use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -30,9 +32,12 @@ class LessonRepository implements LessonRepositoryInterface
 	 */
 	public function findByIds(array $lessonIds): array
 	{
-		return $this->repository->findBy([
-			'lessonId' => $lessonIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('l');
+		return $qb
+			->where($qb->expr()->in('l.lessonId', ':lessonIds'))
+			->setParameter('lessonIds', UuidUtils::convertToBinaryList($lessonIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	/**
@@ -48,30 +53,14 @@ class LessonRepository implements LessonRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
-	{
-		$qb = $this->entityManager->createQueryBuilder();
-
-		$qb->select('l')
-			->from(Lesson::class, 'l')
-			->where('l.date >= :startDate')
-			->andWhere('l.date <= :endDate')
-			->andWhere('l.startTime + l.duration <= :endTime')
-			->setParameter('startDate', $startTime)
-			->setParameter('endDate', $endTime)
-			->setParameter('endTime', $endTime->getTimestamp());
-
-		return $qb->getQuery()->getResult();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function findByCourses(array $courseIds): array
 	{
-		return $this->repository->findBy([
-			'courseId' => $courseIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('l');
+		return $qb
+			->where($qb->expr()->in('l.courseId', ':courseIds'))
+			->setParameter('courseIds', UuidUtils::convertToBinaryList($courseIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	public function store(Lesson $lesson): UuidInterface

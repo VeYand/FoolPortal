@@ -26,30 +26,32 @@ readonly class AttachmentUploader implements AttachmentUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	public function uploadAttachment(string $tempAttachmentPath): string
+	public function uploadAttachment(string $base64Data): string
 	{
-		if (!file_exists($tempAttachmentPath) || !is_readable($tempAttachmentPath))
-		{
-			throw new DomainException("Temporary attachment file does not exist or is not readable");
-		}
-
 		try
 		{
-			$fileName = bin2hex(random_bytes(16)) . '.' . pathinfo($tempAttachmentPath, PATHINFO_EXTENSION);
+			$fileName = bin2hex(random_bytes(16));
 		}
 		catch (RandomException $e)
 		{
 			throw new DomainException($e->getMessage());
 		}
 
-		$attachmentPath = $this->uploadDirectoryPath . '/' . $fileName;
+		$filePath = $this->uploadDirectoryPath . '/' . $fileName;
 
-		if (!rename($tempAttachmentPath, $attachmentPath))
+		$decodedData = base64_decode($base64Data, true);
+
+		if ($decodedData === false)
 		{
-			throw new DomainException("Failed to move file to upload directory");
+			throw new DomainException("Failed to decode base64 file", DomainException::INVALID_BASE_64_DATA);
 		}
 
-		return $attachmentPath;
+		if (file_put_contents($filePath, $decodedData) === false)
+		{
+			throw new DomainException("Failed to save file");
+		}
+
+		return $filePath;
 	}
 
 	/**

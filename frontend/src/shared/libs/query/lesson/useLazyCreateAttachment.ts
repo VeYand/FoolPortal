@@ -1,9 +1,9 @@
-import {AttachmentData, CreateAttachment200Response} from 'shared/api'
+import {CreateAttachment200Response, CreateAttachmentRequest} from 'shared/api'
 import {apiSlice, studentPortalApi} from 'shared/redux/api'
 
 const api = apiSlice.injectEndpoints({
 	endpoints: builder => ({
-		createAttachment: builder.query<CreateAttachment200Response, AttachmentData>({
+		createAttachment: builder.query<CreateAttachment200Response, CreateAttachmentRequest>({
 			queryFn: async request => await studentPortalApi.get().lessonApi.createAttachment(request),
 		}),
 	}),

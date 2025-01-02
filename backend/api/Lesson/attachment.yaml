@@ -5,14 +5,17 @@ components:
       properties:
         file:
           type: string
-          format: binary
+          format: base64
         name:
+          type: string
+        extension:
           type: string
         description:
           type: string
       required:
         - file
         - name
+        - extension
 
     CreateAttachmentRequest:
       type: object

@@ -13,8 +13,8 @@ use App\Lesson\App\Query\Spec\ListLocationsSpec;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
 use OpenAPI\Server\Api\LessonApiInterface as LessonApiHandlerInterface;
 use OpenAPI\Server\Model\AddAttachmentToLessonRequest;
-use OpenAPI\Server\Model\AttachmentData;
 use OpenAPI\Server\Model\CreateAttachment200Response as ApiCreateAttachment200Response;
+use OpenAPI\Server\Model\CreateAttachmentRequest;
 use OpenAPI\Server\Model\CreateLesson200Response as ApiCreateLesson200Response;
 use OpenAPI\Server\Model\CreateLessonRequest;
 use OpenAPI\Server\Model\CreateLocationRequest;
@@ -102,22 +102,17 @@ readonly class LessonApiHandler implements LessonApiHandlerInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createAttachment(AttachmentData $attachment, int &$responseCode, array &$responseHeaders): array|object|null
+	public function createAttachment(CreateAttachmentRequest $createAttachmentRequest, int &$responseCode, array &$responseHeaders): array|object|null
 	{
-		return $this->exceptionHandler->executeWithHandle(function () use ($attachment)
+		return $this->exceptionHandler->executeWithHandle(function () use ($createAttachmentRequest)
 		{
-			$file = $attachment->getFile();
-			if (!$file instanceof UploadedFile)
-			{
-				return new \RuntimeException();
-			}
-
+			$attachment = $createAttachmentRequest->getAttachment();
 			$attachmentId = $this->lessonApi->createAttachment(
 				new CreateAttachmentInput(
-					$attachment->getName(),
-					$file->getExtension(),
-					$attachment->getDescription(),
-					$file->getPath(),
+					$attachment?->getName(),
+					$attachment?->getExtension(),
+					$attachment?->getDescription(),
+					$attachment?->getFile(),
 				),
 			);
 			return new ApiCreateAttachment200Response([

@@ -53,6 +53,7 @@ type LessonData = {
 	subjectId: string,
 	groupId: string,
 	courseId: string,
+	attachmentIds: string[],
 	locationId: string,
 	description?: string,
 }

@@ -10,7 +10,7 @@ interface AttachmentUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	public function uploadAttachment(string $tempAttachmentPath): string;
+	public function uploadAttachment(string $base64Data): string;
 
 	/**
 	 * @throws DomainException

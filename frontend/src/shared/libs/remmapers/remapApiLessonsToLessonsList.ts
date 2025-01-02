@@ -26,6 +26,7 @@ const remapApiLessonToLessonData = (params: RemapApiLessonToLessonDataParams): L
 		subjectId: subject?.subjectId ?? '',
 		groupId: group?.groupId ?? '',
 		courseId: params.lesson.courseId,
+		attachmentIds: params.lesson.attachmentIds,
 		locationId: params.lesson.locationId,
 		description: params.lesson.description,
 	})

@@ -22,11 +22,6 @@ interface LessonReadRepositoryInterface
 	public function findByLocation(UuidInterface $locationId): array;
 
 	/**
-	 * @return Lesson[]
-	 */
-	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array;
-
-	/**
 	 * @param UuidInterface[] $courseIds
 	 * @return Lesson[]
 	 */

@@ -27,7 +27,7 @@ readonly class AttachmentService
 	 */
 	public function create(CreateAttachmentInput $input): UuidInterface
 	{
-		$attachmentPath = $this->attachmentUploader->uploadAttachment($input->tempPath);
+		$attachmentPath = $this->attachmentUploader->uploadAttachment($input->fileData);
 
 		$attachment = new Attachment(
 			$this->uuidProvider->generate(),

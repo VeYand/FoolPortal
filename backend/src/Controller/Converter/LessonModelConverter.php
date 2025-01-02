@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Converter;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\App\Query\Data\LessonData;
 use App\Lesson\Domain\Service\Input\CreateLessonInput;
@@ -63,6 +64,7 @@ readonly class LessonModelConverter
 			'startTime' => $lesson->startTime,
 			'duration' => $lesson->duration,
 			'courseId' => $lesson->courseId->toString(),
+			'attachmentIds' => array_map(static fn(UuidInterface $uuid) => $uuid->toString(), $lesson->attachmentIds),
 			'locationId' => $lesson->locationId->toString(),
 			'description' => $lesson->description,
 		]);

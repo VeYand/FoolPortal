@@ -533,12 +533,9 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: './Lesson/attachment.yaml#/components/schemas/CreateAttachmentRequest'
-            encoding:
-              file:
-                contentType: application/octet-stream
       responses:
         '200':
           $ref: './Lesson/attachment.yaml#/components/responses/CreateAttachmentResponse'

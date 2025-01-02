@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Lesson\Infrastructure\Repository;
 
 use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Lesson\Domain\Model\LessonAttachment;
 use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -43,9 +45,12 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 	 */
 	public function findByLessons(array $lessonIds): array
 	{
-		return $this->repository->findBy([
-			'lessonId' => $lessonIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('la');
+		return $qb
+			->where($qb->expr()->in('la.lessonId', ':lessonIds'))
+			->setParameter('lessonIds', UuidUtils::convertToBinaryList($lessonIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	public function store(LessonAttachment $lessonAttachment): UuidInterface

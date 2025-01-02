@@ -16,6 +16,11 @@ components:
         courseId:
           type: string
           format: uuid
+        attachmentIds:
+          type: array
+          items:
+            type: string
+            format: uuid
         locationId:
           type: string
           format: uuid
@@ -27,6 +32,7 @@ components:
         - startTime
         - duration
         - courseId
+        - attachmentIds
         - locationId
 
     LessonsList:

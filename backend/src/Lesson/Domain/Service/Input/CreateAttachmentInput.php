@@ -9,7 +9,7 @@ readonly class CreateAttachmentInput
 		public string  $originalName,
 		public string  $extension,
 		public ?string $description,
-		public string  $tempPath,
+		public string  $fileData,
 	)
 	{
 	}
