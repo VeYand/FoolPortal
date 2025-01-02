@@ -6,6 +6,7 @@ import {USER_ROLE} from 'shared/types'
 import {Preloader} from '../preloader/Preloader'
 import {DatePicker} from './DatePicker'
 import {LessonModal} from './LessonModal'
+import {LessonReadModal} from './LessonReadModal'
 import {useInitialize} from './libs/useInitialize'
 import {ScheduleTable} from './ScheduleTable'
 
@@ -27,6 +28,8 @@ const ScheduleHeader = ({onCreateButtonClick, onSelectedDateChange}: ScheduleHea
 }
 
 const Schedule = () => {
+	const currentUser = useAppSelector(state => state.userEntity.user)
+
 	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()
 	const [lessonModalOpened, setLessonModalOpened] = useState(false)
 	const [startDate, setStartDate] = useState(moment().startOf('week').toDate())
@@ -78,21 +81,37 @@ const Schedule = () => {
 					}}
 				/>
 			</div>
-			<LessonModal
-				open={lessonModalOpened}
-				setOpened={opened => {
-					setLessonModalOpened(opened)
-					setSelectedLessonId(undefined)
-				}}
-				refetch={refetch}
-				selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
-				locations={locations}
-				groups={groups}
-				courses={courses}
-				teacherSubjects={teacherSubjects}
-				subjects={subjects}
-				teachers={users}
-			/>
+			{(currentUser.role === USER_ROLE.OWNER || currentUser.role === USER_ROLE.ADMIN)
+				&& <LessonModal
+					open={lessonModalOpened}
+					setOpened={opened => {
+						setLessonModalOpened(opened)
+						setSelectedLessonId(undefined)
+					}}
+					refetch={refetch}
+					selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
+					locations={locations}
+					groups={groups}
+					courses={courses}
+					teacherSubjects={teacherSubjects}
+					subjects={subjects}
+					teachers={users.filter(u => u.role === USER_ROLE.TEACHER)}
+				/>
+			}
+			{(currentUser.role === USER_ROLE.TEACHER || currentUser.role === USER_ROLE.STUDENT)
+				&& <LessonReadModal
+					open={lessonModalOpened}
+					setOpened={opened => {
+						setLessonModalOpened(opened)
+						setSelectedLessonId(undefined)
+					}}
+					selectedLesson={lessons.find(l => l.lessonId === selectedLessonId)}
+					locations={locations}
+					groups={groups}
+					subjects={subjects}
+					users={users}
+				/>
+			}
 		</div>
 	)
 }
