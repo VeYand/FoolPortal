@@ -35,6 +35,12 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 				->setParameter('courseIds', $spec->courseIds);
 		}
 
+		if (!empty($spec->groupIds))
+		{
+			$qb->andWhere('c.groupId IN (:groupIds)')
+				->setParameter('groupIds', $spec->groupIds);
+		}
+
 		$courses = $qb->getQuery()->getResult();
 		return self::convertCoursesToCoursesList($courses);
 	}

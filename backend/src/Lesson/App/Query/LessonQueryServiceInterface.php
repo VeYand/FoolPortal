@@ -10,5 +10,5 @@ interface LessonQueryServiceInterface
 	/**
 	 * @return LessonData[]
 	 */
-	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array;
+	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array; // TODO добавить авторизационную фильтрацию
 }

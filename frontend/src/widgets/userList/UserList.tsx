@@ -2,8 +2,10 @@ import {Avatar, Button, Space, Table} from 'antd'
 import {useState} from 'react'
 import {USER_ROLE, UserData} from 'shared/types'
 import {RoleTag} from 'shared/ui/RoleTag/RoleTag'
+import {useAppSelector} from '../../shared/redux'
 import {Preloader} from '../preloader/Preloader'
 import {DeleteConfirmationModal} from './DeleteConfirmationModal'
+import {canDeleteUser, canModifyUser} from './libs/canModifyUser'
 import {useInitialize} from './libs/useInitialize'
 import {UserFormModal} from './UserFormModal'
 
@@ -19,6 +21,7 @@ const UserList = () => {
 		loading,
 	} = useInitialize()
 
+	const currentUser = useAppSelector(state => state.userEntity.user)
 	const [selectedUser, setSelectedUser] = useState<UserData | undefined>()
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
@@ -46,7 +49,7 @@ const UserList = () => {
 			title: 'Фото',
 			dataIndex: 'imageSrc',
 			key: 'imageSrc',
-			render: (src: string) => <Avatar src={src} />,
+			render: (src: string) => <Avatar src={src}/>,
 		},
 		{
 			title: 'Имя',
@@ -77,12 +80,20 @@ const UserList = () => {
 			key: 'actions',
 			render: (_: any, user: UserData) => (
 				<Space>
-					<Button onClick={() => handleEdit(user)}>
-						{'Редактировать'}
-					</Button>
-					<Button danger onClick={() => handleDelete(user)}>
-						{'Удалить'}
-					</Button>
+					{
+						canModifyUser(currentUser, user) && (
+							<Button onClick={() => handleEdit(user)}>
+								{'Редактировать'}
+							</Button>
+						)
+					}
+					{
+						canDeleteUser(currentUser, user) && (
+							<Button danger onClick={() => handleDelete(user)}>
+								{'Удалить'}
+							</Button>
+						)
+					}
 				</Space>
 			),
 		},
@@ -94,8 +105,6 @@ const UserList = () => {
 
 	return (
 		<>
-			<Table columns={columns} dataSource={users} rowKey="id" />
-
 			<Button
 				type="primary"
 				onClick={() => {
@@ -105,7 +114,7 @@ const UserList = () => {
 			>
 				{'Добавить пользователя'}
 			</Button>
-
+			<Table columns={columns} dataSource={users} rowKey="id"/>
 			{isModalVisible && (
 				<UserFormModal
 					user={selectedUser}
@@ -116,7 +125,6 @@ const UserList = () => {
 					teacherSubjects={teacherSubjects}
 				/>
 			)}
-
 			{isDeleteModalVisible && (
 				<DeleteConfirmationModal
 					user={selectedUser}

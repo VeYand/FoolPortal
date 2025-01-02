@@ -157,7 +157,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		{
 			$this->subjectApi->createCourses(
 				array_map(
-					static fn(ApiCreateCourseInput $input) => new CreateCourseInput(
+					fn(ApiCreateCourseInput $input) => new CreateCourseInput(
 						$this->uuidProvider->toBinary($input->getGroupId()),
 						$this->uuidProvider->toBinary($input->getTeacherSubjectId()),
 					),

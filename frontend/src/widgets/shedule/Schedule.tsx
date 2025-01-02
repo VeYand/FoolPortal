@@ -1,6 +1,8 @@
 import {Button} from 'antd'
 import moment from 'moment'
 import {useState} from 'react'
+import {useAppSelector} from 'shared/redux'
+import {USER_ROLE} from 'shared/types'
 import {Preloader} from '../preloader/Preloader'
 import {DatePicker} from './DatePicker'
 import {LessonModal} from './LessonModal'
@@ -12,12 +14,17 @@ type ScheduleHeaderProps = {
 	onCreateButtonClick: () => void,
 }
 
-const ScheduleHeader = ({onCreateButtonClick, onSelectedDateChange}: ScheduleHeaderProps) => (
-	<div style={{display: 'flex', gap: 40}}>
-		<DatePicker onSelectedDateChange={onSelectedDateChange} />
-		<Button onClick={onCreateButtonClick}>{'Создать пару'}</Button>
-	</div>
-)
+const ScheduleHeader = ({onCreateButtonClick, onSelectedDateChange}: ScheduleHeaderProps) => {
+	const currentUser = useAppSelector(state => state.userEntity.user)
+
+	return (
+		<div style={{display: 'flex', gap: 40}}>
+			<DatePicker onSelectedDateChange={onSelectedDateChange}/>
+			{(currentUser.role === USER_ROLE.ADMIN || currentUser.role === USER_ROLE.OWNER)
+				&& <Button onClick={onCreateButtonClick}>{'Создать пару'}</Button>}
+		</div>
+	)
+}
 
 const Schedule = () => {
 	const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>()

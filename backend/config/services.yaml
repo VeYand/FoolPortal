@@ -52,3 +52,8 @@ services:
     App\Controller\LessonApiHandler:
         tags:
             - { name: "open_api_server.api", api: "lesson" }
+
+    App\Lesson\App\Query\LessonQueryServiceInterface:
+        class: App\Lesson\App\Query\AuthorizedLessonQueryService
+        arguments:
+            $lessonQueryService: '@App\Lesson\Infrastructure\Query\LessonQueryService'
