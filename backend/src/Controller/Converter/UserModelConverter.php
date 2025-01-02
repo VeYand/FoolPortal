@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Converter;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Api\Exception\ApiException as UserApiException;
 use App\User\App\Query\Data\DetailedUserData;
@@ -18,14 +19,14 @@ readonly class UserModelConverter
 	public static function convertUserDataToApiUserData(DetailedUserData $user): ApiUserData
 	{
 		return new ApiUserData([
-			'userId' => $user->userId,
+			'userId' => $user->userId->toString(),
 			'firstName' => $user->firstName,
 			'lastName' => $user->lastName,
 			'patronymic' => $user->patronymic,
 			'role' => $user->role->value,
 			'imageSrc' => $user->imageSrc,
 			'email' => $user->email,
-			'groupIds' => $user->groupIds,
+			'groupIds' => array_map(static fn(UuidInterface $groupId) => $groupId->toString(), $user->groupIds),
 		]);
 	}
 
@@ -71,13 +72,13 @@ readonly class UserModelConverter
 	public static function convertUpdateUserRequestToUpdateUserInput(UpdateUserRequest $request, UuidProviderInterface $uuidProvider): UpdateUserInput
 	{
 		return new UpdateUserInput(
-			$uuidProvider->toBinary($request->getUserId()),
+			$uuidProvider->fromStringToUuid($request->getUserId()),
 			$request->getFirstName(),
 			$request->getLastName(),
 			$request->getPatronymic(),
 			is_null($request->getRole())
 				? null
-				: self::convertApiRoleToUserRole($request->getRole() ?? 0),
+				: self::convertApiRoleToUserRole($request->getRole()),
 			$request->getImageData(),
 			$request->getEmail(),
 			$request->getPassword(),

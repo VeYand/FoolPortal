@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\GroupMember;
@@ -24,7 +25,7 @@ readonly class GroupMemberService
 	/**
 	 * @throws DomainException
 	 */
-	public function createGroupMembers(string $groupId, string $userId): string
+	public function createGroupMembers(UuidInterface $groupId, UuidInterface $userId): UuidInterface
 	{
 		$this->assertGroupExists($groupId);
 		$this->assertUserExists($userId);
@@ -39,7 +40,7 @@ readonly class GroupMemberService
 		return $this->groupMemberRepository->store($groupMember);
 	}
 
-	public function deleteGroupMembers(string $groupId, string $userId): void
+	public function deleteGroupMembers(UuidInterface $groupId, UuidInterface $userId): void
 	{
 		$groupMember = $this->groupMemberRepository->find($groupId, $userId);
 
@@ -52,7 +53,7 @@ readonly class GroupMemberService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertUserExists(string $userId): void
+	private function assertUserExists(UuidInterface $userId): void
 	{
 		$user = $this->userRepository->find($userId);
 
@@ -65,7 +66,7 @@ readonly class GroupMemberService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertGroupExists(string $groupId): void
+	private function assertGroupExists(UuidInterface $groupId): void
 	{
 		$group = $this->groupRepository->find($groupId);
 
@@ -78,7 +79,7 @@ readonly class GroupMemberService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertGroupMemberNotExists(string $groupId, string $userId): void
+	private function assertGroupMemberNotExists(UuidInterface $groupId, UuidInterface $userId): void
 	{
 		$groupMember = $this->groupMemberRepository->find($groupId, $userId);
 

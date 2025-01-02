@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Session\Infrastructure\Provider;
 
+use App\Common\Uuid\UuidProviderInterface;
 use App\Security\App\Adapter\Data\UserRole as SecurityUserRole;
 use App\Security\Infrastructure\Model\SecurityUser;
 use App\Session\App\Exception\AppException;
@@ -15,6 +16,7 @@ readonly class SessionProvider implements SessionProviderInterface
 {
 	public function __construct(
 		private TokenStorageInterface $tokenStorage,
+		private UuidProviderInterface $uuidProvider,
 	)
 	{
 	}
@@ -38,7 +40,7 @@ readonly class SessionProvider implements SessionProviderInterface
 		}
 
 		return new SessionUser(
-			$user->getUserId(),
+			$this->uuidProvider->fromBytesToUuid($user->getUserId()),
 			$user->getUserIdentifier(),
 			self::remapUserRole($user->getAppRole()),
 		);

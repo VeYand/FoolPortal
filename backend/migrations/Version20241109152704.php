@@ -16,7 +16,7 @@ final class Version20241109152704 extends AbstractMigration
 	public function up(Schema $schema): void
 	{
 		$this->addSql('CREATE TABLE user (
-				user_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\',
+				user_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid_binary)\',
 				first_name VARCHAR(255) NOT NULL,
 				last_name VARCHAR(255) NOT NULL,
 				patronymic VARCHAR(255) DEFAULT NULL,

@@ -11,7 +11,7 @@ readonly class GroupModelConverter
 	public static function convertGroupDataToApiGroupData(GroupData $group): ApiGroupData
 	{
 		return new ApiGroupData([
-			'groupId' => $group->groupId,
+			'groupId' => $group->groupId->toString(),
 			'name' => $group->name,
 		]);
 	}

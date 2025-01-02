@@ -16,7 +16,7 @@ final class Version20241109154521 extends AbstractMigration
 	public function up(Schema $schema): void
 	{
 		$this->addSql('CREATE TABLE `group` (
-        		group_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\',
+        		group_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid_binary)\',
         		name VARCHAR(255) NOT NULL,
         		PRIMARY KEY(group_id)
         	) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB',

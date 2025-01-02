@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Adapter;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\App\Adapter\Data\UserData;
 use App\Subject\App\Adapter\Data\UserRole;
 use App\Subject\App\Adapter\UserAdapterInterface;
@@ -22,7 +23,7 @@ readonly class UserAdapter implements UserAdapterInterface
 	/**
 	 * @throws AppException
 	 */
-	public function getUser(string $userId): ?UserData
+	public function getUser(UuidInterface $userId): ?UserData
 	{
 		try
 		{
@@ -40,7 +41,7 @@ readonly class UserAdapter implements UserAdapterInterface
 		return new UserData($user->userId, self::remapUserRole($user->role));
 	}
 
-	public function isGroupExists(string $groupId): bool
+	public function isGroupExists(UuidInterface $groupId): bool
 	{
 		return $this->userApi->isGroupExists($groupId);
 	}

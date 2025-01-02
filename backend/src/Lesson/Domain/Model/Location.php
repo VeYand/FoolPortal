@@ -3,16 +3,18 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
+
 class Location
 {
 	public function __construct(
-		private readonly string $locationId,
-		private string          $name,
+		private readonly UuidInterface $locationId,
+		private string                 $name,
 	)
 	{
 	}
 
-	public function getLocationId(): string
+	public function getLocationId(): UuidInterface
 	{
 		return $this->locationId;
 	}

@@ -3,16 +3,18 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
+
 class Subject
 {
 	public function __construct(
-		private readonly string $subjectId,
-		private string          $name,
+		private readonly UuidInterface $subjectId,
+		private string                 $name,
 	)
 	{
 	}
 
-	public function getSubjectId(): string
+	public function getSubjectId(): UuidInterface
 	{
 		return $this->subjectId;
 	}

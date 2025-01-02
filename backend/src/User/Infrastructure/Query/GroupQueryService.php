@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
+use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\User\App\Query\Data\GroupData;
 use App\User\App\Query\GroupQueryServiceInterface;
 use App\User\App\Query\Spec\ListGroupsSpec;
@@ -20,7 +22,7 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 	{
 	}
 
-	public function isGroupExists(string $groupId): bool
+	public function isGroupExists(UuidInterface $groupId): bool
 	{
 		$group = $this->groupReadRepository->find($groupId);
 
@@ -41,13 +43,13 @@ readonly class GroupQueryService implements GroupQueryServiceInterface
 		if (!empty($spec->groupIds))
 		{
 			$qb->andWhere('g.groupId IN (:groupIds)')
-				->setParameter('groupIds', $spec->groupIds);
+				->setParameter('groupIds', UuidUtils::convertToBinaryList($spec->groupIds));
 		}
 
 		if (!empty($spec->userIds))
 		{
 			$qb->andWhere('gm.userId IN (:userIds)')
-				->setParameter('userIds', $spec->userIds);
+				->setParameter('userIds', UuidUtils::convertToBinaryList($spec->userIds));
 		}
 
 		$groups = $qb->getQuery()->getResult();

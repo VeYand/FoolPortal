@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Domain\Model\TeacherSubject;
 
 interface TeacherSubjectReadRepositoryInterface
 {
-	public function find(string $teacherSubjectId): ?TeacherSubject;
+	public function find(UuidInterface $teacherSubjectId): ?TeacherSubject;
 
 	/**
-	 * @param string[] $teacherSubjectIds
+	 * @param UuidInterface[] $teacherSubjectIds
 	 * @return TeacherSubject[]
 	 */
 	public function findByIds(array $teacherSubjectIds): array;
@@ -20,15 +21,15 @@ interface TeacherSubjectReadRepositoryInterface
 	 */
 	public function findAll(): array;
 
-	public function findByTeacherAndSubject(string $teacherId, string $subjectId): ?TeacherSubject;
+	public function findByTeacherAndSubject(UuidInterface $teacherId, UuidInterface $subjectId): ?TeacherSubject;
 
 	/**
 	 * @return TeacherSubject[]
 	 */
-	public function findBySubject(string $subjectId): array;
+	public function findBySubject(UuidInterface $subjectId): array;
 
 	/**
-	 * @param string[] $teacherIds
+	 * @param UuidInterface[] $teacherIds
 	 * @return TeacherSubject[]
 	 */
 	public function findByTeachers(array $teacherIds): array;

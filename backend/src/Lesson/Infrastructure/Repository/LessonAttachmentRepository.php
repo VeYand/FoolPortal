@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Domain\Model\LessonAttachment;
 use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(LessonAttachment::class);
 	}
 
-	public function findByLessonAndAttachment(string $lessonId, string $attachmentId): ?LessonAttachment
+	public function findByLessonAndAttachment(UuidInterface $lessonId, UuidInterface $attachmentId): ?LessonAttachment
 	{
 		return $this->repository->findOneBy([
 			'lessonId' => $lessonId,
@@ -30,7 +31,7 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByAttachment(string $attachmentId): array
+	public function findByAttachment(UuidInterface $attachmentId): array
 	{
 		return $this->repository->findBy([
 			'attachmentId' => $attachmentId,
@@ -47,7 +48,7 @@ class LessonAttachmentRepository implements LessonAttachmentRepositoryInterface
 		]);
 	}
 
-	public function store(LessonAttachment $lessonAttachment): string
+	public function store(LessonAttachment $lessonAttachment): UuidInterface
 	{
 		$this->entityManager->persist($lessonAttachment);
 		$this->entityManager->flush();

@@ -3,19 +3,21 @@ declare(strict_types=1);
 
 namespace App\Lesson\App\Query\Data;
 
+use App\Common\Uuid\UuidInterface;
+
 readonly class LessonData
 {
 	/**
-	 * @param string[] $attachmentIds
+	 * @param UuidInterface[] $attachmentIds
 	 */
 	public function __construct(
-		public string             $lessonId,
+		public UuidInterface      $lessonId,
 		public \DateTimeInterface $date,
 		public int                $startTime,
 		public int                $duration,
-		public string             $courseId,
+		public UuidInterface      $courseId,
 		public array              $attachmentIds,
-		public ?string            $locationId,
+		public ?UuidInterface     $locationId,
 		public ?string            $description,
 	)
 	{

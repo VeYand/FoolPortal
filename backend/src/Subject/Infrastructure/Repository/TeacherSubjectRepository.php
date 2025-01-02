@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Domain\Model\TeacherSubject;
 use App\Subject\Domain\Repository\TeacherSubjectRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(TeacherSubject::class);
 	}
 
-	public function find(string $teacherSubjectId): ?TeacherSubject
+	public function find(UuidInterface $teacherSubjectId): ?TeacherSubject
 	{
 		return $this->repository->find($teacherSubjectId);
 	}
@@ -43,7 +44,7 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function findByTeacherAndSubject(string $teacherId, string $subjectId): ?TeacherSubject
+	public function findByTeacherAndSubject(UuidInterface $teacherId, UuidInterface $subjectId): ?TeacherSubject
 	{
 		return $this->repository->findOneBy([
 			'teacherId' => $teacherId,
@@ -54,7 +55,7 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findBySubject(string $subjectId): array
+	public function findBySubject(UuidInterface $subjectId): array
 	{
 		return $this->repository->findBy([
 			'subjectId' => $subjectId,
@@ -71,7 +72,7 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 		]);
 	}
 
-	public function store(TeacherSubject $teacherSubject): string
+	public function store(TeacherSubject $teacherSubject): UuidInterface
 	{
 		$this->entityManager->persist($teacherSubject);
 		$this->entityManager->flush();

@@ -23,7 +23,7 @@ readonly class AttachmentModelConverter
 	public static function convertAppAttachmentToApiAttachment(AttachmentData $attachment): ApiAttachmentInfo
 	{
 		return new ApiAttachmentInfo([
-			'attachmentId' => $attachment->attachmentId,
+			'attachmentId' => $attachment->attachmentId->toString(),
 			'extension' => $attachment->extension,
 			'name' => $attachment->name,
 			'description' => $attachment->description,

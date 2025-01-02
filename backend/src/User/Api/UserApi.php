@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
@@ -29,7 +30,7 @@ readonly class UserApi implements UserApiInterface
 	{
 	}
 
-	public function isGroupExists(string $groupId): bool
+	public function isGroupExists(UuidInterface $groupId): bool
 	{
 		return $this->groupQueryService->isGroupExists($groupId);
 	}
@@ -37,7 +38,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getUserById(string $userId): UserData
+	public function getUserById(UuidInterface $userId): UserData
 	{
 		return self::tryExecute(function () use ($userId)
 		{
@@ -48,7 +49,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getDetailedUserById(string $userId): DetailedUserData
+	public function getDetailedUserById(UuidInterface $userId): DetailedUserData
 	{
 		return self::tryExecute(function () use ($userId)
 		{
@@ -70,7 +71,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getUserHashedPassword(string $userId): string
+	public function getUserHashedPassword(UuidInterface $userId): string
 	{
 		return self::tryExecute(function () use ($userId)
 		{
@@ -103,7 +104,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createUser(CreateUserInput $input): string
+	public function createUser(CreateUserInput $input): UuidInterface
 	{
 		return self::tryExecute(function () use ($input)
 		{
@@ -125,7 +126,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteUser(string $userId): void
+	public function deleteUser(UuidInterface $userId): void
 	{
 		self::tryExecute(function () use ($userId)
 		{
@@ -136,7 +137,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createGroup(string $groupName): string
+	public function createGroup(string $groupName): UuidInterface
 	{
 		return self::tryExecute(function () use ($groupName)
 		{
@@ -147,7 +148,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function updateGroup(string $groupId, string $groupName): void
+	public function updateGroup(UuidInterface $groupId, string $groupName): void
 	{
 		self::tryExecute(function () use ($groupId, $groupName)
 		{
@@ -158,7 +159,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteGroup(string $groupId): void
+	public function deleteGroup(UuidInterface $groupId): void
 	{
 		self::tryExecute(function () use ($groupId)
 		{

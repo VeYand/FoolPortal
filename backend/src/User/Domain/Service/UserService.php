@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\User\Domain\Service;
 
 use App\Common\Event\EventPublisherInterface;
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\User;
@@ -29,7 +30,7 @@ readonly class UserService
 	/**
 	 * @throws DomainException
 	 */
-	public function create(CreateUserInput $input): string
+	public function create(CreateUserInput $input): UuidInterface
 	{
 		$this->assertEmailIsUnique($input->email);
 		$imagePath = is_null($input->base64ImageData)
@@ -107,7 +108,7 @@ readonly class UserService
 	/**
 	 * @throws DomainException
 	 */
-	public function delete(string $userId): void
+	public function delete(UuidInterface $userId): void
 	{
 		$user = $this->userRepository->find($userId);
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Attachment;
@@ -24,7 +25,7 @@ readonly class AttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	public function create(CreateAttachmentInput $input): string
+	public function create(CreateAttachmentInput $input): UuidInterface
 	{
 		$attachmentPath = $this->attachmentUploader->uploadAttachment($input->tempPath);
 
@@ -42,7 +43,7 @@ readonly class AttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	public function delete(string $attachmentId): void
+	public function delete(UuidInterface $attachmentId): void
 	{
 		$attachment = $this->attachmentRepository->find($attachmentId);
 

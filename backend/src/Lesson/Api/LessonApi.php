@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Api\Exception\ApiException;
 use App\Lesson\App\Exception\AppException;
 use App\Lesson\App\Query\AttachmentQueryServiceInterface;
@@ -43,7 +44,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function updateLocation(string $locationId, string $locationName): void
+	public function updateLocation(UuidInterface $locationId, string $locationName): void
 	{
 		self::tryExecute(function () use ($locationId, $locationName)
 		{
@@ -54,7 +55,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteLocation(string $locationId): void
+	public function deleteLocation(UuidInterface $locationId): void
 	{
 		self::tryExecute(function () use ($locationId)
 		{
@@ -65,7 +66,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createAttachment(CreateAttachmentInput $input): string
+	public function createAttachment(CreateAttachmentInput $input): UuidInterface
 	{
 		return self::tryExecute(function () use ($input)
 		{
@@ -76,7 +77,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteAttachment(string $attachmentId): void
+	public function deleteAttachment(UuidInterface $attachmentId): void
 	{
 		self::tryExecute(function () use ($attachmentId)
 		{
@@ -87,7 +88,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function createLesson(CreateLessonInput $input): string
+	public function createLesson(CreateLessonInput $input): UuidInterface
 	{
 		return self::tryExecute(function () use ($input)
 		{
@@ -109,7 +110,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteLesson(string $lessonId): void
+	public function deleteLesson(UuidInterface $lessonId): void
 	{
 		self::tryExecute(function () use ($lessonId)
 		{
@@ -120,7 +121,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function addAttachmentToLesson(string $lessonId, string $attachmentId): void
+	public function addAttachmentToLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		self::tryExecute(function () use ($lessonId, $attachmentId)
 		{
@@ -131,7 +132,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function removeAttachmentFromLesson(string $lessonId, string $attachmentId): void
+	public function removeAttachmentFromLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		self::tryExecute(function () use ($lessonId, $attachmentId)
 		{
@@ -150,7 +151,7 @@ readonly class LessonApi implements LessonApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listLessonAttachments(string $lessonId): array
+	public function listLessonAttachments(UuidInterface $lessonId): array
 	{
 		return $this->attachmentQueryService->listLessonAttachments($lessonId);
 	}

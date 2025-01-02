@@ -11,9 +11,9 @@ readonly class CourseModelConverter
 	public static function convertCourseDataToApiCourse(CourseData $course): ApiCourseData
 	{
 		return new ApiCourseData([
-			'courseId' => $course->courseId,
-			'groupId' => $course->groupId,
-			'teacherSubjectId' => $course->teacherSubjectId,
+			'courseId' => $course->courseId->toString(),
+			'groupId' => $course->groupId->toString(),
+			'teacherSubjectId' => $course->teacherSubjectId->toString(),
 		]);
 	}
 

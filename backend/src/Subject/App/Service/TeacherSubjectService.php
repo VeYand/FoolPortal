@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\App\Adapter\Data\UserRole;
 use App\Subject\App\Adapter\UserAdapterInterface;
 use App\Subject\App\Exception\AppException;
@@ -42,7 +43,7 @@ readonly class TeacherSubjectService
 	}
 
 	/**
-	 * @param string[] $teacherSubjectIds
+	 * @param UuidInterface[] $teacherSubjectIds
 	 * @throws AppException
 	 */
 	public function delete(array $teacherSubjectIds): void
@@ -58,7 +59,7 @@ readonly class TeacherSubjectService
 	/**
 	 * @throws AppException
 	 */
-	private function assertIsTeacher(string $teacherId): void
+	private function assertIsTeacher(UuidInterface $teacherId): void
 	{
 		$user = $this->userAdapter->getUser($teacherId);
 

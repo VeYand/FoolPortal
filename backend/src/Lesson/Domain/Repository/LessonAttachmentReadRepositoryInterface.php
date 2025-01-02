@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Domain\Model\LessonAttachment;
 
 interface LessonAttachmentReadRepositoryInterface
 {
-	public function findByLessonAndAttachment(string $lessonId, string $attachmentId): ?LessonAttachment;
+	public function findByLessonAndAttachment(UuidInterface $lessonId, UuidInterface $attachmentId): ?LessonAttachment;
 
 	/**
 	 * @return LessonAttachment[]
 	 */
-	public function findByAttachment(string $attachmentId): array;
+	public function findByAttachment(UuidInterface $attachmentId): array;
 
 	/**
-	 * @param string[] $lessonIds
+	 * @param UuidInterface[] $lessonIds
 	 * @return LessonAttachment[]
 	 */
 	public function findByLessons(array $lessonIds): array;

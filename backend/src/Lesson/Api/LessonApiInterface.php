@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Api\Exception\ApiException;
 use App\Lesson\App\Query\Data\AttachmentData;
 use App\Lesson\App\Query\Data\LessonData;
@@ -22,27 +23,27 @@ interface LessonApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function updateLocation(string $locationId, string $locationName): void;
+	public function updateLocation(UuidInterface $locationId, string $locationName): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteLocation(string $locationId): void;
+	public function deleteLocation(UuidInterface $locationId): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function createAttachment(CreateAttachmentInput $input): string;
+	public function createAttachment(CreateAttachmentInput $input): UuidInterface;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteAttachment(string $attachmentId): void;
+	public function deleteAttachment(UuidInterface $attachmentId): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function createLesson(CreateLessonInput $input): string;
+	public function createLesson(CreateLessonInput $input): UuidInterface;
 
 	/**
 	 * @throws ApiException
@@ -52,17 +53,17 @@ interface LessonApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteLesson(string $lessonId): void;
+	public function deleteLesson(UuidInterface $lessonId): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function addAttachmentToLesson(string $lessonId, string $attachmentId): void;
+	public function addAttachmentToLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function removeAttachmentFromLesson(string $lessonId, string $attachmentId): void;
+	public function removeAttachmentFromLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void;
 
 	/**
 	 * @return LocationData[]
@@ -72,7 +73,7 @@ interface LessonApiInterface
 	/**
 	 * @return AttachmentData[]
 	 */
-	public function listLessonAttachments(string $lessonId): array;
+	public function listLessonAttachments(UuidInterface $lessonId): array;
 
 	/**
 	 * @return LessonData[]

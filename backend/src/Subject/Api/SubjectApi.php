@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Exception\AppException;
 use App\Subject\App\Query\CourseQueryServiceInterface;
@@ -41,7 +42,7 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function updateSubject(string $subjectId, string $subjectName): void
+	public function updateSubject(UuidInterface $subjectId, string $subjectName): void
 	{
 		self::tryExecute(function () use ($subjectId, $subjectName)
 		{
@@ -52,7 +53,7 @@ readonly class SubjectApi implements SubjectApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function deleteSubject(string $subjectId): void
+	public function deleteSubject(UuidInterface $subjectId): void
 	{
 		self::tryExecute(function () use ($subjectId)
 		{
@@ -128,7 +129,7 @@ readonly class SubjectApi implements SubjectApiInterface
 		return $this->courseQueryService->listCourses($spec);
 	}
 
-	public function isCourseExists(string $courseId): bool
+	public function isCourseExists(UuidInterface $courseId): bool
 	{
 		return $this->courseQueryService->isCourseExists($courseId);
 	}

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Query;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\App\Query\Data\LessonData;
 use App\Lesson\App\Query\LessonQueryServiceInterface;
 use App\Lesson\Domain\Model\Lesson;
@@ -47,8 +48,8 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 	}
 
 	/**
-	 * @param string[] $lessonIds
-	 * @return array<string, string[]>
+	 * @param UuidInterface[] $lessonIds
+	 * @return array<string, UuidInterface[]>
 	 */
 	private function getAttachmentsByLessonMap(array $lessonIds): array
 	{
@@ -56,7 +57,7 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 
 		return array_reduce($lessonAttachments, static function ($carry, LessonAttachment $lessonAttachment)
 		{
-			$carry[$lessonAttachment->getLessonId()][] = $lessonAttachment->getAttachmentId();
+			$carry[$lessonAttachment->getLessonId()->toString()][] = $lessonAttachment->getAttachmentId();
 			return $carry;
 		}, []);
 	}

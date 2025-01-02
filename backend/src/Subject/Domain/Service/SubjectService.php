@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Subject\Domain\Service;
 
 use App\Common\Event\EventPublisherInterface;
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\Domain\Exception\DomainException;
 use App\Subject\Domain\Model\Course;
@@ -26,7 +27,7 @@ readonly class SubjectService
 	{
 	}
 
-	public function create(string $subjectName): string
+	public function create(string $subjectName): UuidInterface
 	{
 		$subject = new Subject(
 			$this->uuidProvider->generate(),
@@ -39,7 +40,7 @@ readonly class SubjectService
 	/**
 	 * @throws DomainException
 	 */
-	public function update(string $subjectId, string $subjectName): void
+	public function update(UuidInterface $subjectId, string $subjectName): void
 	{
 		$subject = $this->subjectRepository->find($subjectId);
 
@@ -52,7 +53,7 @@ readonly class SubjectService
 		$this->subjectRepository->store($subject);
 	}
 
-	public function delete(string $subjectId): void
+	public function delete(UuidInterface $subjectId): void
 	{
 		$subject = $this->subjectRepository->find($subjectId);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\User\Domain\Service;
 
 use App\Common\Event\EventPublisherInterface;
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\User\Domain\Exception\DomainException;
 use App\User\Domain\Model\Group;
@@ -22,7 +23,7 @@ readonly class GroupService
 	{
 	}
 
-	public function create(string $groupName): string
+	public function create(string $groupName): UuidInterface
 	{
 		$group = new Group(
 			$this->uuidProvider->generate(),
@@ -35,7 +36,7 @@ readonly class GroupService
 	/**
 	 * @throws DomainException
 	 */
-	public function update(string $groupId, string $groupName): void
+	public function update(UuidInterface $groupId, string $groupName): void
 	{
 		$group = $this->groupRepository->find($groupId);
 
@@ -48,7 +49,7 @@ readonly class GroupService
 		$this->groupRepository->store($group);
 	}
 
-	public function delete(string $groupId): void
+	public function delete(UuidInterface $groupId): void
 	{
 		$group = $this->groupRepository->find($groupId);
 

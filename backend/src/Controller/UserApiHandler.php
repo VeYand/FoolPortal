@@ -46,7 +46,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		{
 			$users = $this->userApi->listUsers(
 				new ListUsersSpec(
-					$this->uuidProvider->toBinaryList($listUsersSpec?->getGroupIds()),
+					$this->uuidProvider->fromStringsToUuids($listUsersSpec?->getGroupIds()),
 				),
 			);
 
@@ -65,7 +65,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		{
 			$groups = $this->userApi->listGroups(
 				new ListgroupsSpec(
-					$this->uuidProvider->toBinaryList($listGroupsRequest->getGroupIds()),
+					$this->uuidProvider->fromStringsToUuids($listGroupsRequest->getGroupIds()),
 				),
 			);
 
@@ -85,7 +85,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 			$groupId = $this->userApi->createGroup($createGroupRequest->getName());
 
 			return new ApiCreateGroupResponse([
-				'groupId' => $this->uuidProvider->toString($groupId),
+				'groupId' => $groupId->toString(),
 			]);
 		}, $responseCode, $responseHeaders);
 	}
@@ -98,7 +98,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteGroupRequest)
 		{
 			$this->userApi->deleteGroup(
-				$this->uuidProvider->toBinary($deleteGroupRequest->getGroupId()),
+				$this->uuidProvider->fromStringToUuid($deleteGroupRequest->getGroupId()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -112,7 +112,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($updateGroupRequest)
 		{
 			$this->userApi->updateGroup(
-				$this->uuidProvider->toBinary($updateGroupRequest->getGroupId()),
+				$this->uuidProvider->fromStringToUuid($updateGroupRequest->getGroupId()),
 				$updateGroupRequest->getName(),
 			);
 			return new ApiEmptyResponse();
@@ -127,8 +127,8 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($createGroupMembersRequest)
 		{
 			$this->userApi->createGroupMembers(
-				$this->uuidProvider->toBinaryList($createGroupMembersRequest->getGroupIds()),
-				$this->uuidProvider->toBinaryList($createGroupMembersRequest->getUserIds()),
+				$this->uuidProvider->fromStringsToUuids($createGroupMembersRequest->getGroupIds()),
+				$this->uuidProvider->fromStringsToUuids($createGroupMembersRequest->getUserIds()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -142,8 +142,8 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteGroupMembersRequest)
 		{
 			$this->userApi->deleteGroupMembers(
-				$this->uuidProvider->toBinaryList($deleteGroupMembersRequest->getGroupIds()),
-				$this->uuidProvider->toBinaryList($deleteGroupMembersRequest->getUserIds()),
+				$this->uuidProvider->fromStringsToUuids($deleteGroupMembersRequest->getGroupIds()),
+				$this->uuidProvider->fromStringsToUuids($deleteGroupMembersRequest->getUserIds()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -160,7 +160,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 			$userId = $this->userApi->createUser($input);
 
 			return new ApiCreateUserResponse([
-				'userId' => $this->uuidProvider->toString($userId),
+				'userId' => $userId->toString(),
 			]);
 		}, $responseCode, $responseHeaders);
 	}
@@ -173,7 +173,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteUserRequest)
 		{
 			$this->userApi->deleteUser(
-				$this->uuidProvider->toBinary($deleteUserRequest->getUserId()),
+				$this->uuidProvider->fromStringToUuid($deleteUserRequest->getUserId()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);

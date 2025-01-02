@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\App\Exception\AppException;
 use App\Lesson\Domain\Service\AttachmentService as DomainAttachmentService;
 use App\Lesson\Domain\Service\Input\CreateAttachmentInput;
@@ -19,9 +20,10 @@ readonly class AttachmentService
 	/**
 	 * @throws AppException
 	 */
-	public function create(CreateAttachmentInput $input): string
+	public function create(CreateAttachmentInput $input): UuidInterface
 	{
-		$attachmentId = '';
+		/** @var UuidInterface $attachmentId */
+		$attachmentId = null;
 		$callback = function () use ($input, &$attachmentId): void
 		{
 			$attachmentId = $this->attachmentService->create($input);
@@ -34,7 +36,7 @@ readonly class AttachmentService
 	/**
 	 * @throws AppException
 	 */
-	public function delete(string $attachmentId): void
+	public function delete(UuidInterface $attachmentId): void
 	{
 		$callback = function () use ($attachmentId): void
 		{

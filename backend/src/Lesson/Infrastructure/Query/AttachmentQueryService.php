@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Query;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\App\Query\AttachmentQueryServiceInterface;
 use App\Lesson\App\Query\Data\AttachmentData;
 use App\Lesson\Domain\Model\Attachment;
@@ -22,7 +23,7 @@ readonly class AttachmentQueryService implements AttachmentQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listLessonAttachments(string $lessonId): array
+	public function listLessonAttachments(UuidInterface $lessonId): array
 	{
 		$lessonAttachments = $this->lessonAttachmentReadRepository->findByLessons([$lessonId]);
 		$attachmentIds = array_map(static fn(LessonAttachment $lessonAttachment) => $lessonAttachment->getAttachmentId(), $lessonAttachments);

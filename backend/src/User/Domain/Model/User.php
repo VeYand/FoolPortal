@@ -3,25 +3,27 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
+
 class User
 {
 	private int $role;
 
 	public function __construct(
-		private readonly string $userId,
-		private string          $firstName,
-		private string          $lastName,
-		private ?string         $patronymic,
-		UserRole                $role,
-		private ?string         $imagePath,
-		private string          $email,
-		private string          $password,
+		private readonly UuidInterface $userId,
+		private string                 $firstName,
+		private string                 $lastName,
+		private ?string                $patronymic,
+		UserRole                       $role,
+		private ?string                $imagePath,
+		private string                 $email,
+		private string                 $password,
 	)
 	{
 		$this->role = $role->value;
 	}
 
-	public function getUserId(): string
+	public function getUserId(): UuidInterface
 	{
 		return $this->userId;
 	}

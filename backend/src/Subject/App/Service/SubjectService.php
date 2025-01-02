@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\App\Exception\AppException;
 use App\Subject\Domain\Service\SubjectService as DomainSubjectService;
 
@@ -31,7 +32,7 @@ readonly class SubjectService
 	/**
 	 * @throws AppException
 	 */
-	public function update(string $subjectId, string $subjectName): void
+	public function update(UuidInterface $subjectId, string $subjectName): void
 	{
 		$callback = function () use ($subjectId, $subjectName): void
 		{
@@ -44,7 +45,7 @@ readonly class SubjectService
 	/**
 	 * @throws AppException
 	 */
-	public function delete(string $subjectId): void
+	public function delete(UuidInterface $subjectId): void
 	{
 		$callback = function () use ($subjectId): void
 		{

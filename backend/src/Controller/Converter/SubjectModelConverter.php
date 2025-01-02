@@ -12,7 +12,7 @@ readonly class SubjectModelConverter
 	public static function convertSubjectDataToApiSubject(SubjectData $subject): ApiSubjectData
 	{
 		return new ApiSubjectData([
-			'subjectId' => $subject->id,
+			'subjectId' => $subject->id->toString(),
 			'name' => $subject->name,
 		]);
 	}

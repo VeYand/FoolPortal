@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\App\Exception\AppException;
 use App\User\Domain\Service\GroupService as DomainGroupService;
 
@@ -18,9 +19,10 @@ readonly class GroupService
 	/**
 	 * @throws AppException
 	 */
-	public function create(string $groupName): string
+	public function create(string $groupName): UuidInterface
 	{
-		$createdGroupId = '';
+		/** @var UuidInterface $createdGroupId */
+		$createdGroupId = null;
 		$callback = function () use ($groupName, &$createdGroupId): void
 		{
 			$createdGroupId = $this->domainGroupService->create($groupName);
@@ -34,7 +36,7 @@ readonly class GroupService
 	/**
 	 * @throws AppException
 	 */
-	public function update(string $groupId, string $groupName): void
+	public function update(UuidInterface $groupId, string $groupName): void
 	{
 		$callback = function () use ($groupId, $groupName): void
 		{
@@ -47,7 +49,7 @@ readonly class GroupService
 	/**
 	 * @throws AppException
 	 */
-	public function delete(string $groupId): void
+	public function delete(UuidInterface $groupId): void
 	{
 		$callback = function () use ($groupId): void
 		{

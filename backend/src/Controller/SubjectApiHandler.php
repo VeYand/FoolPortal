@@ -75,7 +75,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($updateSubjectRequest)
 		{
 			$this->subjectApi->updateSubject(
-				$this->uuidProvider->toBinary($updateSubjectRequest->getSubjectId()),
+				$this->uuidProvider->fromStringToUuid($updateSubjectRequest->getSubjectId()),
 				$updateSubjectRequest->getName(),
 			);
 			return new ApiEmptyResponse();
@@ -90,7 +90,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteSubjectRequest)
 		{
 			$this->subjectApi->deleteSubject(
-				$this->uuidProvider->toBinary($deleteSubjectRequest->getSubjectId()),
+				$this->uuidProvider->fromStringToUuid($deleteSubjectRequest->getSubjectId()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -106,8 +106,8 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 			$this->subjectApi->createTeacherSubjects(
 				array_map(
 					fn(ApiCreateTeacherSubjectInput $input) => new CreateTeacherSubjectInput(
-						$this->uuidProvider->toBinary($input->getTeacherId()),
-						$this->uuidProvider->toBinary($input->getSubjectId()),
+						$this->uuidProvider->fromStringToUuid($input->getTeacherId()),
+						$this->uuidProvider->fromStringToUuid($input->getSubjectId()),
 					),
 					$createTeacherSubjectsRequest->getTeacherSubjects(),
 				),
@@ -125,7 +125,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		{
 			$teacherSubjects = $this->subjectApi->listTeacherSubjects(
 				new ListTeacherSubjectsSpec(
-					$this->uuidProvider->toBinaryList($listTeacherSubjectsRequest->getCourseIds()),
+					$this->uuidProvider->fromStringsToUuids($listTeacherSubjectsRequest->getCourseIds()),
 				),
 			);
 			return new ApiTeacherSubjectsList([
@@ -142,7 +142,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteTeacherSubjectsRequest)
 		{
 			$this->subjectApi->deleteTeacherSubjects(
-				$this->uuidProvider->toBinaryList($deleteTeacherSubjectsRequest->getTeacherSubjectIds()),
+				$this->uuidProvider->fromStringsToUuids($deleteTeacherSubjectsRequest->getTeacherSubjectIds()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -158,8 +158,8 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 			$this->subjectApi->createCourses(
 				array_map(
 					fn(ApiCreateCourseInput $input) => new CreateCourseInput(
-						$this->uuidProvider->toBinary($input->getGroupId()),
-						$this->uuidProvider->toBinary($input->getTeacherSubjectId()),
+						$this->uuidProvider->fromStringToUuid($input->getGroupId()),
+						$this->uuidProvider->fromStringToUuid($input->getTeacherSubjectId()),
 					),
 					$createCoursesRequest->getCourses(),
 				),
@@ -176,7 +176,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		return $this->exceptionHandler->executeWithHandle(function () use ($deleteCoursesRequest)
 		{
 			$this->subjectApi->deleteCourses(
-				$this->uuidProvider->toBinaryList($deleteCoursesRequest->getCourseIds()),
+				$this->uuidProvider->fromStringsToUuids($deleteCoursesRequest->getCourseIds()),
 			);
 			return new ApiEmptyResponse();
 		}, $responseCode, $responseHeaders);
@@ -191,7 +191,7 @@ readonly class SubjectApiHandler implements SubjectApiHandlerInterface
 		{
 			$courses = $this->subjectApi->listCourses(
 				new ListCoursesSpec(
-					$this->uuidProvider->toBinaryList($listCoursesRequest->getCourseIds()),
+					$this->uuidProvider->fromStringsToUuids($listCoursesRequest->getCourseIds()),
 				),
 			);
 

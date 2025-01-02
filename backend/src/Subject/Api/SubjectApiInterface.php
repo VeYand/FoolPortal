@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Api\Exception\ApiException;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Data\SubjectData;
@@ -22,12 +23,12 @@ interface SubjectApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function updateSubject(string $subjectId, string $subjectName): void;
+	public function updateSubject(UuidInterface $subjectId, string $subjectName): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteSubject(string $subjectId): void;
+	public function deleteSubject(UuidInterface $subjectId): void;
 
 	/**
 	 * @param CreateTeacherSubjectInput[] $inputs
@@ -36,7 +37,7 @@ interface SubjectApiInterface
 	public function createTeacherSubjects(array $inputs): void;
 
 	/**
-	 * @param string[] $teacherSubjectIds
+	 * @param UuidInterface[] $teacherSubjectIds
 	 * @throws ApiException
 	 */
 	public function deleteTeacherSubjects(array $teacherSubjectIds): void;
@@ -48,7 +49,7 @@ interface SubjectApiInterface
 	public function createCourses(array $inputs): void;
 
 	/**
-	 * @param string[] $courseIds
+	 * @param UuidInterface[] $courseIds
 	 * @throws ApiException
 	 */
 	public function deleteCourses(array $courseIds): void;
@@ -68,5 +69,5 @@ interface SubjectApiInterface
 	 */
 	public function listCourses(ListCoursesSpec $spec): array;
 
-	public function isCourseExists(string $courseId): bool;
+	public function isCourseExists(UuidInterface $courseId): bool;
 }

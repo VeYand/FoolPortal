@@ -28,7 +28,7 @@ readonly class LocationModelConverter
 	public static function convertAppLocationToApiLocation(LocationData $location): ApiLocationData
 	{
 		return new ApiLocationData([
-			'locationId' => $location->locationId,
+			'locationId' => $location->locationId->toString(),
 			'name' => $location->name,
 		]);
 	}

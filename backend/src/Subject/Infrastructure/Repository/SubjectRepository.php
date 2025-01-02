@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Domain\Model\Subject;
 use App\Subject\Domain\Repository\SubjectRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class SubjectRepository implements SubjectRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(Subject::class);
 	}
 
-	public function find(string $subjectId): ?Subject
+	public function find(UuidInterface $subjectId): ?Subject
 	{
 		return $this->repository->find($subjectId);
 	}
@@ -32,7 +33,7 @@ class SubjectRepository implements SubjectRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function store(Subject $subject): string
+	public function store(Subject $subject): UuidInterface
 	{
 		$this->entityManager->persist($subject);
 		$this->entityManager->flush();

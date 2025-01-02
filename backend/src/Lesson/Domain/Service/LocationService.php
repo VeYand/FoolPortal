@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Location;
@@ -19,7 +20,7 @@ readonly class LocationService
 	{
 	}
 
-	public function create(string $locationName): string
+	public function create(string $locationName): UuidInterface
 	{
 		$location = new Location(
 			$this->uuidProvider->generate(),
@@ -32,7 +33,7 @@ readonly class LocationService
 	/**
 	 * @throws DomainException
 	 */
-	public function update(string $locationId, string $locationName): void
+	public function update(UuidInterface $locationId, string $locationName): void
 	{
 		$location = $this->locationRepository->find($locationId);
 
@@ -45,7 +46,7 @@ readonly class LocationService
 		$this->locationRepository->store($location);
 	}
 
-	public function delete(string $locationId): void
+	public function delete(UuidInterface $locationId): void
 	{
 		$location = $this->locationRepository->find($locationId);
 
@@ -56,7 +57,7 @@ readonly class LocationService
 		}
 	}
 
-	private function removeLocationFromLessons(string $locationId): void
+	private function removeLocationFromLessons(UuidInterface $locationId): void
 	{
 		$lessons = $this->lessonRepository->findByLocation($locationId);
 

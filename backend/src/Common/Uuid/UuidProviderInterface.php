@@ -5,21 +5,15 @@ namespace App\Common\Uuid;
 
 interface UuidProviderInterface
 {
-	public function generate(): string;
+	public function generate(): UuidInterface;
 
-	public function toString(string $uuid): string;
+	public function fromBytesToUuid(?string $uuid): ?UuidInterface;
 
-	/**
-	 * @param string[]|null $uuids
-	 * @return string[]|null
-	 */
-	public function toStringList(?array $uuids): ?array;
-
-	public function toBinary(?string $uuid): ?string;
+	public function fromStringToUuid(?string $uuid): ?UuidInterface;
 
 	/**
 	 * @param string[]|null $uuids
-	 * @return string[]|null
+	 * @return UuidInterface[]|null
 	 */
-	public function toBinaryList(?array $uuids): ?array;
+	public function fromStringsToUuids(?array $uuids): ?array;
 }

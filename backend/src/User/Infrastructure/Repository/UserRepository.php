@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class UserRepository implements UserRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(User::class);
 	}
 
-	public function find(string $userId): ?User
+	public function find(UuidInterface $userId): ?User
 	{
 		return $this->repository->find($userId);
 	}
@@ -39,7 +40,7 @@ class UserRepository implements UserRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function store(User $user): string
+	public function store(User $user): UuidInterface
 	{
 		$this->entityManager->persist($user);
 		$this->entityManager->flush();

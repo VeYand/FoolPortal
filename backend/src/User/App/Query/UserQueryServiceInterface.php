@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\App\Query;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
@@ -13,12 +14,12 @@ interface UserQueryServiceInterface
 	/**
 	 * @throws AppException
 	 */
-	public function getUserById(string $userId): UserData;
+	public function getUserById(UuidInterface $userId): UserData;
 
 	/**
 	 * @throws AppException
 	 */
-	public function getDetailedUserById(string $userId): DetailedUserData;
+	public function getDetailedUserById(UuidInterface $userId): DetailedUserData;
 
 	/**
 	 * @throws AppException
@@ -28,7 +29,7 @@ interface UserQueryServiceInterface
 	/**
 	 * @throws AppException
 	 */
-	public function getUserHashedPassword(string $userId): string;
+	public function getUserHashedPassword(UuidInterface $userId): string;
 
 	/**
 	 * @return DetailedUserData[]

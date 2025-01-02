@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Subject\Domain\Model\Course;
 use App\Subject\Domain\Repository\CourseRepositoryInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -19,20 +22,23 @@ class CourseRepository implements CourseRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(Course::class);
 	}
 
-	public function find(string $courseId): ?Course
+	public function find(UuidInterface $courseId): ?Course
 	{
 		return $this->repository->find($courseId);
 	}
 
 	/**
-	 * @param string[] $courseIds
+	 * @param UuidInterface[] $courseIds
 	 * @return Course[]
 	 */
 	public function findByIds(array $courseIds): array
 	{
-		return $this->repository->findBy([
-			'courseId' => $courseIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('c');
+		return $qb
+			->where($qb->expr()->in('c.courseId', ':courseIds'))
+			->setParameter('courseIds', UuidUtils::convertToBinaryList($courseIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	/**
@@ -43,7 +49,7 @@ class CourseRepository implements CourseRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course
+	public function findByTeacherSubjectAndGroup(UuidInterface $teacherSubjectId, UuidInterface $groupId): ?Course
 	{
 		return $this->repository->findOneBy([
 			'teacherSubjectId' => $teacherSubjectId,
@@ -71,7 +77,7 @@ class CourseRepository implements CourseRepositoryInterface
 		]);
 	}
 
-	public function store(Course $course): string
+	public function store(Course $course): UuidInterface
 	{
 		$this->entityManager->persist($course);
 		$this->entityManager->flush();

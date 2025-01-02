@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Subject\Domain\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\Domain\Model\Course;
 
 interface CourseReadRepositoryInterface
 {
-	public function find(string $courseId): ?Course;
+	public function find(UuidInterface $courseId): ?Course;
 
 	/**
-	 * @param string[] $courseIds
+	 * @param UuidInterface[] $courseIds
 	 * @return Course[]
 	 */
 	public function findByIds(array $courseIds): array;
@@ -20,16 +21,16 @@ interface CourseReadRepositoryInterface
 	 */
 	public function findAll(): array;
 
-	public function findByTeacherSubjectAndGroup(string $teacherSubjectId, string $groupId): ?Course;
+	public function findByTeacherSubjectAndGroup(UuidInterface $teacherSubjectId, UuidInterface $groupId): ?Course;
 
 	/**
-	 * @param string[] $teacherSubjectIds
+	 * @param UuidInterface[] $teacherSubjectIds
 	 * @return Course[]
 	 */
 	public function findByTeacherSubjects(array $teacherSubjectIds): array;
 
 	/**
-	 * @param string[] $groupIds
+	 * @param UuidInterface[] $groupIds
 	 * @return Course[]
 	 */
 	public function findByGroups(array $groupIds): array;

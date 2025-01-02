@@ -3,11 +3,13 @@ declare (strict_types=1);
 
 namespace App\Subject\App\Query\Spec;
 
+use App\Common\Uuid\UuidInterface;
+
 readonly class ListCoursesSpec
 {
 	/**
-	 * @param string[]|null $courseIds
-	 * @param string[]|null $groupIds
+	 * @param UuidInterface[]|null $courseIds
+	 * @param UuidInterface[]|null $groupIds
 	 */
 	public function __construct(
 		public ?array $courseIds = null,

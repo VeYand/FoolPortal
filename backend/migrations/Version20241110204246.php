@@ -16,7 +16,7 @@ final class Version20241110204246 extends AbstractMigration
 	public function up(Schema $schema): void
 	{
 		$this->addSql('CREATE TABLE attachment (
-        		attachment_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\',
+        		attachment_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid_binary)\',
         		name VARCHAR(255) NOT NULL,
         		description VARCHAR(255) DEFAULT NULL,
         		path VARCHAR(255) NOT NULL,

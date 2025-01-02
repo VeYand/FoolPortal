@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Subject\Domain\Service;
 
 use App\Common\Event\EventPublisherInterface;
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Subject\Domain\Exception\DomainException;
 use App\Subject\Domain\Model\Course;
@@ -28,7 +29,7 @@ readonly class TeacherSubjectService
 	/**
 	 * @throws DomainException
 	 */
-	public function create(string $teacherId, string $subjectId): void
+	public function create(UuidInterface $teacherId, UuidInterface $subjectId): void
 	{
 		$this->assertSubjectExists($subjectId);
 		$this->assertTeacherSubjectNotExists($teacherId, $subjectId);
@@ -43,7 +44,7 @@ readonly class TeacherSubjectService
 	}
 
 	/**
-	 * @param string[] $teacherSubjectIds
+	 * @param UuidInterface[] $teacherSubjectIds
 	 */
 	public function delete(array $teacherSubjectIds): void
 	{
@@ -62,7 +63,7 @@ readonly class TeacherSubjectService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertTeacherSubjectNotExists(string $teacherId, string $subjectId): void
+	private function assertTeacherSubjectNotExists(UuidInterface $teacherId, UuidInterface $subjectId): void
 	{
 		$teacherSubject = $this->teacherSubjectRepository->findByTeacherAndSubject($teacherId, $subjectId);
 
@@ -75,7 +76,7 @@ readonly class TeacherSubjectService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertSubjectExists(string $subjectId): void
+	private function assertSubjectExists(UuidInterface $subjectId): void
 	{
 		$subject = $this->subjectReadRepository->find($subjectId);
 

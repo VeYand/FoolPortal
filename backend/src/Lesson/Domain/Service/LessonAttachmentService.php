@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\LessonAttachment;
@@ -24,7 +25,7 @@ readonly class LessonAttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	public function addAttachmentToLesson(string $lessonId, string $attachmentId): string
+	public function addAttachmentToLesson(UuidInterface $lessonId, UuidInterface $attachmentId): UuidInterface
 	{
 		$this->assertLessonAttachmentNotExists($lessonId, $attachmentId);
 		$this->assertLessonExists($lessonId);
@@ -39,7 +40,7 @@ readonly class LessonAttachmentService
 		return $this->lessonAttachmentRepository->store($lessonAttachment);
 	}
 
-	public function removeAttachmentFromLesson(string $lessonId, string $attachmentId): void
+	public function removeAttachmentFromLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		$lessonAttachment = $this->lessonAttachmentRepository->findByLessonAndAttachment($lessonId, $attachmentId);
 
@@ -52,7 +53,7 @@ readonly class LessonAttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertAttachmentExists(string $attachmentId): void
+	private function assertAttachmentExists(UuidInterface $attachmentId): void
 	{
 		$attachment = $this->attachmentReadRepository->find($attachmentId);
 
@@ -65,7 +66,7 @@ readonly class LessonAttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertLessonExists(string $lessonId): void
+	private function assertLessonExists(UuidInterface $lessonId): void
 	{
 		$lesson = $this->lessonReadRepository->find($lessonId);
 
@@ -78,7 +79,7 @@ readonly class LessonAttachmentService
 	/**
 	 * @throws DomainException
 	 */
-	private function assertLessonAttachmentNotExists(string $lessonId, string $attachmentId): void
+	private function assertLessonAttachmentNotExists(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		$lessonAttachment = $this->lessonAttachmentRepository->findByLessonAndAttachment($lessonId, $attachmentId);
 

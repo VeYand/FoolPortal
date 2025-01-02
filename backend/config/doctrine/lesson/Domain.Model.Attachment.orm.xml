@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="App\Lesson\Domain\Model\Attachment" table="attachment">
-        <id name="attachmentId" type="uuid" column="attachment_id">
+        <id name="attachmentId" type="uuid_binary" column="attachment_id">
             <generator strategy="NONE"/>
         </id>
         <field name="name" column="name"/>

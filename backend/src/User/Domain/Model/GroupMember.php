@@ -3,27 +3,29 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
+
 readonly class GroupMember
 {
 	public function __construct(
-		private string $groupMemberId,
-		private string $groupId,
-		private string $userId,
+		private UuidInterface $groupMemberId,
+		private UuidInterface $groupId,
+		private UuidInterface $userId,
 	)
 	{
 	}
 
-	public function getGroupMemberId(): string
+	public function getGroupMemberId(): UuidInterface
 	{
 		return $this->groupMemberId;
 	}
 
-	public function getGroupId(): string
+	public function getGroupId(): UuidInterface
 	{
 		return $this->groupId;
 	}
 
-	public function getUserId(): string
+	public function getUserId(): UuidInterface
 	{
 		return $this->userId;
 	}

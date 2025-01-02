@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Domain\Exception\DomainException;
 
 class Lesson
@@ -16,20 +17,20 @@ class Lesson
 	 * @throws DomainException
 	 */
 	public function __construct(
-		private readonly string    $lessonId,
-		private \DateTimeInterface $date,
-		private int                $startTime,
-		private int                $duration,
-		private string             $courseId,
-		private ?string            $locationId,
-		private ?string            $description,
+		private readonly UuidInterface $lessonId,
+		private \DateTimeInterface     $date,
+		private int                    $startTime,
+		private int                    $duration,
+		private UuidInterface          $courseId,
+		private ?UuidInterface         $locationId,
+		private ?string                $description,
 	)
 	{
 		self::assertStartTimeIsValid($this->startTime);
 		self::assertDurationIsValid($this->startTime, $this->duration);
 	}
 
-	public function getLessonId(): string
+	public function getLessonId(): UuidInterface
 	{
 		return $this->lessonId;
 	}
@@ -73,22 +74,22 @@ class Lesson
 		$this->duration = $duration;
 	}
 
-	public function getCourseId(): string
+	public function getCourseId(): UuidInterface
 	{
 		return $this->courseId;
 	}
 
-	public function setCourseId(string $courseId): void
+	public function setCourseId(UuidInterface $courseId): void
 	{
 		$this->courseId = $courseId;
 	}
 
-	public function getLocationId(): ?string
+	public function getLocationId(): ?UuidInterface
 	{
 		return $this->locationId;
 	}
 
-	public function setLocationId(?string $locationId): void
+	public function setLocationId(?UuidInterface $locationId): void
 	{
 		$this->locationId = $locationId;
 	}

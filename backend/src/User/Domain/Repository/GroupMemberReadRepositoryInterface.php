@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Domain\Model\GroupMember;
 
 interface GroupMemberReadRepositoryInterface
 {
-	public function find(string $groupId, string $userId): ?GroupMember;
+	public function find(UuidInterface $groupId, UuidInterface $userId): ?GroupMember;
 
 	/**
 	 * @return GroupMember[]
 	 */
-	public function findByGroup(string $groupId): array;
+	public function findByGroup(UuidInterface $groupId): array;
 
 	/**
-	 * @param string[] $userIds
+	 * @param UuidInterface[] $userIds
 	 * @return GroupMember[]
 	 */
 	public function findByUsers(array $userIds): array;

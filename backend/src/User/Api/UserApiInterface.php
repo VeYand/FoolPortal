@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
@@ -14,17 +15,17 @@ use App\User\Domain\Service\Input\UpdateUserInput;
 
 interface UserApiInterface
 {
-	public function isGroupExists(string $groupId): bool;
+	public function isGroupExists(UuidInterface $groupId): bool;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function getUserById(string $userId): UserData;
+	public function getUserById(UuidInterface $userId): UserData;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function getDetailedUserById(string $userId): DetailedUserData;
+	public function getDetailedUserById(UuidInterface $userId): DetailedUserData;
 
 	/**
 	 * @throws ApiException
@@ -34,7 +35,7 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function getUserHashedPassword(string $userId): string;
+	public function getUserHashedPassword(UuidInterface $userId): string;
 
 	/**
 	 * @return DetailedUserData[]
@@ -51,7 +52,7 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function createUser(CreateUserInput $input): string;
+	public function createUser(CreateUserInput $input): UuidInterface;
 
 	/**
 	 * @throws ApiException
@@ -61,33 +62,33 @@ interface UserApiInterface
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteUser(string $userId): void;
+	public function deleteUser(UuidInterface $userId): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function createGroup(string $groupName): string;
+	public function createGroup(string $groupName): UuidInterface;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function updateGroup(string $groupId, string $groupName): void;
+	public function updateGroup(UuidInterface $groupId, string $groupName): void;
 
 	/**
 	 * @throws ApiException
 	 */
-	public function deleteGroup(string $groupId): void;
+	public function deleteGroup(UuidInterface $groupId): void;
 
 	/**
-	 * @param string[] $groupIds
-	 * @param string[] $userIds
+	 * @param UuidInterface[] $groupIds
+	 * @param UuidInterface[] $userIds
 	 * @throws ApiException
 	 */
 	public function createGroupMembers(array $groupIds, array $userIds): void;
 
 	/**
-	 * @param string[] $groupIds
-	 * @param string[] $userIds
+	 * @param UuidInterface[] $groupIds
+	 * @param UuidInterface[] $userIds
 	 * @throws ApiException
 	 */
 	public function deleteGroupMembers(array $groupIds, array $userIds): void;

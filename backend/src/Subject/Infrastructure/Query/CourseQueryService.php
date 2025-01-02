@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Query;
 
+use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Subject\App\Query\CourseQueryServiceInterface;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Spec\ListCoursesSpec;
@@ -32,20 +34,20 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		if (!empty($spec->courseIds))
 		{
 			$qb->andWhere('c.courseId IN (:courseIds)')
-				->setParameter('courseIds', $spec->courseIds);
+				->setParameter('courseIds', UuidUtils::convertToBinaryList($spec->courseIds));
 		}
 
 		if (!empty($spec->groupIds))
 		{
 			$qb->andWhere('c.groupId IN (:groupIds)')
-				->setParameter('groupIds', $spec->groupIds);
+				->setParameter('groupIds', UuidUtils::convertToBinaryList($spec->groupIds));
 		}
 
 		$courses = $qb->getQuery()->getResult();
 		return self::convertCoursesToCoursesList($courses);
 	}
 
-	public function isCourseExists(string $courseId): bool
+	public function isCourseExists(UuidInterface $courseId): bool
 	{
 		$course = $this->courseReadRepository->find($courseId);
 

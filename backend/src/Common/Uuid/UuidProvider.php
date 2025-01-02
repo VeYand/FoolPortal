@@ -3,47 +3,45 @@ declare(strict_types=1);
 
 namespace App\Common\Uuid;
 
-use Symfony\Component\Uid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 class UuidProvider implements UuidProviderInterface
 {
-	public function generate(): string
+	public function generate(): UuidInterface
 	{
-		return Uuid::v7()->toBinary();
+		return new RamseyUuid(Uuid::uuid7());
 	}
 
-	public function toString(string $uuid): string
-	{
-		return Uuid::v7()::fromBinary($uuid)->toString();
-	}
-
-	public function toStringList(?array $uuids): ?array
-	{
-		if (is_null($uuids))
-		{
-			return null;
-		}
-
-		return array_map(
-			static fn(string $uuid) => Uuid::fromBinary($uuid)->toString(),
-			$uuids,
-		);
-	}
-
-	public function toBinary(?string $uuid): ?string
+	public function fromBytesToUuid(?string $uuid): ?UuidInterface
 	{
 		if (is_null($uuid))
 		{
 			return null;
 		}
 
-		return Uuid::fromString($uuid)->toBinary();
+		return new RamseyUuid(Uuid::fromBytes($uuid));
+	}
+
+	public
+	function fromStringToUuid(
+		?string $uuid,
+	): ?UuidInterface
+	{
+		if (is_null($uuid))
+		{
+			return null;
+		}
+
+		return new RamseyUuid(Uuid::fromString($uuid));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function toBinaryList(?array $uuids): ?array
+	public
+	function fromStringsToUuids(
+		?array $uuids,
+	): ?array
 	{
 		if (is_null($uuids))
 		{
@@ -51,8 +49,8 @@ class UuidProvider implements UuidProviderInterface
 		}
 
 		return array_map(
-			static fn(string $uuid) => Uuid::fromString($uuid)->toBinary(),
-			$uuids,
+			fn(string $uuid) => $this->fromStringToUuid($uuid),
+			array_values($uuids),
 		);
 	}
 }

@@ -18,7 +18,9 @@ final class Version20241110212636 extends AbstractMigration
 	{
 		$uuid = (new UuidProvider())->generate();
 		$this->addSql('INSERT INTO user (user_id, first_name, last_name, role, email, password)
-							VALUES ("' . $uuid . '", "Owner", "Test", 1, "owner@gmail.com", "5ea8be9d88eb68b1eb1662b014e0c99b")');
+                    			VALUES (?, "Owner", "Test", 1, "owner@gmail.com", "5ea8be9d88eb68b1eb1662b014e0c99b")',
+			[$uuid->toBytes()]
+		);
 	}
 
 	public function down(Schema $schema): void

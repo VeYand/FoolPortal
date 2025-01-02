@@ -3,27 +3,29 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Model;
 
+use App\Common\Uuid\UuidInterface;
+
 readonly class LessonAttachment
 {
 	public function __construct(
-		private string $lessonAttachmentId,
-		private string $lessonId,
-		private string $attachmentId,
+		private UuidInterface $lessonAttachmentId,
+		private UuidInterface $lessonId,
+		private UuidInterface $attachmentId,
 	)
 	{
 	}
 
-	public function getLessonAttachmentId(): string
+	public function getLessonAttachmentId(): UuidInterface
 	{
 		return $this->lessonAttachmentId;
 	}
 
-	public function getLessonId(): string
+	public function getLessonId(): UuidInterface
 	{
 		return $this->lessonId;
 	}
 
-	public function getAttachmentId(): string
+	public function getAttachmentId(): UuidInterface
 	{
 		return $this->attachmentId;
 	}

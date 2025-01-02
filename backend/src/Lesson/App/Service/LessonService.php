@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\App\Adapter\SubjectAdapterInterface;
 use App\Lesson\App\Exception\AppException;
 use App\Lesson\Domain\Service\LessonService as DomainLessonService;
@@ -24,11 +25,12 @@ readonly class LessonService
 	/**
 	 * @throws AppException
 	 */
-	public function create(CreateLessonInput $input): string
+	public function create(CreateLessonInput $input): UuidInterface
 	{
 		$this->assertCourseExists($input->courseId);
 
-		$lessonId = '';
+		/** @var UuidInterface $lessonId */
+		$lessonId = null;
 		$callback = function () use ($input, &$lessonId): void
 		{
 			$lessonId = $this->lessonService->create($input);
@@ -59,7 +61,7 @@ readonly class LessonService
 	/**
 	 * @throws AppException
 	 */
-	public function delete(string $lessonId): void
+	public function delete(UuidInterface $lessonId): void
 	{
 		$callback = function () use ($lessonId): void
 		{
@@ -72,7 +74,7 @@ readonly class LessonService
 	/**
 	 * @throws AppException
 	 */
-	public function addAttachmentToLesson(string $lessonId, string $attachmentId): void
+	public function addAttachmentToLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		$callback = function () use ($lessonId, $attachmentId): void
 		{
@@ -85,7 +87,7 @@ readonly class LessonService
 	/**
 	 * @throws AppException
 	 */
-	public function removeAttachmentFromLesson(string $lessonId, string $attachmentId): void
+	public function removeAttachmentFromLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
 	{
 		$callback = function () use ($lessonId, $attachmentId): void
 		{
@@ -98,7 +100,7 @@ readonly class LessonService
 	/**
 	 * @throws AppException
 	 */
-	private function assertCourseExists(string $courseId): void
+	private function assertCourseExists(UuidInterface $courseId): void
 	{
 		$isExists = $this->subjectAdapter->isCourseExists($courseId);
 

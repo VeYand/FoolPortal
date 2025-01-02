@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Query;
 
-use App\Common\Uuid\UuidProviderInterface;
+use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\UserData;
@@ -23,7 +24,6 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		private GroupMemberReadRepositoryInterface $groupMemberReadRepository,
 		private ImageQueryServiceInterface         $imageQueryService,
 		private EntityManagerInterface             $entityManager,
-		private UuidProviderInterface              $uuidProvider,
 	)
 	{
 	}
@@ -31,7 +31,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getUserById(string $userId): UserData
+	public function getUserById(UuidInterface $userId): UserData
 	{
 		$user = $this->userReadRepository->find($userId);
 
@@ -46,7 +46,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getDetailedUserById(string $userId): DetailedUserData
+	public function getDetailedUserById(UuidInterface $userId): DetailedUserData
 	{
 		$user = $this->userReadRepository->find($userId);
 
@@ -77,7 +77,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getUserHashedPassword(string $userId): string
+	public function getUserHashedPassword(UuidInterface $userId): string
 	{
 		$user = $this->userReadRepository->find($userId);
 
@@ -103,7 +103,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		if (!empty($spec->groupIds))
 		{
 			$qb->andWhere('gm.groupId IN (:groupIds)')
-				->setParameter('groupIds', $spec->groupIds);
+				->setParameter('groupIds', UuidUtils::convertToBinaryList($spec->groupIds));
 		}
 
 		$users = $qb->getQuery()->getResult();
@@ -114,7 +114,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 		);
 		$userIdToGroupIdsMap = $this->getUserIdToGroupIdsMap($userIds);
 		return array_map(
-			function ($user) use ($userIdToGroupIdsMap)
+			function (User $user) use ($userIdToGroupIdsMap)
 			{
 				return $this->expandUserByGroups($user, $userIdToGroupIdsMap);
 			},
@@ -123,32 +123,31 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @param string[] $userIds
-	 * @return array<string, string[]>
+	 * @param UuidInterface[] $userIds
+	 * @return array<string, UuidInterface[]>
 	 */
 	private function getUserIdToGroupIdsMap(array $userIds): array
 	{
-		$newUuids = $this->uuidProvider->toBinaryList($userIds);
-		$groupMembers = $this->groupMemberReadRepository->findByUsers($newUuids);
+		$groupMembers = $this->groupMemberReadRepository->findByUsers($userIds);
 
-		/** @var array<string, string[]> $userIdToGroupIdsMap */
+		/** @var array<string, UuidInterface[]> $userIdToGroupIdsMap */
 		$userIdToGroupIdsMap = [];
 		foreach ($groupMembers as $groupMember)
 		{
 			$userId = $groupMember->getUserId();
 			$groupId = $groupMember->getGroupId();
-			$userIdToGroupIdsMap[$userId][] = $groupId;
+			$userIdToGroupIdsMap[$userId->toString()][] = $groupId;
 		}
 
 		return $userIdToGroupIdsMap;
 	}
 
 	/**
-	 * @param array<string, string[]> $userIdToGroupIdsMap
+	 * @param array<string, UuidInterface[]> $userIdToGroupIdsMap
 	 */
 	private function expandUserByGroups(User $user, array $userIdToGroupIdsMap): DetailedUserData
 	{
-		$groupIds = $userIdToGroupIdsMap[$user->getUserId()] ?? [];
+		$groupIds = $userIdToGroupIdsMap[$user->getUserId()->toString()] ?? [];
 		return $this->convertUserToDetailedUserData($user, $groupIds);
 	}
 
@@ -166,7 +165,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	}
 
 	/**
-	 * @param string[] $groupIds
+	 * @param UuidInterface[] $groupIds
 	 */
 	private function convertUserToDetailedUserData(User $user, array $groupIds): DetailedUserData
 	{

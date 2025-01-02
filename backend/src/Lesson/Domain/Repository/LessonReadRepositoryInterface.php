@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Domain\Model\Lesson;
 
 interface LessonReadRepositoryInterface
 {
-	public function find(string $lessonId): ?Lesson;
+	public function find(UuidInterface $lessonId): ?Lesson;
 
 	/**
-	 * @param string[] $lessonIds
+	 * @param UuidInterface[] $lessonIds
 	 * @return Lesson[]
 	 */
 	public function findByIds(array $lessonIds): array;
@@ -18,7 +19,7 @@ interface LessonReadRepositoryInterface
 	/**
 	 * @return Lesson[]
 	 */
-	public function findByLocation(string $locationId): array;
+	public function findByLocation(UuidInterface $locationId): array;
 
 	/**
 	 * @return Lesson[]
@@ -26,7 +27,7 @@ interface LessonReadRepositoryInterface
 	public function findByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array;
 
 	/**
-	 * @param string[] $courseIds
+	 * @param UuidInterface[] $courseIds
 	 * @return Lesson[]
 	 */
 	public function findByCourses(array $courseIds): array;

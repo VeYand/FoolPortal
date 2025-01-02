@@ -21,8 +21,8 @@ readonly class LessonModelConverter
 			$request->getDate(),
 			$request->getStartTime(),
 			$request->getDuration(),
-			$uuidProvider->toBinary($request->getCourseId()),
-			$uuidProvider->toBinary($request->getLocationId()),
+			$uuidProvider->fromStringToUuid($request->getCourseId()),
+			$uuidProvider->fromStringToUuid($request->getLocationId()),
 			$request->getDescription(),
 		);
 	}
@@ -30,12 +30,12 @@ readonly class LessonModelConverter
 	public static function convertUpdateLessonRequestToUpdateLessonInput(ApiUpdateLessonRequest $request, UuidProviderInterface $uuidProvider): UpdateLessonInput
 	{
 		return new UpdateLessonInput(
-			$uuidProvider->toBinary($request->getLessonId()),
+			$uuidProvider->fromStringToUuid($request->getLessonId()),
 			$request->getDate(),
 			$request->getStartTime(),
 			$request->getDuration(),
-			$uuidProvider->toBinary($request->getCourseId()),
-			$uuidProvider->toBinary($request->getLocationId()),
+			$uuidProvider->fromStringToUuid($request->getCourseId()),
+			$uuidProvider->fromStringToUuid($request->getLocationId()),
 			$request->getDescription(),
 		);
 	}
@@ -58,12 +58,12 @@ readonly class LessonModelConverter
 	public static function convertAppLessonToApiLesson(LessonData $lesson): ApiLessonData
 	{
 		return new ApiLessonData([
-			'lessonId' => $lesson->lessonId,
+			'lessonId' => $lesson->lessonId->toString(),
 			'date' => $lesson->date,
 			'startTime' => $lesson->startTime,
 			'duration' => $lesson->duration,
-			'courseId' => $lesson->courseId,
-			'locationId' => $lesson->locationId,
+			'courseId' => $lesson->courseId->toString(),
+			'locationId' => $lesson->locationId->toString(),
 			'description' => $lesson->description,
 		]);
 	}

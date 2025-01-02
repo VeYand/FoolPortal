@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace App\Lesson\App\Adapter;
 
+use App\Common\Uuid\UuidInterface;
+
 interface SubjectAdapterInterface
 {
-	public function isCourseExists(string $courseId): bool;
+	public function isCourseExists(UuidInterface $courseId): bool;
 
 	/**
-	 * @param string[] $groupIds
-	 * @return string[]
+	 * @param UuidInterface[] $groupIds
+	 * @return UuidInterface[]
 	 */
 	public function listCourseIdsByGroupIds(array $groupIds): array;
 }

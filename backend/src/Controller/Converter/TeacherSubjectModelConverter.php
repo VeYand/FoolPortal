@@ -11,9 +11,9 @@ readonly class TeacherSubjectModelConverter
 	public static function convertTeacherSubjectDataToApiTeacherSubject(TeacherSubjectData $teacherSubject): ApiTeacherSubjectData
 	{
 		return new ApiTeacherSubjectData([
-			'teacherSubjectId' => $teacherSubject->teacherSubjectId,
-			'teacherId' => $teacherSubject->teacherId,
-			'subjectId' => $teacherSubject->subjectId,
+			'teacherSubjectId' => $teacherSubject->teacherSubjectId->toString(),
+			'teacherId' => $teacherSubject->teacherId->toString(),
+			'subjectId' => $teacherSubject->subjectId->toString(),
 		]);
 	}
 

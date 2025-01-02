@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Domain\Model\Group;
 use App\User\Domain\Repository\GroupRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class GroupRepository implements GroupRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(Group::class);
 	}
 
-	public function find(string $groupId): ?Group
+	public function find(UuidInterface $groupId): ?Group
 	{
 		return $this->repository->find($groupId);
 	}
@@ -32,7 +33,7 @@ class GroupRepository implements GroupRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function store(Group $group): string
+	public function store(Group $group): UuidInterface
 	{
 		$this->entityManager->persist($group);
 		$this->entityManager->flush();

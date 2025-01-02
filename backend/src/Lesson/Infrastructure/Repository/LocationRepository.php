@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Lesson\Domain\Model\Location;
 use App\Lesson\Domain\Repository\LocationRepositoryInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -19,7 +22,7 @@ class LocationRepository implements LocationRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(Location::class);
 	}
 
-	public function find(string $locationId): ?Location
+	public function find(UuidInterface $locationId): ?Location
 	{
 		return $this->repository->find($locationId);
 	}
@@ -29,7 +32,12 @@ class LocationRepository implements LocationRepositoryInterface
 	 */
 	public function findByIds(array $locationIds): array
 	{
-		return $this->repository->findBy(['locationId' => $locationIds]);
+		$qb = $this->repository->createQueryBuilder('l');
+		return $qb
+			->where($qb->expr()->in('l.locationId', ':locationIds'))
+			->setParameter('locationIds', UuidUtils::convertToBinaryList($locationIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	/**
@@ -40,7 +48,7 @@ class LocationRepository implements LocationRepositoryInterface
 		return $this->repository->findAll();
 	}
 
-	public function store(Location $location): string
+	public function store(Location $location): UuidInterface
 	{
 		$this->entityManager->persist($location);
 		$this->entityManager->flush();

@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Lesson\App\Adapter;
 
+use App\Common\Uuid\UuidInterface;
+
 interface UserAdapterInterface
 {
 	/**
-	 * @return string[]
+	 * @return UuidInterface[]
 	 */
-	public function listUserGroupIds(string $userId): array;
+	public function listUserGroupIds(UuidInterface $userId): array;
 }

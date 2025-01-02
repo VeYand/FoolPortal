@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\App\Exception\AppException;
 use App\User\Domain\Service\GroupMemberService as DomainGroupMemberService;
 
@@ -19,8 +20,8 @@ readonly class GroupMemberService
 	 * TODO Проверить, что это действительно студенты
 	 * TODO Избавиться от запросов в цикле
 	 *
-	 * @param string[] $groupIds
-	 * @param string[] $userIds
+	 * @param UuidInterface[] $groupIds
+	 * @param UuidInterface[] $userIds
 	 * @throws AppException
 	 */
 	public function createGroupMembers(array $groupIds, array $userIds): void
@@ -43,8 +44,8 @@ readonly class GroupMemberService
 	 * TODO Проверить, что это действительно студенты
 	 * TODO Избавиться от запросов в цикле
 	 *
-	 * @param string[] $groupIds
-	 * @param string[] $userIds
+	 * @param UuidInterface[] $groupIds
+	 * @param UuidInterface[] $userIds
 	 * @throws AppException
 	 */
 	public function deleteGroupMembers(array $groupIds, array $userIds): void

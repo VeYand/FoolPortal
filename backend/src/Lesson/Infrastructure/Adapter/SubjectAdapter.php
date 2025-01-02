@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Adapter;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\App\Adapter\SubjectAdapterInterface;
 use App\Subject\Api\SubjectApiInterface;
 use App\Subject\App\Query\Data\CourseData;
@@ -16,7 +17,7 @@ readonly class SubjectAdapter implements SubjectAdapterInterface
 	{
 	}
 
-	public function isCourseExists(string $courseId): bool
+	public function isCourseExists(UuidInterface $courseId): bool
 	{
 		return $this->subjectApi->isCourseExists($courseId);
 	}

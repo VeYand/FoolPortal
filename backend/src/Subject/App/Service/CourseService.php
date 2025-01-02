@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Subject\App\Adapter\UserAdapterInterface;
 use App\Subject\App\Exception\AppException;
 use App\Subject\App\Service\Input\CreateCourseInput;
@@ -41,7 +42,7 @@ readonly class CourseService
 	}
 
 	/**
-	 * @param string[] $courseIds
+	 * @param UuidInterface[] $courseIds
 	 * @throws AppException
 	 */
 	public function delete(array $courseIds): void
@@ -57,7 +58,7 @@ readonly class CourseService
 	/**
 	 * @throws AppException
 	 */
-	private function assertGroupExists(string $groupId): void
+	private function assertGroupExists(UuidInterface $groupId): void
 	{
 		$isExists = $this->userAdapter->isGroupExists($groupId);
 

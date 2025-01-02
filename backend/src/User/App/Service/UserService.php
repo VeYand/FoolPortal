@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\User\App\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\App\Exception\AppException;
 use App\User\Domain\Service\Input\CreateUserInput;
 use App\User\Domain\Service\Input\UpdateUserInput;
@@ -20,9 +21,10 @@ readonly class UserService
 	/**
 	 * @throws AppException
 	 */
-	public function create(CreateUserInput $input): string
+	public function create(CreateUserInput $input): UuidInterface
 	{
-		$createdUserId = '';
+		/** @var UuidInterface $createdUserId */
+		$createdUserId = null;
 		$callback = function () use ($input, &$createdUserId): void
 		{
 			$createdUserId = $this->domainUserService->create($input);
@@ -49,7 +51,7 @@ readonly class UserService
 	/**
 	 * @throws AppException
 	 */
-	public function delete(string $userId): void
+	public function delete(UuidInterface $userId): void
 	{
 		$callback = function () use ($userId): void
 		{

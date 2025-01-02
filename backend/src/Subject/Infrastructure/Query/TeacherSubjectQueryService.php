@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Subject\Infrastructure\Query;
 
+use App\Common\Uuid\UuidUtils;
 use App\Subject\App\Query\Data\TeacherSubjectData;
 use App\Subject\App\Query\Spec\ListTeacherSubjectsSpec;
 use App\Subject\App\Query\TeacherSubjectQueryServiceInterface;
@@ -32,7 +33,7 @@ readonly class TeacherSubjectQueryService implements TeacherSubjectQueryServiceI
 		if (!empty($spec->courseIds))
 		{
 			$qb->andWhere('c.courseId IN (:courseIds)')
-				->setParameter('courseIds', $spec->courseIds);
+				->setParameter('courseIds', UuidUtils::convertToBinaryList($spec->courseIds));
 		}
 
 		$teacherSubjects = $qb->getQuery()->getResult();

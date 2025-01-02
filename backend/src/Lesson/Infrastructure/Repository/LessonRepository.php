@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Infrastructure\Repository;
 
+use App\Common\Uuid\UuidInterface;
 use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Repository\LessonRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ class LessonRepository implements LessonRepositoryInterface
 		$this->repository = $this->entityManager->getRepository(Lesson::class);
 	}
 
-	public function find(string $lessonId): ?Lesson
+	public function find(UuidInterface $lessonId): ?Lesson
 	{
 		return $this->repository->find($lessonId);
 	}
@@ -37,7 +38,7 @@ class LessonRepository implements LessonRepositoryInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function findByLocation(string $locationId): array
+	public function findByLocation(UuidInterface $locationId): array
 	{
 		return $this->repository->findBy([
 			'locationId' => $locationId,
@@ -73,7 +74,7 @@ class LessonRepository implements LessonRepositoryInterface
 		]);
 	}
 
-	public function store(Lesson $lesson): string
+	public function store(Lesson $lesson): UuidInterface
 	{
 		$this->entityManager->persist($lesson);
 		$this->entityManager->flush();

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Lesson;
@@ -26,7 +27,7 @@ readonly class LessonService
 	/**
 	 * @throws DomainException
 	 */
-	public function create(CreateLessonInput $input): string
+	public function create(CreateLessonInput $input): UuidInterface
 	{
 		if (!is_null($input->locationId))
 		{
@@ -96,7 +97,7 @@ readonly class LessonService
 	}
 
 	/**
-	 * @param string[] $lessonIds
+	 * @param UuidInterface[] $lessonIds
 	 *
 	 * TODO Уязвимость: не удаляется вложение, если его перестают использовать
 	 * Решение - создать библиотеку вложений, либо реализовать удаление вложения, если его перестают использовать
@@ -116,7 +117,7 @@ readonly class LessonService
 	/**
 	 * @throws DomainException
 	 */
-	public function assertLocationExists(string $locationId): void
+	public function assertLocationExists(UuidInterface $locationId): void
 	{
 		$location = $this->locationReadRepository->find($locationId);
 
