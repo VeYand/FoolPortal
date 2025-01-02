@@ -65,9 +65,9 @@ class ImageUploader implements ImageUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	public function removeImage(string $path): void
+	public function removeImage(?string $path): void
 	{
-		if (file_exists($path) && !unlink($path))
+		if (!is_null($path) && file_exists($path) && !unlink($path))
 		{
 			throw new DomainException("Failed to delete image at path: $path");
 		}

@@ -15,5 +15,5 @@ interface ImageUploaderInterface
 	/**
 	 * @throws DomainException
 	 */
-	public function removeImage(string $path): void;
+	public function removeImage(?string $path): void;
 }

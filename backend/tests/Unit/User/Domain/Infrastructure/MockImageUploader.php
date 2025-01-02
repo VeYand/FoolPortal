@@ -19,7 +19,7 @@ class MockImageUploader implements ImageUploaderInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function removeImage(string $path): void
+	public function removeImage(?string $path): void
 	{
 		// TODO: Implement removeImage() method.
 	}

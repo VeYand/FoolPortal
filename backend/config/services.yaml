@@ -27,15 +27,15 @@ services:
 
     App\Subject\App\Service\Listener\GroupDeletedEventListener:
         tags:
-            - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\GroupDeletedEventInterface, method: '__invoke' }
+            - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\GroupDeletedEvent, method: '__invoke' }
 
     App\Subject\App\Service\Listener\UserDeletedEventListener:
         tags:
-            - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\UserDeletedEventListenerInterface, method: '__invoke' }
+            - { name: 'kernel.event_listener', event: App\User\Domain\Service\Event\UserDeletedEvent, method: '__invoke' }
 
     App\Lesson\App\Service\Listener\CourseDeletedEventListener:
         tags:
-            - { name: 'kernel.event_listener', event: App\Subject\Domain\Service\Event\CourseDeletedEventInterface, method: '__invoke' }
+            - { name: 'kernel.event_listener', event: App\Subject\Domain\Service\Event\CourseDeletedEvent, method: '__invoke' }
 
     App\Controller\AuthorizationApiHandler:
         tags:
