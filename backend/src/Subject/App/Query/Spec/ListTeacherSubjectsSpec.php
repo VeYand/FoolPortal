@@ -12,6 +12,7 @@ readonly class ListTeacherSubjectsSpec
 	 */
 	public function __construct(
 		public ?array $courseIds = null,
+		public ?array $teacherIds = null,
 	)
 	{
 	}

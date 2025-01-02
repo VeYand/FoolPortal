@@ -36,6 +36,12 @@ readonly class TeacherSubjectQueryService implements TeacherSubjectQueryServiceI
 				->setParameter('courseIds', UuidUtils::convertToBinaryList($spec->courseIds));
 		}
 
+		if (!empty($spec->teacherIds))
+		{
+			$qb->andWhere('ts.teacherId IN (:teacherIds)')
+				->setParameter('teacherIds', UuidUtils::convertToBinaryList($spec->teacherIds));
+		}
+
 		$teacherSubjects = $qb->getQuery()->getResult();
 		return self::convertTeacherSubjectsToTeacherSubjectList($teacherSubjects);
 	}

@@ -9,6 +9,7 @@ use App\Subject\App\Query\CourseQueryServiceInterface;
 use App\Subject\App\Query\Data\CourseData;
 use App\Subject\App\Query\Spec\ListCoursesSpec;
 use App\Subject\Domain\Model\Course;
+use App\Subject\Domain\Model\TeacherSubject;
 use App\Subject\Domain\Repository\CourseReadRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -29,7 +30,8 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		$qb = $this->entityManager->createQueryBuilder();
 
 		$qb->select('c')
-			->from(Course::class, 'c');
+			->from(Course::class, 'c')
+			->leftJoin(TeacherSubject::class, 'ts', 'WITH', 'ts.teacherSubjectId = c.teacherSubjectId');
 
 		if (!empty($spec->courseIds))
 		{
@@ -41,6 +43,12 @@ readonly class CourseQueryService implements CourseQueryServiceInterface
 		{
 			$qb->andWhere('c.groupId IN (:groupIds)')
 				->setParameter('groupIds', UuidUtils::convertToBinaryList($spec->groupIds));
+		}
+
+		if (!empty($spec->teacherSubjectIds))
+		{
+			$qb->andWhere('ts.teacherSubjectId IN (:teacherSubjectIds)')
+				->setParameter('teacherSubjectIds', UuidUtils::convertToBinaryList($spec->teacherSubjectIds));
 		}
 
 		$courses = $qb->getQuery()->getResult();

@@ -14,4 +14,16 @@ interface SubjectAdapterInterface
 	 * @return UuidInterface[]
 	 */
 	public function listCourseIdsByGroupIds(array $groupIds): array;
+
+	/**
+	 * @param UuidInterface[] $teacherSubjectIds
+	 * @return UuidInterface[]
+	 */
+	public function listCourseIdsByTeacherSubjectIds(array $teacherSubjectIds): array;
+
+
+	/**
+	 * @return UuidInterface[]
+	 */
+	public function listTeacherSubjectIdsByTeacherId(UuidInterface $teacherId): array;
 }
