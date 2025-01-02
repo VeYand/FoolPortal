@@ -1,5 +1,5 @@
 import {Modal, Input, Typography} from 'antd'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Student, StudentListForGroup} from './StudentListForGroup'
 import {Subject, SubjectListForGroup, Teacher, TeacherSubject} from './SubjectListForGroup'
 
@@ -34,6 +34,12 @@ const GroupDetailsModal = ({
 	const [name, setName] = useState(group?.name || '')
 	const [studentIds, setStudentIds] = useState(group?.studentIds ?? [])
 	const [teacherSubjectIds, setTeacherSubjectIds] = useState(group?.teacherSubjectIds ?? [])
+
+	useEffect(() => {
+		setName(group?.name || '')
+		setStudentIds(group?.studentIds ?? [])
+		setTeacherSubjectIds(group?.teacherSubjectIds ?? [])
+	}, [group])
 
 	const addStudent = (studentId: string) => {
 		setStudentIds([...studentIds, studentId])
