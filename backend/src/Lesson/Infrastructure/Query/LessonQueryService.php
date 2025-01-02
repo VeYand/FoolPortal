@@ -20,7 +20,7 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array // TODO реализация выглядит хрупкой, подумать над более лучшем извлечением данных
+	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
 	{
 		$qb = $this->entityManager->createQueryBuilder();
 
@@ -35,27 +35,31 @@ readonly class LessonQueryService implements LessonQueryServiceInterface
 			->setParameter('endTime', $endTime->getTimestamp());
 
 		$result = $qb->getQuery()->getResult();
+
 		$lessonsGroupedById = [];
 
-		for ($i = 0, $iMax = count($result); $i < $iMax; $i += 2)
+		foreach ($result as $item)
 		{
-			/** @var Lesson $lesson */
-			$lesson = $result[$i];
-			/** @var LessonAttachment|null $attachment */
-			$attachment = $result[$i + 1];
-
-			$lessonId = $lesson->getLessonId()->toString();
-			if (!isset($lessonsGroupedById[$lessonId]))
+			if ($item instanceof Lesson)
 			{
-				$lessonsGroupedById[$lessonId] = [
-					'lesson' => $lesson,
-					'attachmentIds' => [],
-				];
+				$lessonId = $item->getLessonId()->toString();
+
+				if (!isset($lessonsGroupedById[$lessonId]))
+				{
+					$lessonsGroupedById[$lessonId] = [
+						'lesson' => $item,
+						'attachmentIds' => [],
+					];
+				}
 			}
-
-			if ($attachment)
+			else if ($item instanceof LessonAttachment)
 			{
-				$lessonsGroupedById[$lessonId]['attachmentIds'][] = $attachment->getAttachmentId();
+				$lessonId = $item->getLessonId()->toString();
+
+				if (isset($lessonsGroupedById[$lessonId]))
+				{
+					$lessonsGroupedById[$lessonId]['attachmentIds'][] = $item->getAttachmentId();
+				}
 			}
 		}
 

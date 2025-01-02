@@ -1,12 +1,9 @@
 import {Modal, Form, Input, Select, Button, message} from 'antd'
-import {useState, useEffect, useCallback} from 'react'
+import {useState, useEffect} from 'react'
 import {formatDateToISO} from 'shared/libs'
 import {
-	useLazyAddAttachmentToLesson,
-	useLazyCreateAttachment,
 	useLazyCreateLesson,
-	useLazyDeleteAttachment,
-	useLazyDeleteLesson, useLazyListLessonAttachments,
+	useLazyDeleteLesson,
 	useLazyUpdateLesson,
 } from 'shared/libs/query'
 import {
@@ -21,6 +18,8 @@ import {
 } from 'shared/types'
 import {AttachmentUploadBlock} from './AttachmentUploadBlock'
 import {formatStartTime} from './libs/formatStartTime'
+import {useFetchLessonAttachments} from './libs/useFetchLessonAttachments'
+import {useProcessAttachments} from './libs/useProcessAttachments'
 
 type LessonModalProps = {
 	open: boolean,
@@ -39,7 +38,7 @@ type DetailedAttachmentData = AttachmentData & {
 	file?: string,
 }
 
-const LessonModal = ({
+const LessonModalForAdministration = ({
 	open,
 	setOpened,
 	selectedLesson,
@@ -64,28 +63,12 @@ const LessonModal = ({
 	const [updateLesson] = useLazyUpdateLesson()
 	const [deleteLesson] = useLazyDeleteLesson()
 
-	const [originalAttachments, setOriginalAttachments] = useState<AttachmentData[]>([])
+	const originalAttachments = useFetchLessonAttachments(selectedLesson?.lessonId)
 	const [modifiedAttachments, setModifiedAttachments] = useState<DetailedAttachmentData[]>([])
-
-	const [createAttachment] = useLazyCreateAttachment()
-	const [addAttachmentToLesson] = useLazyAddAttachmentToLesson()
-	const [deleteAttachment] = useLazyDeleteAttachment()
-	const [listAttachments] = useLazyListLessonAttachments()
-
-	const fetchLessonAttachments = useCallback(async () => {
-		if (!selectedLesson) {
-			setOriginalAttachments([])
-			setModifiedAttachments([])
-			return
-		}
-
-		const {data} = await listAttachments({lessonId: selectedLesson.lessonId})
-
-		if (data?.attachments) {
-			setOriginalAttachments(data.attachments)
-			setModifiedAttachments(data.attachments)
-		}
-	}, [listAttachments, selectedLesson])
+	useEffect(() => {
+		setModifiedAttachments(originalAttachments)
+	}, [originalAttachments])
+	const processAttachments = useProcessAttachments()
 
 	const handleDeleteLesson = async (lessonId: string) => {
 		const data = await deleteLesson({lessonId})
@@ -98,37 +81,6 @@ const LessonModal = ({
 		else {
 			message.error('Что-то пошло не так, повторите попытку позже.')
 		}
-	}
-
-	const processAttachments = async (lessonId: string) => {
-		const originalAttachmentIds = originalAttachments.map(a => a.attachmentId)
-		const modifiedAttachmentIds = modifiedAttachments.map(a => a.attachmentId)
-
-		const attachmentIdsToDelete = originalAttachmentIds.filter(attachmentId => !modifiedAttachmentIds.includes(attachmentId))
-
-		await Promise.all(attachmentIdsToDelete.map(attachmentIdToDelete =>
-			deleteAttachment({attachmentId: attachmentIdToDelete}),
-		))
-
-		const createdAttachmentIds: string[] = []
-
-		const attachmentIdsToCreate = modifiedAttachmentIds.filter(attachmentId => !originalAttachmentIds.includes(attachmentId))
-
-		const creationPromises = attachmentIdsToCreate.map(async attachmentIdToCreate => {
-			const attachment = modifiedAttachments.find(a => a.attachmentId === attachmentIdToCreate)
-			if (attachment?.file) {
-				const {data: createdAttachmentData} = await createAttachment({attachment: {...attachment, file: attachment.file}})
-				if (createdAttachmentData?.attachmentId) {
-					createdAttachmentIds.push(createdAttachmentData.attachmentId)
-				}
-			}
-		})
-
-		await Promise.all(creationPromises)
-
-		await Promise.all(createdAttachmentIds.map(attachmentId =>
-			addAttachmentToLesson({lessonId, attachmentId}),
-		))
 	}
 
 	const handleSaveLesson = async (lesson: Partial<LessonData>) => {
@@ -144,7 +96,7 @@ const LessonModal = ({
 				return
 			}
 
-			await processAttachments(lesson.lessonId)
+			await processAttachments(lesson.lessonId, originalAttachments, modifiedAttachments)
 		}
 		else {
 			const data = await createLesson({
@@ -164,7 +116,7 @@ const LessonModal = ({
 				return
 			}
 
-			await processAttachments(createdLessonId)
+			await processAttachments(createdLessonId, originalAttachments, modifiedAttachments)
 		}
 
 		message.success('Пара успешно обновлена.')
@@ -243,7 +195,6 @@ const LessonModal = ({
 	}
 
 	useEffect(() => {
-		fetchLessonAttachments()
 		if (selectedLesson) {
 			form.setFieldsValue({
 				...selectedLesson,
@@ -254,7 +205,7 @@ const LessonModal = ({
 		else {
 			form.resetFields()
 		}
-	}, [selectedLesson, form, fetchLessonAttachments])
+	}, [selectedLesson, form])
 
 	const handleSubmit = () => {
 		form.validateFields()
@@ -282,12 +233,6 @@ const LessonModal = ({
 		form.resetFields()
 		setOpened(false)
 	}
-
-	// if (['png', 'jpg', 'jpeg'].includes(extension)) {
-	// 	return <img src={`/path/to/preview/${extension}`} alt="Preview" style={{width: 50}}/>
-	// }
-	// const renderAttachmentIcon = (extension: string) => <FileOutlined/>
-
 
 	return (
 		<Modal
@@ -413,7 +358,7 @@ const LessonModal = ({
 }
 
 export {
-	LessonModal,
+	LessonModalForAdministration,
 }
 
 export type {

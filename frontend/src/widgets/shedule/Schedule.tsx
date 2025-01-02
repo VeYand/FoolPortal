@@ -5,8 +5,8 @@ import {useAppSelector} from 'shared/redux'
 import {USER_ROLE} from 'shared/types'
 import {Preloader} from '../preloader/Preloader'
 import {DatePicker} from './DatePicker'
-import {LessonModal} from './LessonModal'
-import {LessonReadModal} from './LessonReadModal'
+import {LessonModalForAdministration} from './LessonModalForAdministration'
+import {LessonModalForTeacherAndUser} from './LessonModalForTeacherAndUser'
 import {useInitialize} from './libs/useInitialize'
 import {ScheduleTable} from './ScheduleTable'
 
@@ -82,7 +82,7 @@ const Schedule = () => {
 				/>
 			</div>
 			{(currentUser.role === USER_ROLE.OWNER || currentUser.role === USER_ROLE.ADMIN)
-				&& <LessonModal
+				&& <LessonModalForAdministration
 					open={lessonModalOpened}
 					setOpened={opened => {
 						setLessonModalOpened(opened)
@@ -99,7 +99,7 @@ const Schedule = () => {
 				/>
 			}
 			{(currentUser.role === USER_ROLE.TEACHER || currentUser.role === USER_ROLE.STUDENT)
-				&& <LessonReadModal
+				&& <LessonModalForTeacherAndUser
 					open={lessonModalOpened}
 					setOpened={opened => {
 						setLessonModalOpened(opened)

@@ -2,7 +2,9 @@ import {UploadOutlined, DeleteOutlined, DownloadOutlined} from '@ant-design/icon
 import {Upload, Button, List, Input, Modal, Space, Typography, message} from 'antd'
 import type {RcFile} from 'antd/es/upload'
 import {useState} from 'react'
-import {DetailedAttachmentData} from './LessonModal'
+import {useAppSelector} from '../../shared/redux'
+import {USER_ROLE} from '../../shared/types'
+import {DetailedAttachmentData} from './LessonModalForAdministration'
 
 type AttachmentUploadBlockProps = {
 	attachments: DetailedAttachmentData[],
@@ -10,6 +12,8 @@ type AttachmentUploadBlockProps = {
 }
 
 const AttachmentUploadBlock = ({attachments, setAttachments}: AttachmentUploadBlockProps) => {
+	const currentUser = useAppSelector(state => state.userEntity.user)
+
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [currentFile, setCurrentFile] = useState<File | null>(null)
 	const [fileName, setFileName] = useState('')
@@ -64,28 +68,35 @@ const AttachmentUploadBlock = ({attachments, setAttachments}: AttachmentUploadBl
 
 	return (
 		<div>
-			<Upload beforeUpload={handleUpload} showUploadList={false}>
-				<Button icon={<UploadOutlined/>}>Upload File</Button>
-			</Upload>
-
-			<List
-				header={<Typography.Title level={5}>Uploaded Files</Typography.Title>}
-				bordered
-				dataSource={attachments}
-				renderItem={item => (
-					<List.Item
-						actions={[
-							<Button icon={<DownloadOutlined />} onClick={() => handleDownloadAttachment(item.attachmentId)}>Download</Button>,
-							<Button icon={<DeleteOutlined />} onClick={() => handleRemove(item.attachmentId)}>Delete</Button>,
-						]}
-					>
-						<Space direction="vertical">
-							<Typography.Text strong>{item.name}</Typography.Text>
-							{item.description && <Typography.Text type="secondary">{item.description}</Typography.Text>}
-						</Space>
-					</List.Item>
-				)}
-			/>
+			{currentUser.role !== USER_ROLE.STUDENT && (
+				<Upload beforeUpload={handleUpload} showUploadList={false}>
+					<Button icon={<UploadOutlined/>}>{'Добавить вложение'}</Button>
+				</Upload>
+			)}
+			{attachments.length > 0 && (
+				<List
+					header={<Typography.Title level={5}>{'Вложения'}</Typography.Title>}
+					bordered
+					dataSource={attachments}
+					renderItem={item => (
+						<List.Item
+							actions={[
+								<Button icon={<DownloadOutlined/>}
+									onClick={() => handleDownloadAttachment(item.attachmentId)}>{'Скачать'}</Button>,
+								...(currentUser.role === USER_ROLE.STUDENT ? [] : [
+									<Button icon={<DeleteOutlined/>} danger
+										onClick={() => handleRemove(item.attachmentId)}>{'Удалить'}</Button>,
+								]),
+							]}
+						>
+							<Space direction="vertical">
+								<Typography.Text strong>{item.name}</Typography.Text>
+								{item.description && <Typography.Text type="secondary">{item.description}</Typography.Text>}
+							</Space>
+						</List.Item>
+					)}
+				/>
+			)}
 
 			<Modal
 				title="Add File Details"

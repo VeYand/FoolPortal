@@ -22,7 +22,7 @@ readonly class AuthorizedLessonQueryService implements LessonQueryServiceInterfa
 	/**
 	 * @inheritDoc
 	 */
-	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array
+	public function listByTimeInterval(\DateTimeInterface $startTime, \DateTimeInterface $endTime): array // TODO поправить фильтрацию в зависимости от роли
 	{
 		$lessons = $this->lessonQueryService->listByTimeInterval($startTime, $endTime);
 
