@@ -30,7 +30,7 @@ const Authorization = () => {
 
 	return (
 		<div className={styles.container}>
-			<Typography.Title level={2}>{'Student Portal'}</Typography.Title>
+			<Typography.Title level={2}>{'Студенческий портал'}</Typography.Title>
 			<Form className={styles.form} onFinish={handleSubmit}>
 				<Form.Item label="Email" name="email" rules={[{required: true, message: 'Введите ваш email'}]}>
 					<Input value={email} onChange={e => setEmail(e.target.value)}/>
