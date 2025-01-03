@@ -58,7 +58,7 @@ const AttachmentUploadBlock = ({attachments, setAttachments, isTempAttachment, g
 		}
 
 		if (!fileName.trim()) {
-			message.error('File name is required.')
+			message.error('Название файла обязательно.')
 			return
 		}
 		const base64File = await fileToBase64(currentFile)
@@ -135,21 +135,21 @@ const AttachmentUploadBlock = ({attachments, setAttachments, isTempAttachment, g
 				/>
 			)}
 			<Modal
-				title="Add File Details"
+				title="Сведения о файле"
 				open={isModalOpen}
 				onOk={handleAddFile}
 				onCancel={() => setIsModalOpen(false)}
-				okText="Add File"
-				cancelText="Cancel"
+				okText="Добавить файл"
+				cancelText="Отмена"
 			>
 				<Input
-					placeholder="File Name (Required)"
+					placeholder="Название файла (Обязательно)"
 					value={fileName}
 					onChange={e => setFileName(e.target.value)}
 					style={{marginBottom: 10}}
 				/>
 				<Input.TextArea
-					placeholder="Description (Optional)"
+					placeholder="Описание (Не обязательно)"
 					value={fileDescription}
 					onChange={e => setFileDescription(e.target.value)}
 				/>
