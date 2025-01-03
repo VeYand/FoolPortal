@@ -1,36 +1,39 @@
-import {subjectEntitySlice} from 'entities/subject'
-import {useCallback} from 'react'
+import {message} from 'antd'
+import {useCallback, useEffect, useState} from 'react'
 import {useLazyListSubjects} from 'shared/libs/query'
 import {remapApiSubjectsToSubjectsList} from 'shared/libs/remmapers/remapApiSubjectsToSubjectsList'
-import {useAppDispatch, useAppSelector} from 'shared/redux'
+import {SubjectData} from 'shared/types'
 
 type UseInitializeSubjects = {
-	initialize: () => void,
-	isLoading: boolean,
+	loading: boolean,
+	subjects: SubjectData[],
+	refetch: () => void,
 }
 
 const useInitializeSubjects = (): UseInitializeSubjects => {
-	const dispatch = useAppDispatch()
-	const loadingState = useAppSelector(state => state.subjectEntity.loading)
-	const [listSubjects, {isLoading, isFetching}] = useLazyListSubjects()
+	const [loading, setLoading] = useState(true)
+	const [subjects, setSubjects] = useState<SubjectData[]>([])
+	const [listSubjects] = useLazyListSubjects()
 
-	const initialize = useCallback(async () => {
-		dispatch(subjectEntitySlice.actions.setLoading(true))
-
+	const fetch = useCallback(async () => {
+		setLoading(true)
 		const response = await listSubjects({})
 
-		if (response.isError) {
-			dispatch(subjectEntitySlice.actions.setLoading(false))
+		if (!response.data || response.isError) {
+			message.error('Не удалось получить список предметов. Повторите попытку позже.')
 			return
 		}
 
-		if (response.data) {
-			const subjects = remapApiSubjectsToSubjectsList(response.data.subjects)
-			dispatch(subjectEntitySlice.actions.setSubjects(subjects))
-		}
-	}, [dispatch, listSubjects])
+		setSubjects(remapApiSubjectsToSubjectsList(response.data.subjects))
+		setLoading(false)
+	}, [listSubjects])
 
-	return {isLoading: isLoading || isFetching || loadingState, initialize}
+	useEffect(() => {
+		setLoading(true)
+		fetch()
+	}, [fetch])
+
+	return {loading: loading, subjects, refetch: fetch}
 }
 
 export {

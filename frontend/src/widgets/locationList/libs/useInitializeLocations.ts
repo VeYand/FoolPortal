@@ -1,36 +1,39 @@
-import {locationEntitySlice} from 'entities/location'
-import {useCallback} from 'react'
+import {message} from 'antd'
+import {useCallback, useEffect, useState} from 'react'
 import {useLazyListLocations} from 'shared/libs/query'
 import {remapApiLocationsToLocationsList} from 'shared/libs/remmapers/remapApiLocationsToLocationsList'
-import {useAppDispatch, useAppSelector} from 'shared/redux'
+import {LocationData} from 'shared/types'
 
 type UseInitializeLocations = {
-	initialize: () => void,
-	isLoading: boolean,
+	loading: boolean,
+	locations: LocationData[],
+	refetch: () => void,
 }
 
 const useInitializeLocations = (): UseInitializeLocations => {
-	const dispatch = useAppDispatch()
-	const loadingState = useAppSelector(state => state.locationEntity.loading)
-	const [listLocations, {isLoading, isFetching}] = useLazyListLocations()
+	const [loading, setLoading] = useState(true)
+	const [locations, setLocations] = useState<LocationData[]>([])
+	const [listLocations] = useLazyListLocations()
 
-	const initialize = useCallback(async () => {
-		dispatch(locationEntitySlice.actions.setLoading(true))
-
+	const fetch = useCallback(async () => {
+		setLoading(true)
 		const response = await listLocations({})
 
-		if (response.isError) {
-			dispatch(locationEntitySlice.actions.setLoading(false))
+		if (!response.data || response.isError) {
+			message.error('Не удалось получить список локаций. Повторите попытку позже.')
 			return
 		}
 
-		if (response.data) {
-			const locations = remapApiLocationsToLocationsList(response.data.locations)
-			dispatch(locationEntitySlice.actions.setLocations(locations))
-		}
-	}, [dispatch, listLocations])
+		setLocations(remapApiLocationsToLocationsList(response.data.locations))
+		setLoading(false)
+	}, [listLocations])
 
-	return {isLoading: isLoading || isFetching || loadingState, initialize}
+	useEffect(() => {
+		setLoading(true)
+		fetch()
+	}, [fetch])
+
+	return {loading: loading, locations, refetch: fetch}
 }
 
 export {

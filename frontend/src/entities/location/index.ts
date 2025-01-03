@@ -1,1 +1,0 @@
-export {locationEntitySlice} from './model/locationEntitySlice'
