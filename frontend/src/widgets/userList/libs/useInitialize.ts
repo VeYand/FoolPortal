@@ -1,4 +1,5 @@
 import {message} from 'antd'
+import {userEntitySlice} from 'entities/user'
 import {useEffect, useState, useCallback} from 'react'
 import {UpdateUserRequest} from 'shared/api'
 import {areListsEqual} from 'shared/libs'
@@ -17,6 +18,7 @@ import {
 } from 'shared/libs/query'
 import {remapUserRoleToApiUserRole} from 'shared/libs/remmapers'
 import {remapApiUsersToUsersList} from 'shared/libs/remmapers/remapApiUserToUserData'
+import {useAppDispatch, useAppSelector} from 'shared/redux'
 import {UserData, GroupData, SubjectData, TeacherSubjectData} from 'shared/types'
 
 type UseInitializeReturns = {
@@ -30,6 +32,9 @@ type UseInitializeReturns = {
 }
 
 const useInitialize = (): UseInitializeReturns => {
+	const dispatch = useAppDispatch()
+	const currentUser = useAppSelector(state => state.userEntity.user)
+
 	const [listUsers] = useLazyListUsers()
 	const [listSubjects] = useLazyListSubjects()
 	const [listGroups] = useLazyListGroups()
@@ -95,7 +100,9 @@ const useInitialize = (): UseInitializeReturns => {
 
 			if (existingUser) {
 				await updateUserQuery(constructUpdateUserRequest(existingUser, updatedUser))
-
+				if (existingUser.userId === currentUser.userId) {
+					dispatch(userEntitySlice.actions.setUser(updatedUser))
+				}
 				groupIdsToAdd = updatedUser.groupIds.filter(
 					selectedGroupId => !currentUserGroups.some(currentGroup => currentGroup.groupId === selectedGroupId),
 				)
