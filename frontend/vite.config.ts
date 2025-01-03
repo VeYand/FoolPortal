@@ -29,7 +29,7 @@ export default (configEnv: ConfigEnv) => {
 	}
 
 	return buildViteConfig({
-		minify: isDev,
+		minify: !isDev,
 		isDev,
 		mode,
 		paths,
