@@ -62,9 +62,12 @@ class CourseRepository implements CourseRepositoryInterface
 	 */
 	public function findByTeacherSubjects(array $teacherSubjectIds): array
 	{
-		return $this->repository->findBy([
-			'teacherSubjectId' => $teacherSubjectIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('c');
+		return $qb
+			->where($qb->expr()->in('c.teacherSubjectId', ':teacherSubjectIds'))
+			->setParameter('teacherSubjectIds', UuidUtils::convertToBinaryList($teacherSubjectIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	/**
@@ -72,9 +75,12 @@ class CourseRepository implements CourseRepositoryInterface
 	 */
 	public function findByGroups(array $groupIds): array
 	{
-		return $this->repository->findBy([
-			'groupId' => $groupIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('c');
+		return $qb
+			->where($qb->expr()->in('c.groupId', ':groupIds'))
+			->setParameter('groupIds', UuidUtils::convertToBinaryList($groupIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	public function store(Course $course): UuidInterface

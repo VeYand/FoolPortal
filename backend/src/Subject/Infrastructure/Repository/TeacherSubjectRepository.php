@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Subject\Infrastructure\Repository;
 
 use App\Common\Uuid\UuidInterface;
+use App\Common\Uuid\UuidUtils;
 use App\Subject\Domain\Model\TeacherSubject;
 use App\Subject\Domain\Repository\TeacherSubjectRepositoryInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -30,9 +32,12 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	 */
 	public function findByIds(array $teacherSubjectIds): array
 	{
-		return $this->repository->findBy([
-			'teacherSubjectId' => $teacherSubjectIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('ts');
+		return $qb
+			->where($qb->expr()->in('ts.teacherSubjectId', ':teacherSubjectIds'))
+			->setParameter('teacherSubjectIds', UuidUtils::convertToBinaryList($teacherSubjectIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 
@@ -67,9 +72,12 @@ class TeacherSubjectRepository implements TeacherSubjectRepositoryInterface
 	 */
 	public function findByTeachers(array $teacherIds): array
 	{
-		return $this->repository->findBy([
-			'teacherId' => $teacherIds,
-		]);
+		$qb = $this->repository->createQueryBuilder('ts');
+		return $qb
+			->where($qb->expr()->in('ts.teacherId', ':teacherIds'))
+			->setParameter('teacherIds', UuidUtils::convertToBinaryList($teacherIds), ArrayParameterType::STRING)
+			->getQuery()
+			->getResult();
 	}
 
 	public function store(TeacherSubject $teacherSubject): UuidInterface
