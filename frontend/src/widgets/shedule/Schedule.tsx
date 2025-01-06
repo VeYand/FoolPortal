@@ -54,10 +54,6 @@ const Schedule = () => {
 	}
 
 
-	if (loading) {
-		return <Preloader />
-	}
-
 	return (
 		<div>
 			<ScheduleHeader
@@ -67,20 +63,23 @@ const Schedule = () => {
 				}}
 				onCreateButtonClick={onCreateButtonClick}
 			/>
-			<div style={{marginTop: 20}}>
-				<ScheduleTable
-					weekStartDate={startDate}
-					lessons={lessons}
-					groups={groups}
-					subjects={subjects}
-					users={users}
-					locations={locations}
-					selectLesson={lessonId => {
-						setSelectedLessonId(lessonId)
-						setLessonModalOpened(true)
-					}}
-				/>
-			</div>
+			{loading && <Preloader />}
+			{!loading && (
+				<div style={{marginTop: 20}}>
+					<ScheduleTable
+						weekStartDate={startDate}
+						lessons={lessons}
+						groups={groups}
+						subjects={subjects}
+						users={users}
+						locations={locations}
+						selectLesson={lessonId => {
+							setSelectedLessonId(lessonId)
+							setLessonModalOpened(true)
+						}}
+					/>
+				</div>
+			)}
 			{(currentUser.role === USER_ROLE.OWNER || currentUser.role === USER_ROLE.ADMIN)
 				&& <LessonModalForAdministration
 					open={lessonModalOpened}

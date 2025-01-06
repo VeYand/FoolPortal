@@ -1,5 +1,5 @@
 import {Button, Input} from 'antd'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import styles from './EditableRow.module.css'
 
 type EditableItem = {
@@ -25,6 +25,10 @@ const EditableRow = ({item, onSave, onDelete}: EditableRowProps) => {
 	const handleDelete = () => {
 		onDelete(item.id)
 	}
+
+	useEffect(() => {
+		setValue(item.name)
+	}, [isEditing, item.name])
 
 	return (
 		<tr className={styles.row}>

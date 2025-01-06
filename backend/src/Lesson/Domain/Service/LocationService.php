@@ -20,8 +20,12 @@ readonly class LocationService
 	{
 	}
 
+	/**
+	 * @throws DomainException
+	 */
 	public function create(string $locationName): UuidInterface
 	{
+		$this->assertLocationNameIsUnique($locationName);
 		$location = new Location(
 			$this->uuidProvider->generate(),
 			$locationName,
@@ -42,6 +46,7 @@ readonly class LocationService
 			throw new DomainException('Location not found', DomainException::LOCATION_NOT_FOUND);
 		}
 
+		$this->assertLocationNameIsUnique($locationName);
 		$location->setName($locationName);
 		$this->locationRepository->store($location);
 	}
@@ -67,5 +72,18 @@ readonly class LocationService
 		}
 
 		$this->lessonRepository->storeList($lessons);
+	}
+
+	/**
+	 * @throws DomainException
+	 */
+	private function assertLocationNameIsUnique(string $name): void
+	{
+		$location = $this->locationRepository->findByName($name);
+
+		if (!is_null($location))
+		{
+			throw new DomainException('Location with name "' . $name . '" already exists', DomainException::LOCATION_NAME_IS_NOT_UNIQUE);
+		}
 	}
 }

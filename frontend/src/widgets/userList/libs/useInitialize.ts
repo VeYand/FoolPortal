@@ -129,6 +129,7 @@ const useInitialize = (): UseInitializeReturns => {
 					...updatedUser,
 					role: remapUserRoleToApiUserRole(updatedUser.role),
 					password: updatedUser.password,
+					imageData: updatedUser.imageSrc,
 				})
 				if (response.isError || !response.data) {
 					message.error('Не удалось создать пользователя, попробуйте позже')

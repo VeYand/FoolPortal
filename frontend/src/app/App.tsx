@@ -1,4 +1,6 @@
 import {ConfigProvider} from 'antd'
+import dayjs from 'dayjs'
+import 'dayjs/locale/ru'
 import moment from 'moment'
 import {useEffect} from 'react'
 import {Route, Routes} from 'react-router-dom'
@@ -8,6 +10,7 @@ import {Preloader} from 'widgets/preloader/Preloader'
 import {LoginPage, UserPortalPage, NotFoundPage, ProfilePage} from '../pages'
 import {globalTheme} from './globalTheme'
 
+dayjs.locale('ru')
 moment.updateLocale('ru', {
 	week: {
 		dow: 1,

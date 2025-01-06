@@ -25,6 +25,11 @@ class SubjectRepository implements SubjectRepositoryInterface
 		return $this->repository->find($subjectId);
 	}
 
+	public function findByName(string $subjectName): ?Subject
+	{
+		return $this->repository->findOneBy(['name' => $subjectName]);
+	}
+
 	/**
 	 * @inheritDoc
 	 */

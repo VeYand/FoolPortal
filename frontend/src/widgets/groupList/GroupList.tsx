@@ -51,14 +51,14 @@ const GroupList = () => {
 						title: 'Действия',
 						key: 'actions',
 						render: (_: any, group: Group) => (
-							<>
-								<Button onClick={() => handleEditGroup(group)} type="link">
+							<div style={{display: 'flex', gap: 10}}>
+								<Button onClick={() => handleEditGroup(group)}>
 									{'Редактировать'}
 								</Button>
-								<Button onClick={() => handleDeleteGroup(group.id)} danger type="link">
+								<Button onClick={() => handleDeleteGroup(group.id)} danger>
 									{'Удалить'}
 								</Button>
-							</>
+							</div>
 						),
 					},
 				]}

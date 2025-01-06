@@ -10,6 +10,8 @@ interface SubjectReadRepositoryInterface
 {
 	public function find(UuidInterface $subjectId): ?Subject;
 
+	public function findByName(string $subjectName): ?Subject;
+
 	/**
 	 * @return Subject[]
 	 */

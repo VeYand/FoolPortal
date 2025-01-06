@@ -40,6 +40,11 @@ class LocationRepository implements LocationRepositoryInterface
 			->getResult();
 	}
 
+	public function findByName(string $locationName): ?Location
+	{
+		return $this->repository->findOneBy(['name' => $locationName]);
+	}
+
 	/**
 	 * @inheritDoc
 	 */

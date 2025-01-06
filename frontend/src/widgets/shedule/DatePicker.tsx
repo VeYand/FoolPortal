@@ -1,4 +1,5 @@
-import {DatePicker as AntdDatePicker} from 'antd'
+import {DatePicker as AntdDatePicker, ConfigProvider} from 'antd'
+import locale from 'antd/locale/ru_RU'
 import moment from 'moment'
 import {useState} from 'react'
 
@@ -7,7 +8,7 @@ type DatePickerProps = {
 }
 
 const DatePicker = (props: DatePickerProps) => {
-	const [selectedWeek, setSelectedWeek] = useState<moment.Moment | undefined>(undefined)
+	const [selectedWeek, setSelectedWeek] = useState<moment.Moment>(moment().startOf('isoWeek'))
 
 	const handleWeekChange = (date?: moment.Moment) => {
 		if (date && selectedWeek !== date) {
@@ -20,12 +21,14 @@ const DatePicker = (props: DatePickerProps) => {
 	}
 
 	return (
-		<AntdDatePicker
-			picker="week"
-			value={selectedWeek}
-			onChange={handleWeekChange}
-			style={{marginBottom: 20}}
-		/>
+		<ConfigProvider locale={locale}>
+			<AntdDatePicker
+				picker="week"
+				value={selectedWeek}
+				onChange={handleWeekChange}
+				style={{marginBottom: 20}}
+			/>
+		</ConfigProvider>
 	)
 }
 

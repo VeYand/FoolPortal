@@ -27,8 +27,12 @@ readonly class SubjectService
 	{
 	}
 
+	/**
+	 * @throws DomainException
+	 */
 	public function create(string $subjectName): UuidInterface
 	{
+		$this->assertSubjectNameIsUnique($subjectName);
 		$subject = new Subject(
 			$this->uuidProvider->generate(),
 			$subjectName,
@@ -49,6 +53,7 @@ readonly class SubjectService
 			throw new DomainException('Subject not found', DomainException::SUBJECT_NOT_FOUND);
 		}
 
+		$this->assertSubjectNameIsUnique($subjectName);
 		$subject->setName($subjectName);
 		$this->subjectRepository->store($subject);
 	}
@@ -76,6 +81,19 @@ readonly class SubjectService
 			}
 
 			$this->subjectRepository->delete($subject);
+		}
+	}
+
+	/**
+	 * @throws DomainException
+	 */
+	private function assertSubjectNameIsUnique(string $name): void
+	{
+		$subject = $this->subjectRepository->findByName($name);
+
+		if (!is_null($subject))
+		{
+			throw new DomainException('Subject with name "' . $name . '" already exists', DomainException::SUBJECT_NAME_IS_NOT_UNIQUE);
 		}
 	}
 }

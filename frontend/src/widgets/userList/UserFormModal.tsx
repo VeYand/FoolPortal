@@ -1,6 +1,7 @@
 import {Modal, Form, Input, Select, Button, Upload, message} from 'antd'
 import {useEffect, useState} from 'react'
 import {GroupData, SubjectData, TeacherSubjectData, USER_ROLE, UserData} from 'shared/types'
+import {validatePassword} from './libs/validatePassword'
 
 const {Option} = Select
 
@@ -144,7 +145,7 @@ const UserFormModal = ({
 					<Form.Item
 						name="password"
 						label="Пароль"
-						rules={[{required: true, message: 'Пожалуйста, введите пароль!'}]}
+						rules={[{validator: (_: any, value: string) => validatePassword(value, true)}]}
 					>
 						<Input.Password />
 					</Form.Item>
@@ -153,6 +154,7 @@ const UserFormModal = ({
 					<Form.Item
 						name="password"
 						label="Пароль (оставьте пустым, если не нужно изменять)"
+						rules={[{validator: (_: any, value: string) => validatePassword(value, false)}]}
 					>
 						<Input.Password />
 					</Form.Item>

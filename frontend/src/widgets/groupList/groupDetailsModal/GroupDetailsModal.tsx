@@ -1,4 +1,4 @@
-import {Modal, Input, Typography} from 'antd'
+import {Modal, Input, Typography, message} from 'antd'
 import {useEffect, useState} from 'react'
 import {Student, StudentListForGroup} from './StudentListForGroup'
 import {Subject, SubjectListForGroup, Teacher, TeacherSubject} from './SubjectListForGroup'
@@ -58,6 +58,16 @@ const GroupDetailsModal = ({
 	}
 
 	const handleSave = () => {
+		if (!name) {
+			message.warning('Пожалуйста, укажите название группы. Это поле не может быть пустым.')
+			return
+		}
+
+		if (!studentIds.length) {
+			message.warning('Группа должна содержать хотя бы одного студента. Пожалуйста, добавьте студентов в группу.')
+			return
+		}
+
 		onSave({
 			id: group?.id ?? String(Date.now()),
 			name,

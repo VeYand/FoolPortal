@@ -119,6 +119,7 @@ readonly class ExceptionHandler
 				return self::constructNotFoundRequestResponse($exception->getMessage(), $responseCode, $responseHeaders);
 			case SubjectApiException::COURSE_ALREADY_EXISTS:
 			case SubjectApiException::TEACHER_SUBJECT_ALREADY_EXISTS:
+			case SubjectApiException::SUBJECT_NAME_IS_NOT_UNIQUE:
 				return self::constructConflictResponse($exception->getMessage(), $responseCode, $responseHeaders);
 		}
 
@@ -143,6 +144,7 @@ readonly class ExceptionHandler
 			case LessonApiException::ATTACHMENT_NOT_FOUND:
 				return self::constructNotFoundRequestResponse($exception->getMessage(), $responseCode, $responseHeaders);
 			case LessonApiException::LESSON_ATTACHMENT_ALREADY_EXISTS:
+			case LessonApiException::LOCATION_NAME_IS_NOT_UNIQUE:
 				return self::constructConflictResponse($exception->getMessage(), $responseCode, $responseHeaders);
 		}
 
