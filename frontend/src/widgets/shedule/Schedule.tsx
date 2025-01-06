@@ -1,6 +1,6 @@
 import {Button} from 'antd'
 import moment from 'moment'
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import {useAppSelector} from 'shared/redux'
 import {USER_ROLE} from 'shared/types'
 import {Preloader} from '../preloader/Preloader'
@@ -48,19 +48,20 @@ const Schedule = () => {
 	} = useInitialize(startDate, endDate)
 
 
-	const onCreateButtonClick = () => {
+	const onCreateButtonClick = useCallback(() => {
 		setLessonModalOpened(true)
 		setSelectedLessonId(undefined)
-	}
+	}, [])
 
+	const onSelectedDateChange = useCallback((start: Date, end: Date) => {
+		setStartDate(start)
+		setEndDate(end)
+	}, [])
 
 	return (
 		<div>
 			<ScheduleHeader
-				onSelectedDateChange={(start: Date, end: Date) => {
-					setStartDate(start)
-					setEndDate(end)
-				}}
+				onSelectedDateChange={onSelectedDateChange}
 				onCreateButtonClick={onCreateButtonClick}
 			/>
 			{loading && <Preloader />}

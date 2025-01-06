@@ -8,7 +8,7 @@ const validatePassword = (value: string, required: boolean): Promise<void> => {
 	if (value.length < 8) {
 		return Promise.reject(new Error('Пароль должен содержать не менее 8 символов.'))
 	}
-	if (value.length < 64) {
+	if (value.length > 64) {
 		return Promise.reject(new Error('Пароль должен быть не более 64 символов.'))
 	}
 	if (!/[A-Z]/.test(value)) {
