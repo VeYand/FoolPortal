@@ -1,8 +1,10 @@
-import {Avatar, Button, Space, Table} from 'antd'
+import {SearchOutlined} from '@ant-design/icons'
+import {Avatar, Button, Input, Space, Table} from 'antd'
 import {useState} from 'react'
+import {getViewableUserRole} from 'shared/libs'
+import {useAppSelector} from 'shared/redux'
 import {USER_ROLE, UserData} from 'shared/types'
 import {RoleTag} from 'shared/ui/RoleTag/RoleTag'
-import {useAppSelector} from '../../shared/redux'
 import {Preloader} from '../preloader/Preloader'
 import {DeleteConfirmationModal} from './DeleteConfirmationModal'
 import {canDeleteUser, canModifyUser} from './libs/canModifyUser'
@@ -25,6 +27,7 @@ const UserList = () => {
 	const [selectedUser, setSelectedUser] = useState<UserData | undefined>()
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
+	const [searchText, setSearchText] = useState('')
 
 	const handleEdit = (user: UserData) => {
 		setSelectedUser(user)
@@ -41,8 +44,15 @@ const UserList = () => {
 			return '-'
 		}
 
-		return groupIds.map(id => groups.find(group => group.groupId === id)?.name || '').join(', ')
+		return groupIds
+			.map(id => groups.find(group => group.groupId === id)?.name || '')
+			.join(', ')
 	}
+
+	const filteredData = users.filter(user => {
+		const searchString = `${user.firstName} ${user.lastName} ${user.email} ${getViewableUserRole(user.role)} ${groupNames(user.groupIds)}`.toLowerCase()
+		return searchString.includes(searchText.toLowerCase())
+	})
 
 	const columns = [
 		{
@@ -55,6 +65,8 @@ const UserList = () => {
 			title: 'Имя',
 			dataIndex: 'firstName',
 			key: 'firstName',
+			sorter: (a: UserData, b: UserData) =>
+				`${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
 			render: (_: string, user: UserData) =>
 				`${user.firstName} ${user.lastName} ${user.patronymic || ''}`,
 		},
@@ -62,12 +74,18 @@ const UserList = () => {
 			title: 'Email',
 			dataIndex: 'email',
 			key: 'email',
+			sorter: (a: UserData, b: UserData) => a.email.localeCompare(b.email),
 		},
 		{
 			title: 'Роль',
 			dataIndex: 'role',
 			key: 'role',
-			render: (role: USER_ROLE) => <RoleTag role={role}/>,
+			filters: Object.values(USER_ROLE).map(role => ({
+				text: getViewableUserRole(role),
+				value: role,
+			})),
+			onFilter: (value: any, record: UserData) => record.role === value,
+			render: (role: USER_ROLE) => <RoleTag role={role} />,
 		},
 		{
 			title: 'Группы',
@@ -80,41 +98,48 @@ const UserList = () => {
 			key: 'actions',
 			render: (_: any, user: UserData) => (
 				<Space>
-					{
-						canModifyUser(currentUser, user) && (
-							<Button onClick={() => handleEdit(user)}>
-								{'Редактировать'}
-							</Button>
-						)
-					}
-					{
-						canDeleteUser(currentUser, user) && (
-							<Button danger onClick={() => handleDelete(user)}>
-								{'Удалить'}
-							</Button>
-						)
-					}
+					{canModifyUser(currentUser, user) && (
+						<Button onClick={() => handleEdit(user)}>Редактировать</Button>
+					)}
+					{canDeleteUser(currentUser, user) && (
+						<Button danger onClick={() => handleDelete(user)}>
+							Удалить
+						</Button>
+					)}
 				</Space>
 			),
 		},
 	]
 
 	if (loading) {
-		return <Preloader/>
+		return <Preloader />
 	}
 
 	return (
 		<>
-			<Button
-				type="primary"
-				onClick={() => {
-					setSelectedUser(undefined)
-					setModalVisible(true)
-				}}
-			>
-				{'Добавить пользователя'}
-			</Button>
-			<Table columns={columns} dataSource={users} rowKey="id"/>
+			<Space style={{marginBottom: 16}}>
+				<Input
+					placeholder="Поиск"
+					prefix={<SearchOutlined />}
+					value={searchText}
+					onChange={e => setSearchText(e.target.value)}
+					allowClear
+				/>
+				<Button
+					type="primary"
+					onClick={() => {
+						setSelectedUser(undefined)
+						setModalVisible(true)
+					}}
+				>
+					Добавить пользователя
+				</Button>
+			</Space>
+			<Table
+				columns={columns}
+				dataSource={filteredData}
+				rowKey="id"
+			/>
 			{isModalVisible && (
 				<UserFormModal
 					user={selectedUser}

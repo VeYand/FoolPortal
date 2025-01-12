@@ -1,4 +1,5 @@
 import {ConfigProvider} from 'antd'
+import locale from 'antd/locale/ru_RU'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import moment from 'moment'
@@ -27,7 +28,7 @@ const App = () => {
 	}
 
 	return (
-		<ConfigProvider theme={globalTheme}>
+		<ConfigProvider theme={globalTheme} locale={locale}>
 			<Routes>
 				<Route path={LoginRoute.path} element={<LoginPage/>}/>
 				<Route path={UserPortalRoute.path} element={<UserPortalPage/>}/>
