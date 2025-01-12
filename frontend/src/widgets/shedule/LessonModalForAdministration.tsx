@@ -63,6 +63,12 @@ const LessonModalForAdministration = ({
 	const [updateLesson] = useLazyUpdateLesson()
 	const [deleteLesson] = useLazyDeleteLesson()
 
+	useEffect(() => {
+		setFilteredSubjectIds(subjects.map(s => s.subjectId))
+		setFilteredTeacherIds(teachers.map(t => t.userId))
+		setFilteredGroupIds(groups.map(g => g.groupId))
+	}, [groups, open, subjects, teachers])
+
 	const originalAttachments = useFetchLessonAttachments(selectedLesson?.lessonId)
 	const [modifiedAttachments, setModifiedAttachments] = useState<DetailedAttachmentData[]>([])
 	useEffect(() => {
@@ -270,14 +276,14 @@ const LessonModalForAdministration = ({
 					label="Дата"
 					rules={[{required: true, message: 'Пожалуйста, выберите дату!'}]}
 				>
-					<Input type="date"/>
+					<Input type="date" lang={'ru'}/>
 				</Form.Item>
 				<Form.Item
 					name="startTime"
 					label="Время начала"
 					rules={[{required: true, message: 'Пожалуйста, укажите время начала!'}]}
 				>
-					<Input type="time"/>
+					<Input type="time" lang={'ru'}/>
 				</Form.Item>
 				<Form.Item
 					name="duration"
