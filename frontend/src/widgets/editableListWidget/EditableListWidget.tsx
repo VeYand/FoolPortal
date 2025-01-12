@@ -1,3 +1,4 @@
+import {SearchOutlined} from '@ant-design/icons'
 import {Table, Typography, Input, Button} from 'antd'
 import {useState} from 'react'
 import styles from './EditableListWidget.module.css'
@@ -12,6 +13,7 @@ type EditableListWidgetProps = {
 
 const EditableListWidget = ({title, data, onSave, onDelete}: EditableListWidgetProps) => {
 	const [newItemName, setNewItemName] = useState('')
+	const [searchText, setSearchText] = useState('')
 
 	const handleAddItem = () => {
 		if (newItemName.trim()) {
@@ -20,12 +22,19 @@ const EditableListWidget = ({title, data, onSave, onDelete}: EditableListWidgetP
 		}
 	}
 
+	const filteredData = data.filter(item => {
+		const searchString = `${item.name}`.toLowerCase()
+		return searchString.includes(searchText.toLowerCase())
+	})
+
+
 	const columns = [
 		{
 			title: 'Name',
 			dataIndex: 'name',
 			key: 'name',
 			render: (_: any, item: EditableItem) => <EditableRow item={item} onSave={onSave} onDelete={onDelete} />,
+			sorter: (a: EditableItem, b: EditableItem) => a.name.localeCompare(b.name),
 		},
 		{
 			title: 'Action',
@@ -37,6 +46,16 @@ const EditableListWidget = ({title, data, onSave, onDelete}: EditableListWidgetP
 	return (
 		<div className={styles.widget}>
 			<Typography.Title level={4}>{title}</Typography.Title>
+			<div className={styles.searchContainer}>
+				<Input
+					placeholder="Поиск"
+					prefix={<SearchOutlined/>}
+					value={searchText}
+					onChange={e => setSearchText(e.target.value)}
+					className={styles.searchInput}
+					allowClear
+				/>
+			</div>
 			<div className={styles.newItemContainer}>
 				<Input
 					placeholder="Введите новое название"
@@ -49,7 +68,7 @@ const EditableListWidget = ({title, data, onSave, onDelete}: EditableListWidgetP
 				</Button>
 			</div>
 			<Table
-				dataSource={data}
+				dataSource={filteredData}
 				columns={columns}
 				rowKey="id"
 				pagination={false}

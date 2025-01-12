@@ -1,4 +1,5 @@
-import {Table, Button, Typography} from 'antd'
+import {SearchOutlined} from '@ant-design/icons'
+import {Table, Button, Typography, Space, Input} from 'antd'
 import {useState} from 'react'
 import {Preloader} from '../preloader/Preloader'
 import {Group, GroupDetailsModal} from './groupDetailsModal/GroupDetailsModal'
@@ -8,6 +9,7 @@ const GroupList = () => {
 	const {loading, data, saveGroup, deleteGroup} = useInitialize()
 	const [selectedGroup, setSelectedGroup] = useState<Group | undefined>()
 	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [searchText, setSearchText] = useState('')
 
 	const handleEditGroup = (group: Group) => {
 		setSelectedGroup(group)
@@ -28,40 +30,57 @@ const GroupList = () => {
 		setIsModalOpen(false)
 	}
 
+	const filteredData = data?.initialGroups.filter(group => {
+		const searchString = `${group.name}`.toLowerCase()
+		return searchString.includes(searchText.toLowerCase())
+	})
+
+	const columns = [
+		{
+			title: 'Название',
+			dataIndex: 'name',
+			key: 'name',
+			sorter: (a: Group, b: Group) => a.name.localeCompare(b.name),
+		},
+		{
+			title: 'Действия',
+			key: 'actions',
+			render: (_: any, group: Group) => (
+				<div style={{display: 'flex', gap: 10}}>
+					<Button onClick={() => handleEditGroup(group)}>
+						{'Редактировать'}
+					</Button>
+					<Button onClick={() => handleDeleteGroup(group.id)} danger>
+						{'Удалить'}
+					</Button>
+				</div>
+			),
+		},
+	]
+
 	if (loading || !data) {
 		return <Preloader/>
 	}
 
 	return (
 		<div>
-			<Typography.Title level={3}>Группы</Typography.Title>
-			<Button type="primary" onClick={handleAddGroup}>
-				{'Добавить группу'}
-			</Button>
+			<Typography.Title level={3}>{'Группы'}</Typography.Title>
+			<Space style={{marginBottom: 16}}>
+				<Input
+					placeholder="Поиск"
+					prefix={<SearchOutlined/>}
+					value={searchText}
+					onChange={e => setSearchText(e.target.value)}
+					allowClear
+				/>
+				<Button type="primary" onClick={handleAddGroup}>
+					{'Добавить группу'}
+				</Button>
+			</Space>
 			<Table
-				dataSource={data.initialGroups}
+				dataSource={filteredData}
 				rowKey="id"
-				columns={[
-					{
-						title: 'Название',
-						dataIndex: 'name',
-						key: 'name',
-					},
-					{
-						title: 'Действия',
-						key: 'actions',
-						render: (_: any, group: Group) => (
-							<div style={{display: 'flex', gap: 10}}>
-								<Button onClick={() => handleEditGroup(group)}>
-									{'Редактировать'}
-								</Button>
-								<Button onClick={() => handleDeleteGroup(group.id)} danger>
-									{'Удалить'}
-								</Button>
-							</div>
-						),
-					},
-				]}
+				columns={columns}
 			/>
 			<GroupDetailsModal
 				group={selectedGroup}

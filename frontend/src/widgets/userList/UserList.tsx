@@ -132,7 +132,7 @@ const UserList = () => {
 						setModalVisible(true)
 					}}
 				>
-					Добавить пользователя
+					{'Добавить пользователя'}
 				</Button>
 			</Space>
 			<Table

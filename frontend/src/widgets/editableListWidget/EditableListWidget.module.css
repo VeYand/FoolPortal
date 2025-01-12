@@ -3,6 +3,17 @@
     margin: 0 auto;
 }
 
+.searchContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.searchInput {
+    width: 100%;
+}
+
 .newItemContainer {
     display: flex;
     gap: 8px;
