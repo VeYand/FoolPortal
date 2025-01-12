@@ -28,6 +28,18 @@ const UserList = () => {
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
 	const [searchText, setSearchText] = useState('')
+	const [pagination, setPagination] = useState({
+		current: 1,
+		pageSize: 10,
+	})
+
+	const handleTableChange = (paginationData: any) => {
+		setPagination({
+			current: paginationData.current,
+			pageSize: paginationData.pageSize,
+		})
+	}
+
 
 	const handleEdit = (user: UserData) => {
 		setSelectedUser(user)
@@ -139,7 +151,16 @@ const UserList = () => {
 				columns={columns}
 				dataSource={filteredData}
 				rowKey="id"
+				pagination={{
+					current: pagination.current,
+					pageSize: pagination.pageSize,
+					total: filteredData.length,
+					showSizeChanger: true,
+					pageSizeOptions: ['5', '10', '20', '50'],
+				}}
+				onChange={handleTableChange}
 			/>
+
 			{isModalVisible && (
 				<UserFormModal
 					user={selectedUser}
