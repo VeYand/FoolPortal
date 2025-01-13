@@ -47,6 +47,11 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 			$users = $this->userApi->listUsers(
 				new ListUsersSpec(
 					$this->uuidProvider->fromStringsToUuids($listUsersSpec?->getGroupIds()),
+					$listUsersSpec?->getOrderField(),
+					$listUsersSpec?->getAscOrder(),
+					$listUsersSpec?->getPage(),
+					$listUsersSpec?->getLimit(),
+					UserModelConverter::convertApiRolesToUserRoles($listUsersSpec?->getRoles())
 				),
 			);
 

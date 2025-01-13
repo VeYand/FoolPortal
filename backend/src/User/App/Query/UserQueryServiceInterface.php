@@ -33,6 +33,7 @@ interface UserQueryServiceInterface
 
 	/**
 	 * @return DetailedUserData[]
+	 * @throws AppException
 	 */
 	public function listUsers(ListUsersSpec $spec): array;
 }

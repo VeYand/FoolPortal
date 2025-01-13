@@ -18,8 +18,9 @@ import {
 } from 'shared/libs/query'
 import {remapUserRoleToApiUserRole} from 'shared/libs/remmapers'
 import {remapApiUsersToUsersList} from 'shared/libs/remmapers/remapApiUserToUserData'
+import {remapUserRolesToApiUserRoles} from 'shared/libs/remmapers/remapUserDataToApiUser'
 import {useAppDispatch, useAppSelector} from 'shared/redux'
-import {UserData, GroupData, SubjectData, TeacherSubjectData} from 'shared/types'
+import {UserData, GroupData, SubjectData, TeacherSubjectData, USER_ROLE} from 'shared/types'
 
 type UseInitializeReturns = {
 	users: UserData[],
@@ -31,7 +32,12 @@ type UseInitializeReturns = {
 	loading: boolean,
 }
 
-const useInitialize = (): UseInitializeReturns => {
+type Sort = 'ASC' | 'DESC'
+
+type OrderField = 'name' | 'email'
+
+
+const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: number, pageLimit?: number, roles?: USER_ROLE[]): UseInitializeReturns => {
 	const dispatch = useAppDispatch()
 	const currentUser = useAppSelector(state => state.userEntity.user)
 
@@ -53,12 +59,18 @@ const useInitialize = (): UseInitializeReturns => {
 	const [teacherSubjects, setTeacherSubjects] = useState<TeacherSubjectData[]>([])
 	const [loading, setLoading] = useState<boolean>(true)
 
-	const fetchData = useCallback(async () => {
+	const fetchData = useCallback(async (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => {
 		try {
 			setLoading(true)
 
 			const [usersResponse, subjectsResponse, groupsResponse, teacherSubjectsResponse] = await Promise.all([
-				listUsers({}),
+				listUsers({
+					ascOrder: sort ? sort === 'ASC' : undefined,
+					orderField: field,
+					page,
+					limit,
+					roles: remapUserRolesToApiUserRoles(rolesData),
+				}),
 				listSubjects({}),
 				listGroups({}),
 				listTeacherSubjects({}),
@@ -78,8 +90,8 @@ const useInitialize = (): UseInitializeReturns => {
 	}, [listUsers, listSubjects, listGroups, listTeacherSubjects])
 
 	useEffect(() => {
-		fetchData()
-	}, [fetchData])
+		fetchData(usersSort, orderField, usersPage, pageLimit, roles)
+	}, [fetchData, orderField, pageLimit, roles, usersPage, usersSort])
 
 	const saveUser = async (updatedUser: UserData, selectedSubjectIds: string[]) => {
 		try {

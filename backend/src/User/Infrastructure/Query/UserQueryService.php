@@ -12,6 +12,7 @@ use App\User\App\Query\ImageQueryServiceInterface;
 use App\User\App\Query\Spec\ListUsersSpec;
 use App\User\App\Query\UserQueryServiceInterface;
 use App\User\Domain\Model\User;
+use App\User\Domain\Model\UserRole;
 use App\User\Domain\Repository\GroupMemberReadRepositoryInterface;
 use App\User\Domain\Repository\UserReadRepositoryInterface;
 use App\User\Domain\Model\GroupMember;
@@ -91,9 +92,12 @@ readonly class UserQueryService implements UserQueryServiceInterface
 
 	/**
 	 * @inheritDoc
+	 * @throws AppException
 	 */
 	public function listUsers(ListUsersSpec $spec): array
 	{
+		$this->validatePagination($spec->page, $spec->limit);
+		$this->validateOrder($spec->orderField, $spec->ascOrder);
 		$qb = $this->entityManager->createQueryBuilder();
 
 		$qb->select('u')
@@ -106,13 +110,44 @@ readonly class UserQueryService implements UserQueryServiceInterface
 				->setParameter('groupIds', UuidUtils::convertToBinaryList($spec->groupIds));
 		}
 
+		if (!empty($spec->roles))
+		{
+			$qb->andWhere('u.role IN (:roles)')
+				->setParameter('roles', array_map(
+					static fn(UserRole $role) => $role->value,
+					$spec->roles,
+				));
+		}
+
+		if ($spec->ascOrder !== null)
+		{
+			if ($spec->orderField === 'name')
+			{
+				$qb->orderBy('u.lastName', $spec->ascOrder ? 'ASC' : 'DESC')
+					->addOrderBy('u.firstName', $spec->ascOrder ? 'ASC' : 'DESC')
+					->addOrderBy('u.patronymic', $spec->ascOrder ? 'ASC' : 'DESC');
+			}
+			else if ($spec->orderField === 'email')
+			{
+				$qb->orderBy('u.email', $spec->ascOrder ? 'ASC' : 'DESC');
+			}
+		}
+
+		if ($spec->page !== null && $spec->limit !== null)
+		{
+			$qb->setFirstResult(($spec->page - 1) * $spec->limit)
+				->setMaxResults($spec->limit);
+		}
+
 		$users = $qb->getQuery()->getResult();
 
 		$userIds = array_map(
 			static fn(User $user) => $user->getUserId(),
 			$users,
 		);
+
 		$userIdToGroupIdsMap = $this->getUserIdToGroupIdsMap($userIds);
+
 		return array_map(
 			function (User $user) use ($userIdToGroupIdsMap)
 			{
@@ -120,6 +155,28 @@ readonly class UserQueryService implements UserQueryServiceInterface
 			},
 			$users,
 		);
+	}
+
+	/**
+	 * @throws AppException
+	 */
+	private function validateOrder(?string $orderFiled, ?bool $ascOrder): void
+	{
+		if ($ascOrder !== null && $orderFiled !== 'name' && $orderFiled !== 'email')
+		{
+			throw new AppException('Invalid order field', AppException::INVALID_ORDER_FILED);
+		}
+	}
+
+	/**
+	 * @throws AppException
+	 */
+	private function validatePagination(?int $page, ?int $limit): void
+	{
+		if (($page !== null && $page < 1) || ($limit !== null && $limit < 0))
+		{
+			throw new AppException('Invalid pagination', AppException::INVALID_PAGINATION);
+		}
 	}
 
 	/**

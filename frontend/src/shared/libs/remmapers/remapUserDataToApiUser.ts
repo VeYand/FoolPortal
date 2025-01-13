@@ -18,6 +18,11 @@ const remapUserRoleToApiUserRole = (role: USER_ROLE): ApiUserRole => {
 	}
 }
 
+const remapUserRolesToApiUserRoles = (roles?: USER_ROLE[]): ApiUserRole[] | undefined => (
+	roles?.map(remapUserRoleToApiUserRole)
+)
+
 export {
 	remapUserRoleToApiUserRole,
+	remapUserRolesToApiUserRoles,
 }

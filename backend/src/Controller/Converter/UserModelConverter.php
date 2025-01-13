@@ -51,6 +51,21 @@ readonly class UserModelConverter
 	}
 
 	/**
+	 * @param int[]|null $roles
+	 * @return UserRole[]|null
+	 * @throws UserApiException
+	 */
+	public static function convertApiRolesToUserRoles(?array $roles): ?array
+	{
+		if (is_null($roles))
+		{
+			return null;
+		}
+
+		return array_map(static fn(int $role) => self::convertApiRoleToUserRole($role), $roles);
+	}
+
+	/**
 	 * @throws UserApiException
 	 */
 	public static function convertCreateUserRequestToCreateUserInput(CreateUserRequest $request): CreateUserInput

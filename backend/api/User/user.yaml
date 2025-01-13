@@ -63,6 +63,23 @@ components:
             type: string
             format: uuid
             nullable: false
+        orderField:
+          type: string
+        ascOrder:
+          type: bool
+        page:
+          type: integer
+        limit:
+          type: integer
+        roles:
+          type: array
+          items:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
 
     CreateUserRequest:
       type: object
