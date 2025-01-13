@@ -1,5 +1,6 @@
 import {SearchOutlined} from '@ant-design/icons'
 import {Avatar, Button, Input, Space, Table} from 'antd'
+import {SortOrder} from 'antd/lib/table/interface'
 import {useState} from 'react'
 import {getViewableUserRole} from 'shared/libs'
 import {useAppSelector} from 'shared/redux'
@@ -87,8 +88,8 @@ const UserList = () => {
 			title: 'Имя',
 			dataIndex: 'name',
 			key: 'name',
-			sorter: (a: UserData, b: UserData) =>
-				`${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
+			sorter: true,
+			sortOrder: (sortField === 'name' ? (sortOrder === 'ASC' ? 'ascend' : 'descend') : null) as SortOrder,
 			render: (_: string, user: UserData) =>
 				`${user.firstName} ${user.lastName} ${user.patronymic || ''}`,
 		},
@@ -96,7 +97,8 @@ const UserList = () => {
 			title: 'Email',
 			dataIndex: 'email',
 			key: 'email',
-			sorter: (a: UserData, b: UserData) => a.email.localeCompare(b.email),
+			sorter: true,
+			sortOrder: (sortField === 'email' ? (sortOrder === 'ASC' ? 'ascend' : 'descend') : null) as SortOrder,
 		},
 		{
 			title: 'Роль',
@@ -108,7 +110,7 @@ const UserList = () => {
 			})),
 			filteredValue: filterRoles,
 			onFilter: (value: any, record: UserData) => record.role === value,
-			render: (role: USER_ROLE) => <RoleTag role={role} />,
+			render: (role: USER_ROLE) => <RoleTag role={role}/>,
 		},
 		{
 			title: 'Группы',
@@ -139,7 +141,7 @@ const UserList = () => {
 			<Space style={{marginBottom: 16}}>
 				<Input
 					placeholder="Поиск"
-					prefix={<SearchOutlined />}
+					prefix={<SearchOutlined/>}
 					value={searchText}
 					onChange={e => setSearchText(e.target.value)}
 					allowClear
@@ -154,7 +156,7 @@ const UserList = () => {
 					{'Добавить пользователя'}
 				</Button>
 			</Space>
-			{loading && <Preloader />}
+			{loading && <Preloader/>}
 			{!loading && (
 				<Table
 					columns={columns}

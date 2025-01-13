@@ -63,13 +63,6 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 	const fetchData = useCallback(async (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => {
 		try {
 			setLoading(true)
-			console.log({
-				ascOrder: sort ? sort === 'ASC' : undefined,
-				orderField: field,
-				page,
-				limit,
-				roles: remapUserRolesToApiUserRoles(rolesData),
-			})
 			const [usersResponse, subjectsResponse, groupsResponse, teacherSubjectsResponse] = await Promise.all([
 				listUsers({
 					ascOrder: sort ? sort === 'ASC' : undefined,
