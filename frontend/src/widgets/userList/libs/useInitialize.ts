@@ -98,7 +98,7 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 
 	useEffect(() => {
 		fetchData(usersSort, orderField, usersPage, pageLimit, roles)
-	}, [fetchData])
+	}, [fetchData, orderField, pageLimit, roles, usersPage, usersSort])
 
 	const saveUser = async (updatedUser: UserData, selectedSubjectIds: string[]) => {
 		try {
@@ -264,4 +264,9 @@ const constructUpdateUserRequest = (existingUser: UserData, updatedUser: UserDat
 
 export {
 	useInitialize,
+}
+
+export type {
+	Sort,
+	OrderField,
 }

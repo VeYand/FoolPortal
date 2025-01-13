@@ -8,7 +8,7 @@ import {RoleTag} from 'shared/ui/RoleTag/RoleTag'
 import {Preloader} from '../preloader/Preloader'
 import {DeleteConfirmationModal} from './DeleteConfirmationModal'
 import {canDeleteUser, canModifyUser} from './libs/canModifyUser'
-import {useInitialize} from './libs/useInitialize'
+import {OrderField, Sort, useInitialize} from './libs/useInitialize'
 import {UserFormModal} from './UserFormModal'
 
 
@@ -17,6 +17,10 @@ const UserList = () => {
 		current: 1,
 		pageSize: 10,
 	})
+	const [sortOrder, setSortOrder] = useState<Sort | undefined>()
+	const [sortField, setSortField] = useState<OrderField | undefined>()
+	const [filterRoles, setFilterRoles] = useState<USER_ROLE[] | undefined>()
+
 	const {
 		users,
 		groups,
@@ -25,8 +29,7 @@ const UserList = () => {
 		saveUser,
 		deleteUser,
 		loading,
-		refetch,
-	} = useInitialize(undefined, undefined, pagination.current, pagination.pageSize, undefined)
+	} = useInitialize(sortOrder, sortField, pagination.current, pagination.pageSize, filterRoles)
 
 	const currentUser = useAppSelector(state => state.userEntity.user)
 	const [selectedUser, setSelectedUser] = useState<UserData | undefined>()
@@ -35,15 +38,16 @@ const UserList = () => {
 	const [searchText, setSearchText] = useState('')
 
 	const handleTableChange = (paginationData: any, filters: any, sorter: any) => {
-		const sortOrder = sorter.order ? sorter.order === 'ascend' ? 'ASC' : 'DESC' : undefined
-		const sortField = sorter.field
+		const newSortOrder = sorter.order ? (sorter.order === 'ascend' ? 'ASC' : 'DESC') : undefined
+		const newSortField = sorter.field
 
 		setPagination({
 			current: paginationData.current,
 			pageSize: paginationData.pageSize,
 		})
-
-		refetch(sortOrder, sortField, paginationData.current, paginationData.pageSize, filters.role)
+		setSortOrder(newSortOrder)
+		setSortField(newSortField)
+		setFilterRoles(filters.role)
 	}
 
 
@@ -102,6 +106,7 @@ const UserList = () => {
 				text: getViewableUserRole(role),
 				value: role,
 			})),
+			filteredValue: filterRoles,
 			onFilter: (value: any, record: UserData) => record.role === value,
 			render: (role: USER_ROLE) => <RoleTag role={role} />,
 		},
@@ -129,10 +134,6 @@ const UserList = () => {
 		},
 	]
 
-	if (loading) {
-		return <Preloader />
-	}
-
 	return (
 		<>
 			<Space style={{marginBottom: 16}}>
@@ -153,6 +154,7 @@ const UserList = () => {
 					{'Добавить пользователя'}
 				</Button>
 			</Space>
+			{loading && <Preloader />}
 			{!loading && (
 				<Table
 					columns={columns}
