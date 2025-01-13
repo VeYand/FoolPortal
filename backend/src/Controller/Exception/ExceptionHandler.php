@@ -79,6 +79,8 @@ readonly class ExceptionHandler
 			case UserApiException::PASSWORD_IS_TOO_LONG:
 			case UserApiException::EMAIL_IS_NOT_UNIQUE:
 			case UserApiException::INVALID_USER_ROLE:
+			case UserApiException::INVALID_PAGINATION:
+			case UserApiException::INVALID_ORDER_FILED:
 				return self::constructBadRequestResponse($exception->getMessage(), $responseCode, $responseHeaders);
 			case UserApiException::USER_NOT_FOUND:
 			case UserApiException::GROUP_NOT_FOUND:

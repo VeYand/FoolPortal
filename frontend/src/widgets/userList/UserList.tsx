@@ -13,6 +13,10 @@ import {UserFormModal} from './UserFormModal'
 
 
 const UserList = () => {
+	const [pagination, setPagination] = useState({
+		current: 1,
+		pageSize: 10,
+	})
 	const {
 		users,
 		groups,
@@ -21,23 +25,25 @@ const UserList = () => {
 		saveUser,
 		deleteUser,
 		loading,
-	} = useInitialize()
+		refetch,
+	} = useInitialize(undefined, undefined, pagination.current, pagination.pageSize, undefined)
 
 	const currentUser = useAppSelector(state => state.userEntity.user)
 	const [selectedUser, setSelectedUser] = useState<UserData | undefined>()
 	const [isModalVisible, setModalVisible] = useState(false)
 	const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
 	const [searchText, setSearchText] = useState('')
-	const [pagination, setPagination] = useState({
-		current: 1,
-		pageSize: 10,
-	})
 
-	const handleTableChange = (paginationData: any) => {
+	const handleTableChange = (paginationData: any, filters: any, sorter: any) => {
+		const sortOrder = sorter.order ? sorter.order === 'ascend' ? 'ASC' : 'DESC' : undefined
+		const sortField = sorter.field
+
 		setPagination({
 			current: paginationData.current,
 			pageSize: paginationData.pageSize,
 		})
+
+		refetch(sortOrder, sortField, paginationData.current, paginationData.pageSize, filters.role)
 	}
 
 
@@ -75,8 +81,8 @@ const UserList = () => {
 		},
 		{
 			title: 'Имя',
-			dataIndex: 'firstName',
-			key: 'firstName',
+			dataIndex: 'name',
+			key: 'name',
 			sorter: (a: UserData, b: UserData) =>
 				`${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
 			render: (_: string, user: UserData) =>
@@ -147,20 +153,21 @@ const UserList = () => {
 					{'Добавить пользователя'}
 				</Button>
 			</Space>
-			<Table
-				columns={columns}
-				dataSource={filteredData}
-				rowKey="id"
-				pagination={{
-					current: pagination.current,
-					pageSize: pagination.pageSize,
-					total: filteredData.length,
-					showSizeChanger: true,
-					pageSizeOptions: ['5', '10', '20', '50'],
-				}}
-				onChange={handleTableChange}
-			/>
-
+			{!loading && (
+				<Table
+					columns={columns}
+					dataSource={filteredData}
+					rowKey="id"
+					pagination={{
+						current: pagination.current,
+						pageSize: pagination.pageSize,
+						total: filteredData.length,
+						showSizeChanger: true,
+						pageSizeOptions: ['5', '10', '20', '50'],
+					}}
+					onChange={handleTableChange}
+				/>
+			)}
 			{isModalVisible && (
 				<UserFormModal
 					user={selectedUser}

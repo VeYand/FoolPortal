@@ -18,7 +18,6 @@ readonly class ListUsersSpec
 		public ?bool   $ascOrder = null,
 		public ?int    $page = null,
 		public ?int    $limit = null,
-		public ?string $sortField = null,
 		public ?array  $roles = null,
 	)
 	{

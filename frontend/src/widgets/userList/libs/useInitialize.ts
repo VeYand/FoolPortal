@@ -30,6 +30,7 @@ type UseInitializeReturns = {
 	saveUser: (updatedUser: UserData, selectedSubjectIds: string[]) => Promise<void>,
 	deleteUser: (userId: string) => Promise<void>,
 	loading: boolean,
+	refetch: (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => void,
 }
 
 type Sort = 'ASC' | 'DESC'
@@ -62,7 +63,13 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 	const fetchData = useCallback(async (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => {
 		try {
 			setLoading(true)
-
+			console.log({
+				ascOrder: sort ? sort === 'ASC' : undefined,
+				orderField: field,
+				page,
+				limit,
+				roles: remapUserRolesToApiUserRoles(rolesData),
+			})
 			const [usersResponse, subjectsResponse, groupsResponse, teacherSubjectsResponse] = await Promise.all([
 				listUsers({
 					ascOrder: sort ? sort === 'ASC' : undefined,
@@ -91,7 +98,7 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 
 	useEffect(() => {
 		fetchData(usersSort, orderField, usersPage, pageLimit, roles)
-	}, [fetchData, orderField, pageLimit, roles, usersPage, usersSort])
+	}, [fetchData])
 
 	const saveUser = async (updatedUser: UserData, selectedSubjectIds: string[]) => {
 		try {
@@ -210,6 +217,7 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 		saveUser,
 		deleteUser,
 		loading,
+		refetch: fetchData,
 	}
 }
 
