@@ -7,6 +7,7 @@ use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidUtils;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
+use App\User\App\Query\Data\ListUsersOutput;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\ImageQueryServiceInterface;
 use App\User\App\Query\Spec\ListUsersSpec;
@@ -94,7 +95,7 @@ readonly class UserQueryService implements UserQueryServiceInterface
 	 * @inheritDoc
 	 * @throws AppException
 	 */
-	public function listUsers(ListUsersSpec $spec): array
+	public function listUsers(ListUsersSpec $spec): ListUsersOutput
 	{
 		$this->validatePagination($spec->page, $spec->limit);
 		$this->validateOrder($spec->orderField, $spec->ascOrder);
@@ -133,6 +134,18 @@ readonly class UserQueryService implements UserQueryServiceInterface
 			}
 		}
 
+		if (!is_null($spec->limit))
+		{
+			$countQuery = clone $qb;
+			$countQuery->select('COUNT(u.userId)');
+			$totalUsers = (int)$countQuery->getQuery()->getSingleScalarResult();
+			$maxPage = (int)ceil($totalUsers / $spec->limit);
+		}
+		else
+		{
+			$maxPage = 1;
+		}
+
 		if ($spec->page !== null && $spec->limit !== null)
 		{
 			$qb->setFirstResult(($spec->page - 1) * $spec->limit)
@@ -148,14 +161,17 @@ readonly class UserQueryService implements UserQueryServiceInterface
 
 		$userIdToGroupIdsMap = $this->getUserIdToGroupIdsMap($userIds);
 
-		return array_map(
+		$users = array_map(
 			function (User $user) use ($userIdToGroupIdsMap)
 			{
 				return $this->expandUserByGroups($user, $userIdToGroupIdsMap);
 			},
 			$users,
 		);
+
+		return new ListUsersOutput($users, $maxPage);
 	}
+
 
 	/**
 	 * @throws AppException

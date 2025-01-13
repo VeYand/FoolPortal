@@ -30,6 +30,7 @@ type UseInitializeReturns = {
 	saveUser: (updatedUser: UserData, selectedSubjectIds: string[]) => Promise<void>,
 	deleteUser: (userId: string) => Promise<void>,
 	loading: boolean,
+	maxPage: number,
 	refetch: (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => void,
 }
 
@@ -58,6 +59,7 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 	const [groups, setGroups] = useState<GroupData[]>([])
 	const [subjects, setSubjects] = useState<SubjectData[]>([])
 	const [teacherSubjects, setTeacherSubjects] = useState<TeacherSubjectData[]>([])
+	const [maxPage, setMaxPage] = useState(1)
 	const [loading, setLoading] = useState<boolean>(true)
 
 	const fetchData = useCallback(async (sort?: Sort, field?: OrderField, page?: number, limit?: number, rolesData?: USER_ROLE[]) => {
@@ -76,7 +78,8 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 				listTeacherSubjects({}),
 			])
 
-			setUsers(remapApiUsersToUsersList(usersResponse.data?.users || []))
+			setUsers(remapApiUsersToUsersList(usersResponse.data?.users.users || []))
+			setMaxPage(usersResponse.data?.maxPage ?? 1)
 			setSubjects(subjectsResponse.data?.subjects || [])
 			setGroups(groupsResponse.data?.groups || [])
 			setTeacherSubjects(teacherSubjectsResponse.data?.teacherSubjects || [])
@@ -210,6 +213,7 @@ const useInitialize = (usersSort?: Sort, orderField?: OrderField, usersPage?: nu
 		saveUser,
 		deleteUser,
 		loading,
+		maxPage,
 		refetch: fetchData,
 	}
 }

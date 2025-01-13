@@ -22,6 +22,7 @@ use OpenAPI\Server\Model\DeleteGroupRequest;
 use OpenAPI\Server\Model\DeleteUserRequest;
 use OpenAPI\Server\Model\GroupsList as ApiGroupsList;
 use OpenAPI\Server\Model\ListGroupsRequest;
+use OpenAPI\Server\Model\ListUsers200Response as ApiListUsers200Response;
 use OpenAPI\Server\Model\ListUsersSpec as ApiListUsersSpec;
 use OpenAPI\Server\Model\UpdateGroupRequest;
 use OpenAPI\Server\Model\UpdateUserRequest;
@@ -44,7 +45,7 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 	{
 		return $this->exceptionHandler->executeWithHandle(function () use ($listUsersSpec)
 		{
-			$users = $this->userApi->listUsers(
+			$output = $this->userApi->listUsers(
 				new ListUsersSpec(
 					$this->uuidProvider->fromStringsToUuids($listUsersSpec?->getGroupIds()),
 					$listUsersSpec?->getOrderField(),
@@ -55,8 +56,11 @@ readonly class UserApiHandler implements UserApiHandlerInterface
 				),
 			);
 
-			return new ApiUsersList([
-				'users' => UserModelConverter::convertUsersToApiUsers($users),
+			return new ApiListUsers200Response([
+				'users' => new ApiUsersList([
+					'users' => UserModelConverter::convertUsersToApiUsers($output->users)
+				]),
+				'maxPage' => $output->maxPage,
 			]);
 		}, $responseCode, $responseHeaders);
 	}

@@ -7,6 +7,7 @@ use App\Common\Uuid\UuidInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Exception\AppException;
 use App\User\App\Query\Data\DetailedUserData;
+use App\User\App\Query\Data\ListUsersOutput;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\GroupQueryServiceInterface;
 use App\User\App\Query\Spec\ListGroupsSpec;
@@ -82,7 +83,7 @@ readonly class UserApi implements UserApiInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function listUsers(ListUsersSpec $spec): array
+	public function listUsers(ListUsersSpec $spec): ListUsersOutput
 	{
 		return self::tryExecute(function () use ($spec)
 		{

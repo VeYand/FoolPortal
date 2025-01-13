@@ -7,6 +7,7 @@ use App\Common\Uuid\UuidInterface;
 use App\User\Api\Exception\ApiException;
 use App\User\App\Query\Data\DetailedUserData;
 use App\User\App\Query\Data\GroupData;
+use App\User\App\Query\Data\ListUsersOutput;
 use App\User\App\Query\Data\UserData;
 use App\User\App\Query\Spec\ListGroupsSpec;
 use App\User\App\Query\Spec\ListUsersSpec;
@@ -38,10 +39,9 @@ interface UserApiInterface
 	public function getUserHashedPassword(UuidInterface $userId): string;
 
 	/**
-	 * @return DetailedUserData[]
 	 * @throws ApiException
 	 */
-	public function listUsers(ListUsersSpec $spec): array;
+	public function listUsers(ListUsersSpec $spec): ListUsersOutput;
 
 	/**
 	 * @return GroupData[]

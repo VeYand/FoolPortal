@@ -29,6 +29,7 @@ const UserList = () => {
 		teacherSubjects,
 		saveUser,
 		deleteUser,
+		maxPage,
 		loading,
 	} = useInitialize(sortOrder, sortField, pagination.current, pagination.pageSize, filterRoles)
 
@@ -165,7 +166,7 @@ const UserList = () => {
 					pagination={{
 						current: pagination.current,
 						pageSize: pagination.pageSize,
-						total: filteredData.length,
+						total: maxPage * pagination.pageSize,
 						showSizeChanger: true,
 						pageSizeOptions: ['5', '10', '20', '50'],
 					}}

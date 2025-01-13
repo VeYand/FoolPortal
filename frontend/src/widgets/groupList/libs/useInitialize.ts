@@ -186,7 +186,7 @@ export const useInitialize = (): UseInitializeReturns => {
 					listCourses({}),
 				])
 
-			const [availableStudents, availableTeachers] = mapUsersToStudentsAndTeachers(usersResponse.data)
+			const [availableStudents, availableTeachers] = mapUsersToStudentsAndTeachers(usersResponse.data?.users)
 			const availableSubjects
 				= subjectsResponse.data?.subjects.map(subject => ({
 					id: subject.subjectId,
@@ -200,7 +200,7 @@ export const useInitialize = (): UseInitializeReturns => {
 				})) || []
 			const initialGroups = mapApiDataToGroups(
 				groupsResponse.data?.groups || [],
-				usersResponse.data?.users || [],
+				usersResponse.data?.users.users || [],
 				coursesResponse.data?.courses || [],
 			)
 

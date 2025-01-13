@@ -81,7 +81,7 @@ const useInitialize = (startTime: Date, endTime: Date): InitializedData => {
 		setGroups(groupsList)
 
 		const {data: usersData} = await listUsers({})
-		const usersList = remapApiUsersToUsersList(usersData?.users ?? [])
+		const usersList = remapApiUsersToUsersList(usersData?.users.users ?? [])
 		setUsers(usersList)
 
 		setLessons(remapApiLessonsToLessonsList({

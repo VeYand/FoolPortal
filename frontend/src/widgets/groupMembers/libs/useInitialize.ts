@@ -29,7 +29,7 @@ const useInitialize = (): UseInitializeReturns => {
 					listGroups({}),
 				])
 
-			setUsers(remapApiUsersToUsersList(usersResponse.data?.users ?? []))
+			setUsers(remapApiUsersToUsersList(usersResponse.data?.users.users ?? []))
 			setGroups(remapApiGroupsToGroupsList(groupsResponse.data?.groups ?? []))
 		}
 		catch (error) {

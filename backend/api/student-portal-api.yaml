@@ -64,11 +64,7 @@ paths:
               $ref: './User/user.yaml#/components/schemas/ListUsersSpec'
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './User/user.yaml#/components/schemas/UsersList'
+          $ref: './User/user.yaml#/components/responses/UsersListResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
