@@ -7,7 +7,6 @@ use App\Common\Event\EventPublisherInterface;
 use App\Common\Uuid\UuidProvider;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Tests\Unit\User\Domain\Infrastructure\GroupMemberInMemoryRepository;
-use App\Tests\Unit\User\Domain\Infrastructure\MockEventPublisher;
 use App\Tests\Unit\User\Domain\Infrastructure\MockImageUploader;
 use App\Tests\Unit\User\Domain\Infrastructure\UserInMemoryRepository;
 use App\User\Domain\Exception\DomainException;
