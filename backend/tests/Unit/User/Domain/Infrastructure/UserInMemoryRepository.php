@@ -3,20 +3,27 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\User\Domain\Infrastructure;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 
 class UserInMemoryRepository implements UserRepositoryInterface
 {
-	public function find(string $userId): ?User
+	/** @var array<string, User>  */
+	private array $users = [];
+
+	public function find(UuidInterface $userId): ?User
 	{
-		// TODO: Implement find() method.
-		return null;
+		return $this->users[$userId->toString()] ?? null;
 	}
 
 	public function findByEmail(string $email): ?User
 	{
-		// TODO: Implement findByEmail() method.
+		foreach ($this->users as $user) {
+			if ($user->getEmail() === $email) {
+				return $user;
+			}
+		}
 		return null;
 	}
 
@@ -25,18 +32,18 @@ class UserInMemoryRepository implements UserRepositoryInterface
 	 */
 	public function findAll(): array
 	{
-		// TODO: Implement findAll() method.
-		return [];
+		return array_values($this->users);
 	}
 
-	public function store(User $user): string
+	public function store(User $user): UuidInterface
 	{
-		// TODO: Implement store() method.
-		return '';
+		$this->users[$user->getUserId()->toString()] = $user;
+		return $user->getUserId();
 	}
 
 	public function delete(User $user): void
 	{
-		// TODO: Implement delete() method.
+		$userId = $user->getUserId()->toString();
+		unset($this->users[$userId]);
 	}
 }

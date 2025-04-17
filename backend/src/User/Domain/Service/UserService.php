@@ -38,17 +38,7 @@ readonly class UserService
 			: $this->imageUploader->uploadImage($input->base64ImageData);
 		$hashedPassword = $this->passwordHasher->hash($input->plainPassword);
 
-		$user = new User(
-			$this->uuidProvider->generate(),
-			$input->firstName,
-			$input->lastName,
-			$input->patronymic,
-			$input->role,
-			$imagePath,
-			$input->email,
-			$hashedPassword,
-		);
-
+		$user = $this->createUserModel($input, $imagePath, $hashedPassword);
 		return $this->userRepository->store($user);
 	}
 
@@ -134,5 +124,19 @@ readonly class UserService
 		{
 			throw new DomainException('User with email "' . $email . '" already exists', DomainException::EMAIL_IS_NOT_UNIQUE);
 		}
+	}
+
+	private function createUserModel(CreateUserInput $input, ?string $imagePath, string $hashedPassword): User
+	{
+		return new User(
+			$this->uuidProvider->generate(),
+			$input->firstName,
+			$input->lastName,
+			$input->patronymic,
+			$input->role,
+			$imagePath,
+			$input->email,
+			$hashedPassword,
+		);
 	}
 }

@@ -3,24 +3,37 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\User\Domain\Infrastructure;
 
+use App\Common\Uuid\UuidInterface;
 use App\User\Domain\Model\GroupMember;
 use App\User\Domain\Repository\GroupMemberRepositoryInterface;
 
 class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 {
-	public function find(string $groupId, string $userId): ?GroupMember
+	/** @var array<string, GroupMember> */
+	private array $groupMembers = [];
+
+	public function find(UuidInterface $groupId, UuidInterface $userId): ?GroupMember
 	{
-		// TODO: Implement find() method.
+		foreach ($this->groupMembers as $groupMember)
+		{
+			if ($groupId->toString() === $groupMember->getGroupId()->toString()
+				&& $userId->toString() === $groupMember->getUserId()->toString())
+			{
+				return $groupMember;
+			}
+		}
 		return null;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function findByGroup(string $groupId): array
+	public function findByGroup(UuidInterface $groupId): array
 	{
-		// TODO: Implement findByGroup() method.
-		return [];
+		return array_filter($this->groupMembers, static function (GroupMember $groupMember) use ($groupId)
+		{
+			return $groupId->toString() === $groupMember->getGroupId()->toString();
+		});
 	}
 
 	/**
@@ -28,8 +41,15 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	 */
 	public function findByUsers(array $userIds): array
 	{
-		// TODO: Implement findByUser() method.
-		return [];
+		$ids = array_map(static function (UuidInterface $userId)
+		{
+			return $userId->toString();
+		}, $userIds);
+
+		return array_filter($this->groupMembers, static function (GroupMember $groupMember) use ($ids)
+		{
+			return in_array($groupMember->getUserId()->toString(), $ids, true);
+		});
 	}
 
 	/**
@@ -37,14 +57,13 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	 */
 	public function findAll(): array
 	{
-		// TODO: Implement findAll() method.
-		return [];
+		return array_values($this->groupMembers);
 	}
 
-	public function store(GroupMember $groupMember): string
+	public function store(GroupMember $groupMember): UuidInterface
 	{
-		// TODO: Implement store() method.
-		return '';
+		$this->groupMembers[$groupMember->getGroupMemberId()->toString()] = $groupMember;
+		return $groupMember->getGroupMemberId();
 	}
 
 	/**
@@ -52,6 +71,14 @@ class GroupMemberInMemoryRepository implements GroupMemberRepositoryInterface
 	 */
 	public function delete(array $groupMembers): void
 	{
-		// TODO: Implement delete() method.
+		$groupMembersIds = array_map(static function (GroupMember $groupMember)
+		{
+			return $groupMember->getGroupMemberId()->toString();
+		}, $groupMembers);
+
+		foreach ($groupMembersIds as $groupMemberId)
+		{
+			unset($this->groupMembers[$groupMemberId]);
+		}
 	}
 }
