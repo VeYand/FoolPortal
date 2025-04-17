@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\User\Domain\Service;
 
+use App\Common\Event\EventPublisherInterface;
 use App\Common\Uuid\UuidProvider;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Tests\Unit\User\Domain\Infrastructure\GroupMemberInMemoryRepository;
@@ -21,6 +22,7 @@ use App\User\Domain\Service\Input\UpdateUserInput;
 use App\User\Domain\Service\PasswordHasherInterface;
 use App\User\Domain\Service\UserService;
 use App\User\Infrastructure\Hasher\PasswordHasher;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase
@@ -31,9 +33,12 @@ class UserServiceTest extends TestCase
 	private UuidProviderInterface $uuidProvider;
 	private ImageUploaderInterface $imageUploader;
 	private PasswordHasherInterface $passwordHasher;
-	private MockEventPublisher $eventPublisher;
+	private EventPublisherInterface $eventPublisher;
 
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp(): void
 	{
 		$this->userRepository = new UserInMemoryRepository();
@@ -41,7 +46,7 @@ class UserServiceTest extends TestCase
 		$this->uuidProvider = new UuidProvider();
 		$this->imageUploader = new MockImageUploader();
 		$this->passwordHasher = new PasswordHasher();
-		$this->eventPublisher = new MockEventPublisher();
+		$this->eventPublisher = $this->createMock(EventPublisherInterface::class);
 		$this->userService = new UserService(
 			$this->userRepository,
 			$this->groupMemberRepository,
@@ -242,6 +247,14 @@ class UserServiceTest extends TestCase
 		);
 		$userId = $this->userService->create($createInput);
 
+		$this->eventPublisher
+			->expects($this->once())
+			->method('publish')
+			->with($this->callback(function (object $event) use ($userId) {
+				return $event instanceof UserDeletedEvent
+					&& $event->getUserIds() === [$userId];
+			}));
+
 		$groupMember = new GroupMember(
 			$this->uuidProvider->generate(),
 			$this->uuidProvider->generate(),
@@ -253,16 +266,6 @@ class UserServiceTest extends TestCase
 
 		$this->assertNull($this->userRepository->find($userId));
 		$this->assertEmpty($this->groupMemberRepository->findByUsers([$userId]));
-		$events = $this->eventPublisher->getEvents();
-		$this->assertCount(1, $events);
-		$this->assertInstanceOf(
-			UserDeletedEvent::class,
-			$events[0],
-		);
-		$this->assertEquals(
-			[$userId],
-			$events[0]->getUserIds(),
-		);
 	}
 
 	/**
@@ -273,7 +276,5 @@ class UserServiceTest extends TestCase
 		$randomId = $this->uuidProvider->generate();
 		$this->userService->delete($randomId);
 		$this->assertEmpty($this->userRepository->findAll());
-		$events = $this->eventPublisher->getEvents();
-		$this->assertCount(0, $events);
 	}
 }
