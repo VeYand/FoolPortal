@@ -3,15 +3,20 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Lesson\Domain\Service;
 
+use App\Common\Event\EventPublisherInterface;
+use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProvider;
 use App\Lesson\Domain\Exception\DomainException;
 use App\Lesson\Domain\Model\Attachment;
 use App\Lesson\Domain\Model\Lesson;
 use App\Lesson\Domain\Model\LessonAttachment;
+use App\Lesson\Domain\Service\Event\LessonAttachmentCreatedEvent;
+use App\Lesson\Domain\Service\Event\LessonAttachmentDeletedEvent;
 use App\Lesson\Domain\Service\LessonAttachmentService;
 use App\Tests\Unit\Lesson\Infrastructure\InMemoryAttachmentRepository;
 use App\Tests\Unit\Lesson\Infrastructure\InMemoryLessonAttachmentRepository;
 use App\Tests\Unit\Lesson\Infrastructure\InMemoryLessonRepository;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 class LessonAttachmentServiceTest extends TestCase
@@ -21,18 +26,24 @@ class LessonAttachmentServiceTest extends TestCase
 	private InMemoryAttachmentRepository $attachmentRepository;
 	private InMemoryLessonRepository $lessonRepository;
 	private UuidProvider $uuidProvider;
+	private EventPublisherInterface $eventPublisher;
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp(): void
 	{
 		$this->lessonAttachmentRepo = new InMemoryLessonAttachmentRepository();
 		$this->attachmentRepository = new InMemoryAttachmentRepository();
 		$this->lessonRepository = new InMemoryLessonRepository();
 		$this->uuidProvider = new UuidProvider();
+		$this->eventPublisher = $this->createMock(EventPublisherInterface::class);
 		$this->service = new LessonAttachmentService(
 			$this->lessonAttachmentRepo,
 			$this->attachmentRepository,
 			$this->lessonRepository,
 			$this->uuidProvider,
+			$this->eventPublisher,
 		);
 	}
 
@@ -47,6 +58,7 @@ class LessonAttachmentServiceTest extends TestCase
 		$this->lessonRepository->store($lesson);
 		$attachment = new Attachment($attachmentId, 'file', null, '/tmp/file', 'txt');
 		$this->attachmentRepository->store($attachment);
+		$this->expectLessonAttachmentCreatedEventPublished();
 
 		$storedId = $this->service->addAttachmentToLesson($lessonId, $attachmentId);
 
@@ -108,6 +120,7 @@ class LessonAttachmentServiceTest extends TestCase
 		$attachmentId = $this->uuidProvider->generate();
 		$assoc = new LessonAttachment($this->uuidProvider->generate(), $lessonId, $attachmentId);
 		$this->lessonAttachmentRepo->store($assoc);
+		$this->expectLessonAttachmentDeletedEventPublished([$assoc->getLessonAttachmentId()]);
 
 		$this->service->removeAttachmentFromLesson($lessonId, $attachmentId);
 
@@ -174,6 +187,7 @@ class LessonAttachmentServiceTest extends TestCase
 		$assoc2 = new LessonAttachment($this->uuidProvider->generate(), $lessonId, $this->uuidProvider->generate());
 		$this->lessonAttachmentRepo->store($assoc1);
 		$this->lessonAttachmentRepo->store($assoc2);
+		$this->expectLessonAttachmentDeletedEventPublished([$assoc1->getLessonAttachmentId(), $assoc2->getLessonAttachmentId()]);
 
 		$this->service->removeAttachmentFromLesson($lessonId, $assoc1->getAttachmentId());
 
@@ -192,6 +206,32 @@ class LessonAttachmentServiceTest extends TestCase
 		$this->expectExceptionCode(DomainException::LESSON_ATTACHMENT_ALREADY_EXISTS);
 
 		$this->service->addAttachmentToLesson($lessonId, $attachmentId);
+	}
+
+	private function expectLessonAttachmentCreatedEventPublished(): void
+	{
+		$this->eventPublisher
+			->expects($this->once())
+			->method('publish')
+			->with($this->callback(function (object $event)
+			{
+				return $event instanceof LessonAttachmentCreatedEvent;
+			}));
+	}
+
+	/**
+	 * @param UuidInterface[] $lessonAttachmentIds
+	 */
+	private function expectLessonAttachmentDeletedEventPublished(array $lessonAttachmentIds): void
+	{
+		$this->eventPublisher
+			->expects($this->once())
+			->method('publish')
+			->with($this->callback(function (object $event) use ($lessonAttachmentIds)
+			{
+				return $event instanceof LessonAttachmentDeletedEvent
+					&& !array_diff($event->getLessonAttachmentIds(), $lessonAttachmentIds);
+			}));
 	}
 }
 

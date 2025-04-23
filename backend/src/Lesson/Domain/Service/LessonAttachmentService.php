@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lesson\Domain\Service;
 
+use App\Common\Event\EventPublisherInterface;
 use App\Common\Uuid\UuidInterface;
 use App\Common\Uuid\UuidProviderInterface;
 use App\Lesson\Domain\Exception\DomainException;
@@ -10,6 +11,8 @@ use App\Lesson\Domain\Model\LessonAttachment;
 use App\Lesson\Domain\Repository\AttachmentReadRepositoryInterface;
 use App\Lesson\Domain\Repository\LessonAttachmentRepositoryInterface;
 use App\Lesson\Domain\Repository\LessonReadRepositoryInterface;
+use App\Lesson\Domain\Service\Event\LessonAttachmentCreatedEvent;
+use App\Lesson\Domain\Service\Event\LessonAttachmentDeletedEvent;
 
 readonly class LessonAttachmentService
 {
@@ -18,6 +21,7 @@ readonly class LessonAttachmentService
 		private AttachmentReadRepositoryInterface   $attachmentReadRepository,
 		private LessonReadRepositoryInterface       $lessonReadRepository,
 		private UuidProviderInterface               $uuidProvider,
+		private EventPublisherInterface             $eventPublisher,
 	)
 	{
 	}
@@ -37,7 +41,9 @@ readonly class LessonAttachmentService
 			$attachmentId,
 		);
 
-		return $this->lessonAttachmentRepository->store($lessonAttachment);
+		$createdId  = $this->lessonAttachmentRepository->store($lessonAttachment);
+		$this->eventPublisher->publish(new LessonAttachmentCreatedEvent([$lessonAttachment->getLessonAttachmentId()]));
+		return $createdId;
 	}
 
 	public function removeAttachmentFromLesson(UuidInterface $lessonId, UuidInterface $attachmentId): void
@@ -47,6 +53,7 @@ readonly class LessonAttachmentService
 		if (!is_null($lessonAttachment))
 		{
 			$this->lessonAttachmentRepository->delete([$lessonAttachment]);
+			$this->eventPublisher->publish(new LessonAttachmentDeletedEvent([$lessonAttachment->getLessonAttachmentId()]));
 		}
 	}
 
