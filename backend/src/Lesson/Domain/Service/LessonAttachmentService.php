@@ -46,7 +46,7 @@ readonly class LessonAttachmentService
 
 		if (!is_null($lessonAttachment))
 		{
-			$this->lessonAttachmentRepository->delete($lessonAttachment->getLessonAttachmentId());
+			$this->lessonAttachmentRepository->delete([$lessonAttachment]);
 		}
 	}
 

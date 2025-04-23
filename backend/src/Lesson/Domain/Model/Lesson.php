@@ -55,8 +55,8 @@ class Lesson
 	 */
 	public function setStartTime(int $startTime): void
 	{
-		self::assertStartTimeIsValid($this->startTime);
-		self::assertDurationIsValid($this->startTime, $this->duration);
+		self::assertStartTimeIsValid($startTime);
+		self::assertDurationIsValid($startTime, $this->duration);
 		$this->startTime = $startTime;
 	}
 
@@ -70,7 +70,7 @@ class Lesson
 	 */
 	public function setDuration(int $duration): void
 	{
-		self::assertDurationIsValid($this->startTime, $this->duration);
+		self::assertDurationIsValid($this->startTime, $duration);
 		$this->duration = $duration;
 	}
 
@@ -107,7 +107,7 @@ class Lesson
 	/**
 	 * @throws DomainException
 	 */
-	public static function assertStartTimeIsValid(int $startTime): void
+	private static function assertStartTimeIsValid(int $startTime): void
 	{
 		if ($startTime < 0)
 		{
@@ -118,7 +118,7 @@ class Lesson
 	/**
 	 * @throws DomainException
 	 */
-	public static function assertDurationIsValid(int $startTime, int $duration): void
+	private static function assertDurationIsValid(int $startTime, int $duration): void
 	{
 		if ($duration < 0)
 		{
